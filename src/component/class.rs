@@ -1,7 +1,7 @@
 use super::MatchSelectorElement;
 use std::borrow::Cow;
 use bevy::prelude::{
-    Component, Handle, Name,
+    Component,
     Deref,
     Reflect, ReflectComponent,
 };
