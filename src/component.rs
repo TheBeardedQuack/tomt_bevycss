@@ -12,7 +12,7 @@ use crate::StyleSheetAsset;
 ///
 /// ```
 /// # use bevy::prelude::*;
-/// # use bevy_ecss::prelude::*;
+/// # use tomt_bevycss::prelude::*;
 /// fn system(mut commands: Commands) {
 ///     // This entity can be selected by either ".yellow-button", ".enabled"
 ///     // or even ".yellow-button.enabled"
@@ -47,7 +47,7 @@ impl Class {
 ///
 /// ```
 /// # use bevy::prelude::*;
-/// use bevy_ecss::prelude::*;
+/// use tomt_bevycss::prelude::*;
 ///
 /// fn setup(asset_server: Res<AssetServer>, mut commands: Commands) {
 ///     commands.spawn(StyleSheet::new(asset_server.load("sheets/fancy.css")));

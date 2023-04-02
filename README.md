@@ -21,7 +21,7 @@ To use Bevy ECSS just add a `StyleSheet` with a loaded `css` file to any entity 
 
 ```rust
 use bevy::prelude::*;
-use bevy_ecss::prelude::*;
+use tomt_bevycss::prelude::*;
 
 fn setup_awesome_ui(root: Entity, mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
@@ -162,7 +162,7 @@ This list will be expanded to match `bevy_ui` and other `bevy` core components.
 You may also register your own components or alias/overwrite builtin components selector.
 ```rust
 use bevy::prelude::*;
-use bevy_ecss::prelude::*;
+use tomt_bevycss::prelude::*;
 
 #[derive(Component)]
 struct MyFancyComponentSelector;
@@ -172,7 +172,7 @@ struct FancyColor;
 
 fn some_main() {
     let mut app = App::new();
-    app.add_plugins(DefaultPlugins).add_plugin(EcssPlugin::default());
+    app.add_plugins(DefaultPlugins).add_plugin(BevyCssPlugin::default());
     // You may use it as selector now, like
     // fancy-pants {
     //      background-color: pink;
@@ -189,7 +189,7 @@ It's also possible to implement your own properties, be it part of `CSS` standar
 Let's implement a custom `alpha` property with will set the alpha channel of any [`BackgroundColor`](https://docs.rs/bevy/latest/bevy/prelude/struct.BackgroundColor.html).
 ```rust
 # use bevy::{ecs::query::QueryItem, prelude::*};
-# use bevy_ecss::{prelude::*, EcssError, Property, PropertyValues};
+# use tomt_bevycss::{prelude::*, BevyCssError, Property, PropertyValues};
 
 #[derive(Default)]
 pub(crate) struct AlphaProperty;
@@ -210,12 +210,12 @@ impl Property for AlphaProperty {
         "alpha"
     }
 
-    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
         // PropertyValues::f32 tries to parse property value into a numeric value
         if let Some(value) = values.f32() {
             Ok(value)
         } else {
-            Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+            Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
         }
     }
 

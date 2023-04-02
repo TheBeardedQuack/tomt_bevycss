@@ -1,7 +1,7 @@
 use std::hash::{Hash, Hasher};
 
 use bevy::utils::AHasher;
-use cssparser::CowRcStr;
+use tomt_cssparser::CowRcStr;
 use smallvec::{smallvec, SmallVec};
 
 /// Represents a selector element on a style sheet rule.

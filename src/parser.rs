@@ -1,5 +1,5 @@
 use bevy::prelude::error;
-use cssparser::{
+use tomt_cssparser::{
     AtRuleParser, DeclarationListParser, DeclarationParser, ParseError, Parser, ParserInput,
     QualifiedRuleParser, RuleListParser, ToCss, Token,
 };
@@ -9,7 +9,7 @@ use crate::{
     property::PropertyValues,
     selector::{Selector, SelectorElement},
     stylesheet::StyleRule,
-    EcssError,
+    BevyCssError,
 };
 
 /// Parses a `css` string using [`RuleListParser`].
@@ -37,22 +37,22 @@ impl StyleSheetParser {
     }
 }
 
-fn format_error(error: ParseError<EcssError>) -> String {
+fn format_error(error: ParseError<BevyCssError>) -> String {
     let error_description = match error.kind {
-        cssparser::ParseErrorKind::Basic(b) => match b {
-            cssparser::BasicParseErrorKind::UnexpectedToken(token) => {
+        tomt_cssparser::ParseErrorKind::Basic(b) => match b {
+            tomt_cssparser::BasicParseErrorKind::UnexpectedToken(token) => {
                 format!("Unexpected token {}", token.to_css_string())
             }
-            cssparser::BasicParseErrorKind::EndOfInput => "End of input".to_string(),
-            cssparser::BasicParseErrorKind::AtRuleInvalid(token) => {
+            tomt_cssparser::BasicParseErrorKind::EndOfInput => "End of input".to_string(),
+            tomt_cssparser::BasicParseErrorKind::AtRuleInvalid(token) => {
                 format!("At rule isn't supported {}", token)
             }
-            cssparser::BasicParseErrorKind::AtRuleBodyInvalid => {
+            tomt_cssparser::BasicParseErrorKind::AtRuleBodyInvalid => {
                 "At rule isn't supported".to_string()
             }
-            cssparser::BasicParseErrorKind::QualifiedRuleInvalid => "Invalid rule".to_string(),
+            tomt_cssparser::BasicParseErrorKind::QualifiedRuleInvalid => "Invalid rule".to_string(),
         },
-        cssparser::ParseErrorKind::Custom(c) => c.to_string(),
+        tomt_cssparser::ParseErrorKind::Custom(c) => c.to_string(),
     };
 
     format!(
@@ -64,7 +64,7 @@ fn format_error(error: ParseError<EcssError>) -> String {
 impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
     type Prelude = Selector;
     type QualifiedRule = StyleRule;
-    type Error = EcssError;
+    type Error = BevyCssError;
 
     fn parse_prelude<'t>(
         &mut self,
@@ -75,7 +75,7 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
         let mut next_is_class = false;
 
         while let Ok(token) = input.next_including_whitespace() {
-            use cssparser::Token::*;
+            use tomt_cssparser::Token::*;
             match token {
                 Ident(v) => {
                     if next_is_class {
@@ -87,7 +87,7 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                 }
                 IDHash(v) => {
                     if v.is_empty() {
-                        return Err(input.new_custom_error(EcssError::InvalidSelector));
+                        return Err(input.new_custom_error(BevyCssError::InvalidSelector));
                     } else {
                         elements.push(SelectorElement::Name(v.to_string()));
                     }
@@ -96,13 +96,13 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                 Delim(c) if *c == '.' => next_is_class = true,
                 _ => {
                     let token = token.to_css_string();
-                    return Err(input.new_custom_error(EcssError::UnexpectedToken(token)));
+                    return Err(input.new_custom_error(BevyCssError::UnexpectedToken(token)));
                 }
             }
         }
 
         if elements.is_empty() {
-            return Err(input.new_custom_error(EcssError::InvalidSelector));
+            return Err(input.new_custom_error(BevyCssError::InvalidSelector));
         }
 
         // Remove noise the trailing white spaces, if any
@@ -116,7 +116,7 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
     fn parse_block<'t>(
         &mut self,
         prelude: Self::Prelude,
-        _start: &cssparser::ParserState,
+        _start: &tomt_cssparser::ParserState,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self::QualifiedRule, ParseError<'i, Self::Error>> {
         let mut rule = StyleRule {
@@ -140,7 +140,7 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
 impl<'i> AtRuleParser<'i> for StyleSheetParser {
     type Prelude = ();
     type AtRule = StyleRule;
-    type Error = EcssError;
+    type Error = BevyCssError;
 }
 
 struct PropertyParser;
@@ -148,13 +148,13 @@ struct PropertyParser;
 impl<'i> DeclarationParser<'i> for PropertyParser {
     type Declaration = (String, PropertyValues);
 
-    type Error = EcssError;
+    type Error = BevyCssError;
 
     fn parse_value<'t>(
         &mut self,
-        name: cssparser::CowRcStr<'i>,
+        name: tomt_cssparser::CowRcStr<'i>,
         parser: &mut Parser<'i, 't>,
-    ) -> Result<Self::Declaration, ParseError<'i, EcssError>> {
+    ) -> Result<Self::Declaration, ParseError<'i, BevyCssError>> {
         let mut tokens = smallvec![];
         for token in parse_values(parser)? {
             match token.try_into() {
@@ -170,12 +170,12 @@ impl<'i> DeclarationParser<'i> for PropertyParser {
 impl<'i> AtRuleParser<'i> for PropertyParser {
     type Prelude = ();
     type AtRule = (String, PropertyValues);
-    type Error = EcssError;
+    type Error = BevyCssError;
 }
 
 fn parse_values<'i>(
     parser: &mut Parser<'i, '_>,
-) -> Result<SmallVec<[Token<'i>; 8]>, ParseError<'i, EcssError>> {
+) -> Result<SmallVec<[Token<'i>; 8]>, ParseError<'i, BevyCssError>> {
     let mut values = SmallVec::new();
 
     while let Ok(token) = parser.next_including_whitespace() {

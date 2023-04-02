@@ -1,10 +1,10 @@
 use bevy::{ecs::query::QueryItem, prelude::*};
-use bevy_ecss::{prelude::*, EcssError, Property, PropertyValues};
+use tomt_bevycss::{prelude::*, BevyCssError, Property, PropertyValues};
 
 fn main() {
     let mut app = App::new();
     app.add_plugins(DefaultPlugins)
-        .add_plugin(EcssPlugin::default())
+        .add_plugin(BevyCssPlugin::default())
         .add_startup_system(setup);
 
     app.register_property::<AlphaProperty>();
@@ -57,12 +57,12 @@ impl Property for AlphaProperty {
         "alpha"
     }
 
-    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
         // PropertyValues::f32 tries to parse property value into a numeric value
         if let Some(value) = values.f32() {
             Ok(value)
         } else {
-            Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+            Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
         }
     }
 

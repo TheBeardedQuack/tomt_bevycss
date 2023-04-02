@@ -1,10 +1,10 @@
 use bevy::prelude::*;
-use bevy_ecss::prelude::{Class, EcssPlugin, StyleSheet};
+use tomt_bevycss::prelude::{Class, BevyCssPlugin, StyleSheet};
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(EcssPlugin::default())
+        .add_plugin(BevyCssPlugin::default())
         .add_startup_system(setup)
         .run();
 }

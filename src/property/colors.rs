@@ -1,14 +1,19 @@
 use bevy::prelude::Color;
 
 pub(super) fn parse_hex_color(hex: &str) -> Option<Color> {
-    if let Ok(cssparser::Color::RGBA(cssparser::RGBA {
+    if let Ok(tomt_cssparser::Color::Rgba(tomt_cssparser::RGBA {
         red,
         green,
         blue,
         alpha,
-    })) = cssparser::Color::parse_hash(hex.as_bytes())
+    })) = tomt_cssparser::parse_hash_color(hex.as_bytes())
     {
-        Some(Color::rgba_u8(red, green, blue, alpha))
+        Some(Color::rgba_u8(
+            red.unwrap_or_default(),
+            green.unwrap_or_default(),
+            blue.unwrap_or_default(),
+            tomt_cssparser::clamp_unit_f32(alpha.unwrap_or_default())
+        ))
     } else {
         None
     }

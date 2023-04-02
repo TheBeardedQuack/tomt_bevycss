@@ -30,11 +30,11 @@ pub use property::{Property, PropertyToken, PropertyValues};
 pub use selector::{Selector, SelectorElement};
 pub use stylesheet::{StyleRule, StyleSheetAsset};
 
-/// use `bevy_ecss::prelude::*;` to import common components, and plugins and utility functions.
+/// use `tomt_bevycss::prelude::*;` to import common components, and plugins and utility functions.
 pub mod prelude {
     pub use super::component::{Class, StyleSheet};
     pub use super::stylesheet::StyleSheetAsset;
-    pub use super::EcssPlugin;
+    pub use super::BevyCssPlugin;
     pub use super::RegisterComponentSelector;
     pub use super::RegisterProperty;
 }
@@ -42,7 +42,7 @@ pub mod prelude {
 /// Errors which can happens while parsing `css` into [`Selector`] or [`Property`].
 // TODO: Change this to Cow<'static, str>
 #[derive(Debug)]
-pub enum EcssError {
+pub enum BevyCssError {
     /// An unsupported selector was found on a style sheet rule.
     UnsupportedSelector,
     /// An unsupported property was found on a style sheet rule.
@@ -55,69 +55,69 @@ pub enum EcssError {
     UnexpectedToken(String),
 }
 
-impl Error for EcssError {}
+impl Error for BevyCssError {}
 
-impl Display for EcssError {
+impl Display for BevyCssError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            EcssError::UnsupportedSelector => {
+            BevyCssError::UnsupportedSelector => {
                 write!(f, "Unsupported selector")
             }
-            EcssError::UnsupportedProperty(p) => write!(f, "Unsupported property: {}", p),
-            EcssError::InvalidPropertyValue(p) => write!(f, "Invalid property value: {}", p),
-            EcssError::InvalidSelector => write!(f, "Invalid selector"),
-            EcssError::UnexpectedToken(t) => write!(f, "Unexpected token: {}", t),
+            BevyCssError::UnsupportedProperty(p) => write!(f, "Unsupported property: {}", p),
+            BevyCssError::InvalidPropertyValue(p) => write!(f, "Invalid property value: {}", p),
+            BevyCssError::InvalidSelector => write!(f, "Invalid selector"),
+            BevyCssError::UnexpectedToken(t) => write!(f, "Unexpected token: {}", t),
         }
     }
 }
 #[derive(SystemSet, Debug, Clone, Hash, Eq, PartialEq)]
 #[system_set(base)]
-struct EcssHotReload;
+struct BevyCssHotReload;
 
-/// System sets  used by `bevy_ecss` systems
+/// System sets  used by `tomt_bevycss` systems
 #[derive(SystemSet, Clone, Copy, Debug, Hash, PartialEq, Eq)]
-pub enum EcssSet {
+pub enum BevyCssSet {
     /// Prepares internal state before running apply systems.
     /// This system runs on [`CoreSet::PreUpdate`].
     Prepare,
     /// All [`Property`] implementation `systems` are run on this system set.
-    /// Those stages runs on [`CoreSet::PreUpdate`] after [`EcssSet::Prepare`].
+    /// Those stages runs on [`CoreSet::PreUpdate`] after [`BevyCssSet::Prepare`].
     Apply,
     /// Clears the internal state used by [`Property`] implementation `systems` set.
     /// This system runs on [`CoreSet::PostUpdate`].
     Cleanup,
 }
 
-/// Plugin which add all types, assets, systems and internal resources needed by `bevy_ecss`.
-/// You must add this plugin in order to use `bevy_ecss`.
+/// Plugin which add all types, assets, systems and internal resources needed by `tomt_bevycss`.
+/// You must add this plugin in order to use `tomt_bevycss`.
 #[derive(Default)]
-pub struct EcssPlugin {
+pub struct BevyCssPlugin {
     hot_reload: bool,
 }
 
-impl EcssPlugin {
-    pub fn with_hot_reload() -> EcssPlugin {
-        EcssPlugin { hot_reload: true }
+impl BevyCssPlugin {
+    pub fn with_hot_reload() -> BevyCssPlugin {
+        BevyCssPlugin { hot_reload: true }
     }
 }
 
-impl Plugin for EcssPlugin {
+impl Plugin for BevyCssPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app.register_type::<Class>()
             .register_type::<StyleSheet>()
             .add_asset::<StyleSheetAsset>()
-            .configure_set(EcssSet::Prepare.in_base_set(CoreSet::PreUpdate))
+            .configure_set(BevyCssSet::Prepare.in_base_set(CoreSet::PreUpdate))
             .configure_set(
-                EcssSet::Apply
+                BevyCssSet::Apply
                     .in_base_set(CoreSet::PreUpdate)
-                    .after(EcssSet::Prepare),
+                    .after(BevyCssSet::Prepare),
             )
-            .configure_set(EcssSet::Cleanup.in_base_set(CoreSet::PostUpdate))
+            .configure_set(BevyCssSet::Cleanup.in_base_set(CoreSet::PostUpdate))
             .init_resource::<StyleSheetState>()
             .init_resource::<ComponentFilterRegistry>()
             .init_asset_loader::<StyleSheetLoader>()
-            .add_system(system::prepare.in_set(EcssSet::Prepare))
-            .add_system(system::clear_state.in_set(EcssSet::Cleanup));
+            .add_system(system::prepare.in_set(BevyCssSet::Prepare))
+            .add_system(system::clear_state.in_set(BevyCssSet::Cleanup));
 
         let prepared_state = PrepareParams::new(&mut app.world);
         app.insert_resource(prepared_state);
@@ -127,11 +127,11 @@ impl Plugin for EcssPlugin {
 
         if self.hot_reload {
             app.configure_set(
-                EcssHotReload
+                BevyCssHotReload
                     .after(AssetSet::AssetEvents)
                     .before(CoreSet::Last),
             )
-            .add_system(system::hot_reload_style_sheets.in_base_set(EcssHotReload));
+            .add_system(system::hot_reload_style_sheets.in_base_set(BevyCssHotReload));
         }
     }
 }
@@ -198,14 +198,14 @@ fn register_properties(app: &mut bevy::prelude::App) {
 ///
 /// ```
 /// # use bevy::prelude::*;
-/// # use bevy_ecss::prelude::*;
+/// # use tomt_bevycss::prelude::*;
 /// #
 /// # #[derive(Component)]
 /// # struct MyFancyComponentSelector;
 /// #
 /// # fn some_main() {
 /// #    let mut app = App::new();
-/// #    app.add_plugins(DefaultPlugins).add_plugin(EcssPlugin::default());
+/// #    app.add_plugins(DefaultPlugins).add_plugin(BevyCssPlugin::default());
 /// // You may use it as selector now, like
 /// // fancy-pants {
 /// //      background-color: pink;
@@ -254,7 +254,7 @@ impl RegisterProperty for bevy::prelude::App {
     where
         T: Property + 'static,
     {
-        self.add_system(T::apply_system.in_set(EcssSet::Apply));
+        self.add_system(T::apply_system.in_set(BevyCssSet::Apply));
 
         self
     }

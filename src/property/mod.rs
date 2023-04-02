@@ -10,10 +10,10 @@ use bevy::{
     utils::HashMap,
 };
 
-use cssparser::Token;
+use tomt_cssparser::Token;
 use smallvec::SmallVec;
 
-use crate::{selector::Selector, EcssError, StyleSheetAsset};
+use crate::{selector::Selector, BevyCssError, StyleSheetAsset};
 
 mod colors;
 pub(crate) mod impls;
@@ -289,7 +289,7 @@ pub trait Property: Default + Sized + Send + Sync + 'static {
     ///
     /// This function is called only once, on the first time a matching property is found while applying style rule.
     /// If an error is returned, it is also cached so no more attempt are made.
-    fn parse(values: &PropertyValues) -> Result<Self::Cache, EcssError>;
+    fn parse(values: &PropertyValues) -> Result<Self::Cache, BevyCssError>;
 
     /// Applies on the given [`Components`](Property::Components) the [`Cache`](Property::Cache) value.
     /// Additionally, an [`AssetServer`] and [`Commands`] parameters are provided for more complex use cases.

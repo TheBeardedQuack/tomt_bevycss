@@ -1,5 +1,5 @@
 [package]
-name = "bevy_ecss"
+name = "tomt_bevycss"
 version = "0.3.0"
 edition = "2021"
 categories = ["game-development", "gui", "web-programming"]
@@ -8,7 +8,7 @@ exclude = [".github/"]
 keywords = ["css", "bevy", "style", "theme", "ui"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/afonsolage/bevy_ecss"
+repository = "https://bitbucket.org/TheBeardedQuack/tomt-bevycss.git"
 
 [dependencies]
 bevy = { version = "0.10", default-features = false, features = [
@@ -17,7 +17,7 @@ bevy = { version = "0.10", default-features = false, features = [
     "bevy_text",
     "bevy_render",
 ] }
-cssparser = "0.29"
+tomt_cssparser = { git = "https://bitbucket.org/TheBeardedQuack/tomt-cssparser.git" }
 
 smallvec = { version = "1.10", features = ["serde", "union", "const_generics"] }
 

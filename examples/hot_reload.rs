@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_ecss::prelude::{Class, EcssPlugin, StyleSheet};
+use tomt_bevycss::prelude::{Class, BevyCssPlugin, StyleSheet};
 use bevy_editor_pls::prelude::*;
 
 fn main() {
@@ -10,7 +10,7 @@ fn main() {
             ..Default::default()
         }))
         .add_plugin(EditorPlugin)
-        .add_plugin(EcssPlugin::with_hot_reload())
+        .add_plugin(BevyCssPlugin::with_hot_reload())
         .add_startup_system(setup)
         .run();
 }

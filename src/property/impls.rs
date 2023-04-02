@@ -1,6 +1,6 @@
 use bevy::{ecs::query::QueryItem, prelude::*};
 
-use crate::EcssError;
+use crate::BevyCssError;
 
 use super::{Property, PropertyValues};
 
@@ -31,11 +31,11 @@ mod style {
                     $name
                 }
 
-                fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+                fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
                     if let Some(val) = values.rect() {
                         Ok(val)
                     } else {
-                        Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+                        Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
                     }
                 }
 
@@ -76,11 +76,11 @@ mod style {
                     $name
                 }
 
-                fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+                fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
                     if let Some(val) = values.$parse_func() {
                         Ok(val)
                     } else {
-                        Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+                        Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
                     }
                 }
 
@@ -146,7 +146,7 @@ mod style {
                     $name
                 }
 
-                fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+                fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
                     if let Some(identifier) = values.identifier() {
                         use $cache::*;
                         // Chain if-let when `cargofmt` supports it
@@ -157,7 +157,7 @@ mod style {
                         }
                     }
 
-                    Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+                    Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
                 }
 
                 fn apply<'w>(
@@ -259,11 +259,11 @@ mod text {
             "color"
         }
 
-        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
             if let Some(color) = values.color() {
                 Ok(color)
             } else {
-                Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+                Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
             }
         }
 
@@ -293,11 +293,11 @@ mod text {
             "font"
         }
 
-        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
             if let Some(path) = values.string() {
                 Ok(path)
             } else {
-                Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+                Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
             }
         }
 
@@ -327,11 +327,11 @@ mod text {
             "font-size"
         }
 
-        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
             if let Some(size) = values.f32() {
                 Ok(size)
             } else {
-                Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+                Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
             }
         }
 
@@ -362,7 +362,7 @@ mod text {
             "text-align"
         }
 
-        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
             if let Some(ident) = values.identifier() {
                 match ident {
                     "left" => return Ok(Some(TextAlignment::Left)),
@@ -371,7 +371,7 @@ mod text {
                     _ => (),
                 }
             }
-            Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+            Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
         }
 
         fn apply<'w>(
@@ -397,11 +397,11 @@ mod text {
             "text-content"
         }
 
-        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+        fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
             if let Some(content) = values.string() {
                 Ok(content)
             } else {
-                Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+                Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
             }
         }
 
@@ -433,11 +433,11 @@ impl Property for BackgroundColorProperty {
         "background-color"
     }
 
-    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, EcssError> {
+    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
         if let Some(color) = values.color() {
             Ok(color)
         } else {
-            Err(EcssError::InvalidPropertyValue(Self::name().to_string()))
+            Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
         }
     }
 

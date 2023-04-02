@@ -1,6 +1,6 @@
 use bevy::{prelude::*, ui::FocusPolicy};
-use bevy_ecss::prelude::{
-    Class, EcssPlugin, RegisterComponentSelector, StyleSheet, StyleSheetAsset,
+use tomt_bevycss::prelude::{
+    Class, BevyCssPlugin, RegisterComponentSelector, StyleSheet, StyleSheetAsset,
 };
 
 #[derive(Component, Debug, Default, Reflect)]
@@ -14,7 +14,7 @@ fn main() {
             watch_for_changes: true,
             ..Default::default()
         }))
-        .add_plugin(EcssPlugin::with_hot_reload())
+        .add_plugin(BevyCssPlugin::with_hot_reload())
         .add_startup_system(setup)
         .add_system(change_theme)
         .register_component_selector::<Title>("title")
