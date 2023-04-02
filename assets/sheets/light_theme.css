@@ -68,3 +68,7 @@ button text {
     color: #3b3f3f;
     text-content: "Darkness!!!!";
 }
+
+button:hover text {
+    color: black;
+}
