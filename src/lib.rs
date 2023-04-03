@@ -32,7 +32,7 @@ pub use stylesheet::{StyleRule, StyleSheetAsset};
 
 /// use `tomt_bevycss::prelude::*;` to import common components, and plugins and utility functions.
 pub mod prelude {
-    pub use super::component::{Class, StyleSheet};
+    pub use super::component::{Class, PseudoClass, StyleSheet};
     pub use super::stylesheet::StyleSheetAsset;
     pub use super::BevyCssPlugin;
     pub use super::RegisterComponentSelector;

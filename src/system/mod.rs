@@ -1,49 +1,33 @@
+mod component_filter;
+pub(crate) use component_filter::*;
+
+mod component_filter_registry;
+pub(crate) use component_filter_registry::*;
+
+mod css_query_param;
+pub(crate) use css_query_param::*;
+
 use bevy::{
-    ecs::system::{SystemParam, SystemState},
+    ecs::system::{SystemState},
     prelude::{
-        debug, error, trace, AssetEvent, Assets, Changed, Children, Component, Deref, DerefMut,
-        Entity, EventReader, Mut, Name, Query, Res, ResMut, Resource, With, World,
+        debug, error, trace, AssetEvent, Children, Component, Deref, DerefMut,
+        Entity, EventReader, Mut, Query, ResMut, Resource, With, World,
     },
     ui::Node,
-    utils::HashMap,
 };
 use smallvec::SmallVec;
 
 use crate::{
-    component::{Class, MatchSelectorElement, StyleSheet, PseudoClass},
+    component::{MatchSelectorElement, StyleSheet},
     property::StyleSheetState,
     selector::{Selector, SelectorElement},
     StyleSheetAsset,
 };
 
-pub(crate) trait ComponentFilter {
-    fn filter(&mut self, world: &World) -> SmallVec<[Entity; 8]>;
-}
-
 impl<'w, 's, T: Component> ComponentFilter for SystemState<Query<'w, 's, Entity, With<T>>> {
     fn filter(&mut self, world: &World) -> SmallVec<[Entity; 8]> {
         self.get(world).iter().collect()
     }
-}
-
-#[derive(Default, Resource)]
-pub(crate) struct ComponentFilterRegistry(
-    pub HashMap<&'static str, Box<dyn ComponentFilter + Send + Sync>>,
-);
-
-#[derive(SystemParam)]
-pub(crate) struct CssQueryParam<'w, 's> {
-    assets: Res<'w, Assets<StyleSheetAsset>>,
-    nodes: Query<
-        'w,
-        's,
-        (Entity, Option<&'static Children>, &'static StyleSheet),
-        Changed<StyleSheet>,
-    >,
-    names: Query<'w, 's, (Entity, &'static Name)>,
-    classes: Query<'w, 's, (Entity, &'static Class)>,
-    pseudo_classes: Query<'w, 's, (Entity, &'static PseudoClass)>,
-    children: Query<'w, 's, &'static Children, With<Node>>,
 }
 
 #[derive(Deref, DerefMut, Resource)]
@@ -168,11 +152,11 @@ fn select_entities_node(
                 SelectorElement::Class(class) => {
                     get_entities_with(class.as_str(), &css_query.classes, filter)
                 }
-                SelectorElement::Component(component) => {
-                    get_entities_with_component(component.as_str(), world, registry, filter)
-                }
                 SelectorElement::PseudoClass(class) => {
                     get_entities_with(class.as_str(), &css_query.pseudo_classes, filter)
+                }
+                SelectorElement::Component(component) => {
+                    get_entities_with_component(component.as_str(), world, registry, filter)
                 }
                 // All child elements are filtered by [`get_parent_tree`](Selector::get_parent_tree)
                 SelectorElement::Child => unreachable!(),

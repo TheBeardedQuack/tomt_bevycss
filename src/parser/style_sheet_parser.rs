@@ -65,7 +65,6 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
             Class,
             PseudoClass,
             PseudoProp,
-            Unknown(char),
         }
 
         let mut prev_delim = DelimType::None;
@@ -91,9 +90,6 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                         DelimType::PseudoProp => {
                             let err_str = format!(":{v}");
                             return Err(input.new_custom_error(BevyCssError::UnexpectedToken(err_str)));
-                        }
-                        DelimType::Unknown(c) => {
-                            return Err(input.new_custom_error(BevyCssError::UnexpectedToken(c.to_string())));
                         },
                     });
                 }
