@@ -1,13 +1,12 @@
 #![doc = include_str!("../README.md")]
 
+pub mod error;
 mod component;
 mod parser;
 mod property;
 mod selector;
 mod stylesheet;
 mod system;
-
-use std::{error::Error, fmt::Display};
 
 use bevy::{
     asset::AssetSet,
@@ -32,44 +31,16 @@ pub use stylesheet::{StyleRule, StyleSheetAsset};
 
 /// use `tomt_bevycss::prelude::*;` to import common components, and plugins and utility functions.
 pub mod prelude {
-    pub use super::component::{Class, PseudoClass, StyleSheet};
-    pub use super::stylesheet::StyleSheetAsset;
-    pub use super::BevyCssPlugin;
-    pub use super::RegisterComponentSelector;
-    pub use super::RegisterProperty;
+    pub use super::{
+        BevyCssPlugin,
+        RegisterComponentSelector,
+        RegisterProperty,
+        error::BevyCssError,
+        component::{Class, PseudoClass, StyleSheet},
+        stylesheet::StyleSheetAsset,
+    };
 }
 
-/// Errors which can happens while parsing `css` into [`Selector`] or [`Property`].
-// TODO: Change this to Cow<'static, str>
-#[derive(Debug)]
-pub enum BevyCssError {
-    /// An unsupported selector was found on a style sheet rule.
-    UnsupportedSelector,
-    /// An unsupported property was found on a style sheet rule.
-    UnsupportedProperty(String),
-    /// An invalid property value was found on a style sheet rule.
-    InvalidPropertyValue(String),
-    /// An invalid selector was found on a style sheet rule.
-    InvalidSelector,
-    /// An unexpected token was found on a style sheet rule.
-    UnexpectedToken(String),
-}
-
-impl Error for BevyCssError {}
-
-impl Display for BevyCssError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BevyCssError::UnsupportedSelector => {
-                write!(f, "Unsupported selector")
-            }
-            BevyCssError::UnsupportedProperty(p) => write!(f, "Unsupported property: {}", p),
-            BevyCssError::InvalidPropertyValue(p) => write!(f, "Invalid property value: {}", p),
-            BevyCssError::InvalidSelector => write!(f, "Invalid selector"),
-            BevyCssError::UnexpectedToken(t) => write!(f, "Unexpected token: {}", t),
-        }
-    }
-}
 #[derive(SystemSet, Debug, Clone, Hash, Eq, PartialEq)]
 #[system_set(base)]
 struct BevyCssHotReload;
