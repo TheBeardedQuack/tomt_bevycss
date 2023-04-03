@@ -23,7 +23,9 @@ use bevy::log::{
 pub(crate) struct StyleSheetParser;
 
 impl StyleSheetParser {
-    pub(crate) fn parse(content: &str) -> SmallVec<[StyleRule; 8]> {
+    pub(crate) fn parse(
+        content: &str
+    ) -> SmallVec<[StyleRule; 8]> {
         let mut input = ParserInput::new(content);
         let mut parser = Parser::new(&mut input);
 
@@ -55,18 +57,32 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
     ) -> Result<Self::Prelude, ParseError<'i, Self::Error>> {
         let mut elements = smallvec![];
 
-        let mut next_is_class = false;
+        #[derive(Debug, Default, Clone)]
+        enum DelimType {
+            #[default] None,
+            Class,
+            Unknown(char),
+        }
+
+        let mut prev_delim = DelimType::None;
 
         while let Ok(token) = input.next_including_whitespace() {
             use tomt_cssparser::Token::*;
             match token {
                 Ident(v) => {
-                    if next_is_class {
-                        next_is_class = false;
-                        elements.push(SelectorElement::Class(v.to_string()));
-                    } else {
-                        elements.push(SelectorElement::Component(v.to_string()));
-                    }
+                    elements.push(match prev_delim {
+                        DelimType::None => {
+                            prev_delim = DelimType::None;
+                            SelectorElement::Component(v.to_string())
+                        },
+                        DelimType::Class => {
+                            prev_delim = DelimType::None;
+                            SelectorElement::Class(v.to_string())
+                        },
+                        DelimType::Unknown(c) => {
+                            return Err(input.new_custom_error(BevyCssError::UnexpectedToken(c.to_string())));
+                        },
+                    });
                 }
                 IDHash(v) => {
                     if v.is_empty() {
@@ -76,7 +92,16 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                     }
                 }
                 WhiteSpace(_) => elements.push(SelectorElement::Child),
-                Delim(c) if *c == '.' => next_is_class = true,
+                Delim(c) => {
+                    prev_delim = match (*c, prev_delim) {
+                        ('.', DelimType::None) => DelimType::Class,
+                        (c, _) => DelimType::Unknown(c),
+                    };
+                    if let DelimType::Unknown(c) = prev_delim
+                    {
+                        return Err(input.new_custom_error(BevyCssError::UnexpectedToken(c.to_string())));
+                    }
+                },
                 _ => {
                     let token = token.to_css_string();
                     return Err(input.new_custom_error(BevyCssError::UnexpectedToken(token)));
