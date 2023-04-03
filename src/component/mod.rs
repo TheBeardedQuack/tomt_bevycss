@@ -1,6 +1,9 @@
 mod class;
 pub use class::*;
 
+mod pseudo_class;
+pub use pseudo_class::*;
+
 mod style_sheet;
 pub use style_sheet::*;
 

@@ -18,15 +18,15 @@ use bevy::prelude::{
 /// fn system(mut commands: Commands) {
 ///     // This entity can be selected by either ".yellow-button", ".enabled"
 ///     // or even ".yellow-button.enabled"
-///     commands.spawn(Class::new("yellow-button enabled"));
+///     commands.spawn(PseudoClass::new("yellow-button enabled"));
 /// }
 /// ```
 #[derive(Debug, Reflect, Component, Default, Clone, Deref)]
 #[reflect(Component)]
-pub struct Class(Cow<'static, str>);
+pub struct PseudoClass(Cow<'static, str>);
 
-impl Class {
-    /// Creates a new [`Class`] with the given class names.
+impl PseudoClass {
+    /// Creates a new [`PseudoClass`] with the given class names.
     ///
     /// Multiple class names can be used separated by spaces.
     pub fn new(class: impl Into<Cow<'static, str>>) -> Self {
@@ -39,7 +39,7 @@ impl Class {
     }
 }
 
-impl MatchSelectorElement for Class {
+impl MatchSelectorElement for PseudoClass {
     fn matches(
         &self,
         element: &str

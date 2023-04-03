@@ -10,7 +10,7 @@ use bevy::{
 use smallvec::SmallVec;
 
 use crate::{
-    component::{Class, MatchSelectorElement, StyleSheet},
+    component::{Class, MatchSelectorElement, StyleSheet, PseudoClass},
     property::StyleSheetState,
     selector::{Selector, SelectorElement},
     StyleSheetAsset,
@@ -42,6 +42,7 @@ pub(crate) struct CssQueryParam<'w, 's> {
     >,
     names: Query<'w, 's, (Entity, &'static Name)>,
     classes: Query<'w, 's, (Entity, &'static Class)>,
+    pseudo_classes: Query<'w, 's, (Entity, &'static PseudoClass)>,
     children: Query<'w, 's, &'static Children, With<Node>>,
 }
 
@@ -169,6 +170,9 @@ fn select_entities_node(
                 }
                 SelectorElement::Component(component) => {
                     get_entities_with_component(component.as_str(), world, registry, filter)
+                }
+                SelectorElement::PseudoClass(class) => {
+                    get_entities_with(class.as_str(), &css_query.pseudo_classes, filter)
                 }
                 // All child elements are filtered by [`get_parent_tree`](Selector::get_parent_tree)
                 SelectorElement::Child => unreachable!(),

@@ -17,6 +17,7 @@ use tomt_cssparser::{
 };
 use bevy::log::{
     error,
+    trace,
 };
 
 /// Parses a `css` string using [`RuleListParser`].
@@ -26,11 +27,11 @@ impl StyleSheetParser {
     pub(crate) fn parse(
         content: &str
     ) -> SmallVec<[StyleRule; 8]> {
+        trace!("StyleSheetParser::parse");
         let mut input = ParserInput::new(content);
         let mut parser = Parser::new(&mut input);
 
         RuleListParser::new_for_stylesheet(&mut parser, StyleSheetParser)
-            .into_iter()
             .filter_map(|result| match result {
                 Ok(rule) => Some(rule),
                 Err((err, rule)) => {
@@ -55,12 +56,15 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
         &mut self,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self::Prelude, ParseError<'i, Self::Error>> {
+        trace!("QualifiedRuleParser::parse_prelude");
         let mut elements = smallvec![];
 
         #[derive(Debug, Default, Clone)]
         enum DelimType {
             #[default] None,
             Class,
+            PseudoClass,
+            PseudoProp,
             Unknown(char),
         }
 
@@ -68,6 +72,7 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
 
         while let Ok(token) = input.next_including_whitespace() {
             use tomt_cssparser::Token::*;
+
             match token {
                 Ident(v) => {
                     elements.push(match prev_delim {
@@ -79,6 +84,14 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                             prev_delim = DelimType::None;
                             SelectorElement::Class(v.to_string())
                         },
+                        DelimType::PseudoClass => {
+                            prev_delim = DelimType::None;
+                            SelectorElement::PseudoClass(v.to_string())
+                        },
+                        DelimType::PseudoProp => {
+                            let err_str = format!(":{v}");
+                            return Err(input.new_custom_error(BevyCssError::UnexpectedToken(err_str)));
+                        }
                         DelimType::Unknown(c) => {
                             return Err(input.new_custom_error(BevyCssError::UnexpectedToken(c.to_string())));
                         },
@@ -95,13 +108,22 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                 Delim(c) => {
                     prev_delim = match (*c, prev_delim) {
                         ('.', DelimType::None) => DelimType::Class,
-                        (c, _) => DelimType::Unknown(c),
+                        _ => {
+                            let err_str = token.to_css_string();
+                            return Err(input.new_custom_error(BevyCssError::UnexpectedToken(err_str)));
+                        }
                     };
-                    if let DelimType::Unknown(c) = prev_delim
-                    {
-                        return Err(input.new_custom_error(BevyCssError::UnexpectedToken(c.to_string())));
-                    }
                 },
+                Colon => {
+                    prev_delim = match prev_delim {
+                        DelimType::None => DelimType::PseudoClass,
+                        DelimType::PseudoClass => DelimType::PseudoProp,
+                        _ => {
+                            let err_str = token.to_css_string();
+                            return Err(input.new_custom_error(BevyCssError::UnexpectedToken(err_str)));
+                        },
+                    };
+                }
                 _ => {
                     let token = token.to_css_string();
                     return Err(input.new_custom_error(BevyCssError::UnexpectedToken(token)));
@@ -127,6 +149,7 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
         _start: &tomt_cssparser::ParserState,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self::QualifiedRule, ParseError<'i, Self::Error>> {
+        trace!("QualifiedRuleParser::parse_block");
         let mut rule = StyleRule {
             selector: prelude,
             properties: Default::default(),

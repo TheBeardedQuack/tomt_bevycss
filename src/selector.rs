@@ -15,6 +15,8 @@ pub enum SelectorElement {
     Component(String),
     /// A class name component selector element, `.border`
     Class(String),
+    /// A class name component selector element, `:hover`
+    PseudoClass(String),
     /// Indicates a parent-child relation between previous elements and next elements, like `window .border`
     Child,
 }
@@ -74,6 +76,10 @@ impl std::fmt::Display for Selector {
                 SelectorElement::Component(c) => result.push_str(c),
                 SelectorElement::Class(c) => {
                     result.push('.');
+                    result.push_str(c);
+                }
+                SelectorElement::PseudoClass(c) => {
+                    result.push(':');
                     result.push_str(c);
                 }
                 SelectorElement::Child => result.push(' '),
