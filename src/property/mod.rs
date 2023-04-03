@@ -1,4 +1,19 @@
+mod colors;
+pub(crate) mod impls;
+
+use crate::{
+    prelude::{
+        BevyCssError,
+        StyleSheetAsset,
+    },
+    selector::Selector,
+};
+
 use std::any::Any;
+
+use tomt_cssparser::Token;
+
+use smallvec::SmallVec;
 
 use bevy::{
     ecs::query::{QueryItem, ReadOnlyWorldQuery, WorldQuery},
@@ -9,14 +24,6 @@ use bevy::{
     ui::{UiRect, Val},
     utils::HashMap,
 };
-
-use tomt_cssparser::Token;
-use smallvec::SmallVec;
-
-use crate::{selector::Selector, BevyCssError, StyleSheetAsset};
-
-mod colors;
-pub(crate) mod impls;
 
 /// A property value token which was parsed from a CSS rule.
 #[derive(Debug, Clone, PartialEq, PartialOrd)]

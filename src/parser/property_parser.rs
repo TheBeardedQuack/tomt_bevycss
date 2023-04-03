@@ -3,7 +3,7 @@ use super::{
     parse_values,
 };
 use crate::{
-    BevyCssError,
+    prelude::BevyCssError,
     property::PropertyValues,
 };
 

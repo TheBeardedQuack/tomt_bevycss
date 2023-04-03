@@ -6,7 +6,7 @@ mod parser;
 mod property;
 mod selector;
 mod stylesheet;
-mod system;
+pub mod system;
 
 use bevy::{
     asset::AssetSet,
@@ -41,24 +41,6 @@ pub mod prelude {
     };
 }
 
-#[derive(SystemSet, Debug, Clone, Hash, Eq, PartialEq)]
-#[system_set(base)]
-struct BevyCssHotReload;
-
-/// System sets  used by `tomt_bevycss` systems
-#[derive(SystemSet, Clone, Copy, Debug, Hash, PartialEq, Eq)]
-pub enum BevyCssSet {
-    /// Prepares internal state before running apply systems.
-    /// This system runs on [`CoreSet::PreUpdate`].
-    Prepare,
-    /// All [`Property`] implementation `systems` are run on this system set.
-    /// Those stages runs on [`CoreSet::PreUpdate`] after [`BevyCssSet::Prepare`].
-    Apply,
-    /// Clears the internal state used by [`Property`] implementation `systems` set.
-    /// This system runs on [`CoreSet::PostUpdate`].
-    Cleanup,
-}
-
 /// Plugin which add all types, assets, systems and internal resources needed by `tomt_bevycss`.
 /// You must add this plugin in order to use `tomt_bevycss`.
 #[derive(Default)]
@@ -74,21 +56,35 @@ impl BevyCssPlugin {
 
 impl Plugin for BevyCssPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
+        use system::sets::*;
+
         app.register_type::<Class>()
             .register_type::<StyleSheet>()
             .add_asset::<StyleSheetAsset>()
-            .configure_set(BevyCssSet::Prepare.in_base_set(CoreSet::PreUpdate))
+            .configure_set(
+                BevyCssSet::Prepare
+                    .in_base_set(CoreSet::PreUpdate)
+            )
             .configure_set(
                 BevyCssSet::Apply
                     .in_base_set(CoreSet::PreUpdate)
                     .after(BevyCssSet::Prepare),
             )
-            .configure_set(BevyCssSet::Cleanup.in_base_set(CoreSet::PostUpdate))
+            .configure_set(
+                BevyCssSet::Cleanup
+                    .in_base_set(CoreSet::PostUpdate)
+            )
             .init_resource::<StyleSheetState>()
             .init_resource::<ComponentFilterRegistry>()
             .init_asset_loader::<StyleSheetLoader>()
-            .add_system(system::prepare.in_set(BevyCssSet::Prepare))
-            .add_system(system::clear_state.in_set(BevyCssSet::Cleanup));
+            .add_system(
+                system::prepare
+                    .in_set(BevyCssSet::Prepare)
+            )
+            .add_system(
+                system::clear_state
+                    .in_set(BevyCssSet::Cleanup)
+            );
 
         let prepared_state = PrepareParams::new(&mut app.world);
         app.insert_resource(prepared_state);
@@ -102,7 +98,10 @@ impl Plugin for BevyCssPlugin {
                     .after(AssetSet::AssetEvents)
                     .before(CoreSet::Last),
             )
-            .add_system(system::hot_reload_style_sheets.in_base_set(BevyCssHotReload));
+            .add_system(
+                system::hot_reload_style_sheets
+                    .in_base_set(BevyCssHotReload)
+            );
         }
     }
 }
@@ -225,8 +224,10 @@ impl RegisterProperty for bevy::prelude::App {
     where
         T: Property + 'static,
     {
-        self.add_system(T::apply_system.in_set(BevyCssSet::Apply));
-
+        self.add_system(
+            T::apply_system
+                .in_set(system::sets::BevyCssSet::Apply)
+        );
         self
     }
 }

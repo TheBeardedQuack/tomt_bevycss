@@ -4,8 +4,9 @@ use super::{
     PropertyParser
 };
 use crate::{
+    prelude::BevyCssError,
     Selector, SelectorElement,
-    StyleRule, BevyCssError,
+    StyleRule,
 };
 
 use tomt_cssparser::{

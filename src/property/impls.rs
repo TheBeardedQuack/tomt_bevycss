@@ -1,11 +1,11 @@
-use bevy::{ecs::query::QueryItem, prelude::*};
-
-use crate::BevyCssError;
 
 use super::{Property, PropertyValues};
+use crate::prelude::BevyCssError;
 
 pub(crate) use style::*;
 pub(crate) use text::*;
+
+use bevy::{ecs::query::QueryItem, prelude::*};
 
 /// Impls for `bevy_ui` [`Style`] component
 mod style {

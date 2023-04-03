@@ -4,7 +4,7 @@ pub(crate) use style_sheet_parser::*;
 mod property_parser;
 use property_parser::PropertyParser;
 
-use crate::BevyCssError;
+use crate::prelude::BevyCssError;
 
 use tomt_cssparser::{
     ParseError, Parser,

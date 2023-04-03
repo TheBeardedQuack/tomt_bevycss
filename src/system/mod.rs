@@ -1,3 +1,5 @@
+pub mod sets;
+
 mod component_filter;
 pub(crate) use component_filter::*;
 
@@ -28,13 +30,17 @@ use crate::{
 pub(crate) struct PrepareParams(SystemState<CssQueryParam<'static, 'static>>);
 
 impl PrepareParams {
-    pub fn new(world: &mut World) -> Self {
+    pub fn new(
+        world: &mut World
+    ) -> Self {
         Self(SystemState::new(world))
     }
 }
 
 /// Exclusive system which selects all entities and prepare the internal state used by [`Property`](crate::Property) systems.
-pub(crate) fn prepare(world: &mut World) {
+pub(crate) fn prepare(
+    world: &mut World
+) {
     world.resource_scope(|world, mut params: Mut<PrepareParams>| {
         world.resource_scope(|world, mut registry: Mut<ComponentFilterRegistry>| {
             let css_query = params.get(world);
