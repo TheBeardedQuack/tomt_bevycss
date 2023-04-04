@@ -189,7 +189,7 @@ It's also possible to implement your own properties, be it part of `CSS` standar
 Let's implement a custom `alpha` property with will set the alpha channel of any [`BackgroundColor`](https://docs.rs/bevy/latest/bevy/prelude/struct.BackgroundColor.html).
 ```rust
 # use bevy::{ecs::query::QueryItem, prelude::*};
-# use tomt_bevycss::{prelude::*, BevyCssError, Property, PropertyValues};
+# use tomt_bevycss::{prelude::*, Property, PropertyValues};
 
 #[derive(Default)]
 pub(crate) struct AlphaProperty;

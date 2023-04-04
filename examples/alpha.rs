@@ -1,5 +1,5 @@
 use bevy::{ecs::query::QueryItem, prelude::*};
-use tomt_bevycss::{prelude::*, BevyCssError, Property, PropertyValues};
+use tomt_bevycss::{prelude::*, Property, PropertyValues};
 
 fn main() {
     let mut app = App::new();

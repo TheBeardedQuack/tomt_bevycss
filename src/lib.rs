@@ -13,7 +13,7 @@ use bevy::{
     ecs::system::SystemState,
     prelude::{
         AddAsset, Button, Component, CoreSet, Entity, IntoSystemConfig, IntoSystemSetConfig,
-        Plugin, Query, SystemSet, With,
+        Plugin, Query, With,
     },
     text::Text,
     ui::{BackgroundColor, Interaction, Node, Style, UiImage},
