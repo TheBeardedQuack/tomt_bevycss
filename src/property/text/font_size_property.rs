@@ -1,9 +1,8 @@
 use crate::{
     prelude::BevyCssError,
     property::{
-        impls::Color,
         Property,
-        PropertyValues
+        PropertyValues,
     },
 };
 use bevy::{
@@ -17,29 +16,28 @@ use bevy::{
     },
 };
 
-
-/// Applies the `color` property on [`TextStyle::color`](`TextStyle`) field of all sections on matched [`Text`] components.
+/// Applies the `font-size` property on [`TextStyle::font_size`](`TextStyle`) property of all sections on matched [`Text`] components.
 #[derive(Default)]
-pub(crate) struct FontColorProperty;
+pub struct FontSizeProperty;
 
-impl Property for FontColorProperty
+impl Property for FontSizeProperty
 {
-    type Cache = Color;
+    type Cache = f32;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
     fn name()
     -> &'static str
     {
-        "color"
+        "font-size"
     }
 
     fn parse<'a>(
         values: &PropertyValues
     ) -> Result<Self::Cache, BevyCssError>
     {
-        if let Some(color) = values.color() {
-            Ok(color)
+        if let Some(size) = values.f32() {
+            Ok(size)
         } else {
             Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
         }
@@ -54,6 +52,6 @@ impl Property for FontColorProperty
         components
             .sections
             .iter_mut()
-            .for_each(|section| section.style.color = *cache);
+            .for_each(|section| section.style.font_size = *cache);
     }
 }

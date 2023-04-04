@@ -19,7 +19,7 @@ use bevy::{
 
 /// Applies the `text-align` property on [`Text::horizontal`](`TextAlignment`) components.
 #[derive(Default)]
-pub(crate) struct TextAlignProperty;
+pub struct TextAlignProperty;
 
 impl Property for TextAlignProperty
 {

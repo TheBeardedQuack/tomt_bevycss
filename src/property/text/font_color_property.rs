@@ -2,13 +2,14 @@ use crate::{
     prelude::BevyCssError,
     property::{
         Property,
-        PropertyValues,
+        PropertyValues
     },
 };
 use bevy::{
     ecs::query::QueryItem,
     prelude::{
         AssetServer,
+        Color,
         Commands, 
         Text,
         Node,
@@ -16,28 +17,29 @@ use bevy::{
     },
 };
 
-/// Applies the `font-size` property on [`TextStyle::font_size`](`TextStyle`) property of all sections on matched [`Text`] components.
-#[derive(Default)]
-pub(crate) struct FontSizeProperty;
 
-impl Property for FontSizeProperty
+/// Applies the `color` property on [`TextStyle::color`](`TextStyle`) field of all sections on matched [`Text`] components.
+#[derive(Default)]
+pub struct FontColorProperty;
+
+impl Property for FontColorProperty
 {
-    type Cache = f32;
+    type Cache = Color;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
     fn name()
     -> &'static str
     {
-        "font-size"
+        "color"
     }
 
     fn parse<'a>(
         values: &PropertyValues
     ) -> Result<Self::Cache, BevyCssError>
     {
-        if let Some(size) = values.f32() {
-            Ok(size)
+        if let Some(color) = values.color() {
+            Ok(color)
         } else {
             Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
         }
@@ -52,6 +54,6 @@ impl Property for FontSizeProperty
         components
             .sections
             .iter_mut()
-            .for_each(|section| section.style.font_size = *cache);
+            .for_each(|section| section.style.color = *cache);
     }
 }

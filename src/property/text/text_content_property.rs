@@ -18,7 +18,7 @@ use bevy::{
 
 /// Apply a custom `text-content` which updates [`TextSection::value`](`TextSection`) of all sections on matched [`Text`] components
 #[derive(Default)]
-pub(crate) struct TextContentProperty;
+pub struct TextContentProperty;
 
 impl Property for TextContentProperty
 {

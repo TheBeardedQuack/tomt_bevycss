@@ -1,13 +1,16 @@
 mod cached_properties;
 mod cache_state;
 mod colors;
-pub(crate) mod impls;
 mod property;
 mod property_meta;
 mod property_token;
 mod property_values;
 mod selected_entities;
 mod stylesheet_state;
+
+pub(crate) mod impls;
+/// Impls for `bevy_text` [`Text`] component
+pub(crate) mod text;
 
 pub use {
     cached_properties::*,

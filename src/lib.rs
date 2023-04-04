@@ -149,12 +149,15 @@ fn register_properties(app: &mut bevy::prelude::App) {
     app.register_property::<PaddingProperty>();
     app.register_property::<BorderProperty>();
 
-    app.register_property::<FontColorProperty>();
-    app.register_property::<FontProperty>();
-    app.register_property::<FontSizeProperty>();
-    app.register_property::<TextAlignProperty>();
-    app.register_property::<TextContentProperty>();
-
+    {
+        use property::text::*;
+        app.register_property::<FontColorProperty>();
+        app.register_property::<FontProperty>();
+        app.register_property::<FontSizeProperty>();
+        app.register_property::<TextAlignProperty>();
+        app.register_property::<TextContentProperty>();
+    }
+    
     app.register_property::<BackgroundColorProperty>();
 }
 

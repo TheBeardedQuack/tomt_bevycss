@@ -4,13 +4,7 @@ use crate::prelude::BevyCssError;
 /// Impls for `bevy_ui` [`Style`] component
 pub mod style;
 
-/// Impls for `bevy_text` [`Text`] component
-pub mod text;
-
-pub(crate) use {
-    style::*,
-    text::*,
-};
+pub(crate) use style::*;
 
 use bevy::{ecs::query::QueryItem, prelude::*};
 

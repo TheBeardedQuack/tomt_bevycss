@@ -18,7 +18,7 @@ use bevy::{
 
 /// Applies the `font` property on [`TextStyle::font`](`TextStyle`) property of all sections on matched [`Text`] components.
 #[derive(Default)]
-pub(crate) struct FontProperty;
+pub struct FontProperty;
 
 impl Property for FontProperty
 {
