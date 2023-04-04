@@ -20,6 +20,9 @@ pub use property_meta::*;
 mod selected_entities;
 pub use selected_entities::*;
 
+mod stylesheet_state;
+pub use stylesheet_state::*;
+
 use crate::prelude::{
     BevyCssError,
     StyleSheetAsset,
@@ -30,15 +33,11 @@ use std::any::Any;
 use bevy::{
     ecs::query::{QueryItem, ReadOnlyWorldQuery, WorldQuery},
     prelude::{
-        trace, AssetServer, Assets, Commands, Deref, DerefMut, Handle, Local,
-        Query, Res, Resource,
+        trace,
+        Assets, AssetServer,
+        Commands, Local, Query, Res,
     },
-    utils::HashMap,
 };
-
-/// Maps sheets for each [`StyleSheetAsset`].
-#[derive(Debug, Clone, Default, Deref, DerefMut, Resource)]
-pub struct StyleSheetState(HashMap<Handle<StyleSheetAsset>, SelectedEntities>);
 
 /// Determines how a property should interact and modify the [ecs world](`bevy::prelude::World`).
 ///
