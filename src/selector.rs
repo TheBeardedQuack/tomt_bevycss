@@ -73,7 +73,9 @@ impl std::fmt::Display for Selector {
                     result.push('#');
                     result.push_str(n);
                 }
-                SelectorElement::Component(c) => result.push_str(c),
+                SelectorElement::Component(c) => {
+                    result.push_str(c);
+                }
                 SelectorElement::Class(c) => {
                     result.push('.');
                     result.push_str(c);
@@ -82,7 +84,9 @@ impl std::fmt::Display for Selector {
                     result.push(':');
                     result.push_str(c);
                 }
-                SelectorElement::Child => result.push(' '),
+                SelectorElement::Child => {
+                    result.push(' ');
+                }
             }
         }
 

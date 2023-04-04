@@ -1,13 +1,16 @@
-use std::hash::{Hash, Hasher};
+use crate::{
+    parser::StyleSheetParser,
+    property::PropertyValues,
+    selector::Selector
+};
 
+use std::hash::{Hash, Hasher};
+use smallvec::SmallVec;
 use bevy::{
     asset::{AssetLoader, LoadedAsset},
     reflect::TypeUuid,
     utils::{AHasher, HashMap},
 };
-use smallvec::SmallVec;
-
-use crate::{parser::StyleSheetParser, property::PropertyValues, selector::Selector};
 
 #[derive(Debug, TypeUuid)]
 #[uuid = "14b98dd6-5425-4692-a561-5e6ae9180554"]
@@ -27,7 +30,10 @@ impl StyleSheetAsset {
     ///
     /// This used by internal asset loader to keep track of where each asset came from.
     /// If you are creating this struct by hand, you can safely supply an  empty string as path.
-    pub fn parse(path: &str, content: &str) -> Self {
+    pub fn parse(
+        path: &str,
+        content: &str
+    ) -> Self {
         let mut hasher = AHasher::default();
         content.hash(&mut hasher);
         let hash = hasher.finish();
@@ -40,7 +46,11 @@ impl StyleSheetAsset {
     }
 
     /// Returns the [`PropertyValues`] on the given [`Selector`] with the given name.
-    pub fn get_properties(&self, selector: &Selector, name: &str) -> Option<&PropertyValues> {
+    pub fn get_properties(
+        &self,
+        selector: &Selector,
+        name: &str
+    ) -> Option<&PropertyValues> {
         self.rules
             .iter()
             .find(|&rule| &rule.selector == selector)
@@ -48,17 +58,23 @@ impl StyleSheetAsset {
     }
 
     /// Iterates over all existing rules
-    pub fn iter(&self) -> impl Iterator<Item = &StyleRule> {
+    pub fn iter(
+        &self
+    ) -> impl Iterator<Item = &StyleRule> {
         self.rules.iter()
     }
 
     /// Internal hash computed from content and used for equality and ordering comparison
-    pub fn hash(&self) -> u64 {
+    pub fn hash(
+        &self
+    ) -> u64 {
         self.hash
     }
 
     /// Asset path, for debug reasons only
-    pub fn path(&self) -> &str {
+    pub fn path(
+        &self
+    ) -> &str {
         &self.path
     }
 }
