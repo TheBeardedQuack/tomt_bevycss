@@ -10,6 +10,11 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://bitbucket.org/TheBeardedQuack/tomt-bevycss.git"
 
+[features]
+default = ["pseudo_class"]
+pseudo_class = []
+pseudo_prop = ["pseudo_class"]
+
 [dependencies]
 bevy = { version = "0.10", default-features = false, features = [
     "bevy_ui",
@@ -18,7 +23,6 @@ bevy = { version = "0.10", default-features = false, features = [
     "bevy_render",
 ] }
 tomt_cssparser = { git = "https://bitbucket.org/TheBeardedQuack/tomt-cssparser.git" }
-
 smallvec = { version = "1.10", features = ["serde", "union", "const_generics"] }
 
 [dev-dependencies]

@@ -36,9 +36,18 @@ pub mod prelude {
         RegisterComponentSelector,
         RegisterProperty,
         error::BevyCssError,
-        component::{Class, PseudoClass, StyleSheet},
+        component::{
+            Class,
+            StyleSheet
+        },
         stylesheet::StyleSheetAsset,
     };
+
+    #[cfg(feature = "pseudo_class")]
+    pub use super::component::PseudoClass;
+
+    #[cfg(feature = "pseudo_prop")]
+    pub use super::component::PseudoProp;
 }
 
 /// Plugin which add all types, assets, systems and internal resources needed by `tomt_bevycss`.
@@ -106,7 +115,9 @@ impl Plugin for BevyCssPlugin {
     }
 }
 
-fn register_component_selector(app: &mut bevy::prelude::App) {
+fn register_component_selector(
+    app: &mut bevy::prelude::App
+) {
     app.register_component_selector::<BackgroundColor>("background-color");
     app.register_component_selector::<Text>("text");
     app.register_component_selector::<Button>("button");
@@ -116,7 +127,9 @@ fn register_component_selector(app: &mut bevy::prelude::App) {
     app.register_component_selector::<Interaction>("interaction");
 }
 
-fn register_properties(app: &mut bevy::prelude::App) {
+fn register_properties(
+    app: &mut bevy::prelude::App
+) {
     use property::impls::*;
 
     app.register_property::<DisplayProperty>();
@@ -187,14 +200,22 @@ fn register_properties(app: &mut bevy::prelude::App) {
 /// # }
 /// ```
 
-pub trait RegisterComponentSelector {
-    fn register_component_selector<T>(&mut self, name: &'static str) -> &mut Self
+pub trait RegisterComponentSelector
+{
+    fn register_component_selector<T>(
+        &mut self,
+        name: &'static str
+    ) -> &mut Self
     where
         T: Component;
 }
 
-impl RegisterComponentSelector for bevy::prelude::App {
-    fn register_component_selector<T>(&mut self, name: &'static str) -> &mut Self
+impl RegisterComponentSelector for bevy::prelude::App
+{
+    fn register_component_selector<T>(
+        &mut self,
+        name: &'static str
+    ) -> &mut Self
     where
         T: Component,
     {
@@ -217,13 +238,17 @@ impl RegisterComponentSelector for bevy::prelude::App {
 ///
 /// You need to register only custom properties which implements [`Property`] trait.
 pub trait RegisterProperty {
-    fn register_property<T>(&mut self) -> &mut Self
+    fn register_property<T>(
+        &mut self
+    ) -> &mut Self
     where
         T: Property + 'static;
 }
 
 impl RegisterProperty for bevy::prelude::App {
-    fn register_property<T>(&mut self) -> &mut Self
+    fn register_property<T>(
+        &mut self
+    ) -> &mut Self
     where
         T: Property + 'static,
     {

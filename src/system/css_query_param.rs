@@ -1,7 +1,15 @@
 use crate::prelude::{
-    Class, PseudoClass,
-    StyleSheet, StyleSheetAsset,
+    Class,
+    StyleSheet,
+    StyleSheetAsset,
 };
+
+#[cfg(feature = "pseudo_class")]
+use crate::prelude::PseudoClass;
+
+#[cfg(feature = "pseudo_prop")]
+use crate::prelude::PseudoProp;
+
 use bevy::{
     prelude::*,
     ecs::system::SystemParam,
@@ -23,9 +31,15 @@ pub(crate) struct CssQueryParam<'w, 's> {
         'w, 's,
         (Entity, &'static Class)            // Select
     >,
+    #[cfg(feature = "pseudo_class")]
     pub pseudo_classes: Query<
         'w, 's,
         (Entity, &'static PseudoClass)      // Select
+    >,
+    #[cfg(feature = "pseudo_prop")]
+    pub pseudo_props: Query<
+        'w, 's,
+        (Entity, &'static PseudoProp)
     >,
     pub children: Query<
         'w, 's,

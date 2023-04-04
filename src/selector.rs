@@ -8,15 +8,25 @@ use smallvec::{smallvec, SmallVec};
 /// A single selector can have multiple elements, for instance a selector of `button.enabled`
 /// Would generated two elements, one for `button` and another for `.enabled`.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash)]
-pub enum SelectorElement {
+pub enum SelectorElement
+{
     /// A name selector element, like `#score_window`. On CSS used on web, this is as known as id.
     Name(String),
+    
     /// A component selector element, like `window` or `button`
     Component(String),
+
     /// A class name component selector element, `.border`
     Class(String),
-    /// A class name component selector element, `:hover`
+
+    #[cfg(feature = "pseudo_class")]
+    /// A class name component selector element, like `:hover` or `:first-child` or `:empty`
     PseudoClass(String),
+
+    #[cfg(feature = "")]
+    /// A class name component selector element, like `::first-line` or `::first-letter` or `::marker`
+    PseudoProp(String),
+
     /// Indicates a parent-child relation between previous elements and next elements, like `window .border`
     Child,
 }
@@ -80,9 +90,15 @@ impl std::fmt::Display for Selector {
                     result.push('.');
                     result.push_str(c);
                 }
+                #[cfg(feature = "pseudo_class")]
                 SelectorElement::PseudoClass(c) => {
                     result.push(':');
                     result.push_str(c);
+                }
+                #[cfg(feature = "pseudo_prop")]
+                SelectorElement::PseudoProp(p) => {
+                    result.push_str("::");
+                    result.push_str(p);
                 }
                 SelectorElement::Child => {
                     result.push(' ');

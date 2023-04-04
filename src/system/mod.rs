@@ -152,8 +152,13 @@ fn select_entities_node(
                 SelectorElement::Class(class) => {
                     get_entities_with(class.as_str(), &css_query.classes, filter)
                 }
+                #[cfg(feature = "pseudo_class")]
                 SelectorElement::PseudoClass(class) => {
                     get_entities_with(class.as_str(), &css_query.pseudo_classes, filter)
+                }
+                #[cfg(feature = "pseudo_prop")]
+                SelectorElement::PseudoProp(prop) => {
+                    get_entities_with(class.as_str(), &css_query.pseudo_props, filter)
                 }
                 SelectorElement::Component(component) => {
                     get_entities_with_component(component.as_str(), world, registry, filter)

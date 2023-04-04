@@ -64,7 +64,9 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
         enum DelimType {
             #[default] None,
             Class,
+            #[cfg(feature = "pseudo_class")]
             PseudoClass,
+            #[cfg(feature = "pseudo_prop")]
             PseudoProp,
         }
 
@@ -84,10 +86,12 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                             prev_delim = DelimType::None;
                             SelectorElement::Class(v.to_string())
                         },
+                        #[cfg(feature = "pseudo_class")]
                         DelimType::PseudoClass => {
                             prev_delim = DelimType::None;
                             SelectorElement::PseudoClass(v.to_string())
                         },
+                        #[cfg(feature = "pseudo_prop")]
                         DelimType::PseudoProp => {
                             let err_str = format!(":{v}");
                             return Err(input.new_custom_error(BevyCssError::UnexpectedToken(err_str)));
@@ -111,9 +115,11 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                         }
                     };
                 },
+                #[cfg(feature = "pseudo_class")]
                 Colon => {
                     prev_delim = match prev_delim {
                         DelimType::None => DelimType::PseudoClass,
+                        #[cfg(feature = "pseudo_prop")]
                         DelimType::PseudoClass => DelimType::PseudoProp,
                         _ => {
                             let err_str = token.to_css_string();
