@@ -17,8 +17,6 @@ use crate::{
 
 use std::any::Any;
 
-use tomt_cssparser::Token;
-
 use smallvec::SmallVec;
 
 use bevy::{
@@ -29,23 +27,6 @@ use bevy::{
     },
     utils::HashMap,
 };
-
-impl<'i> TryFrom<Token<'i>> for PropertyToken {
-    type Error = ();
-
-    fn try_from(token: Token<'i>) -> Result<Self, Self::Error> {
-        match token {
-            Token::Ident(val) => Ok(Self::Identifier(val.to_string())),
-            Token::Hash(val) => Ok(Self::Hash(val.to_string())),
-            Token::IDHash(val) => Ok(Self::Hash(val.to_string())),
-            Token::QuotedString(val) => Ok(Self::String(val.to_string())),
-            Token::Number { value, .. } => Ok(Self::Number(value)),
-            Token::Percentage { unit_value, .. } => Ok(Self::Percentage(unit_value * 100.0)),
-            Token::Dimension { value, .. } => Ok(Self::Dimension(value)),
-            _ => Err(()),
-        }
-    }
-}
 
 /// Internal cache state. Used by [`CachedProperties`] to avoid parsing properties of the same rule on same sheet.
 #[derive(Default, Debug, Clone)]
