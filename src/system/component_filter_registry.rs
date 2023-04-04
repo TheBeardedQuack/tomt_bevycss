@@ -7,5 +7,8 @@ use bevy::{
 
 #[derive(Default, Resource)]
 pub(crate) struct ComponentFilterRegistry(
-    pub HashMap<&'static str, Box<dyn ComponentFilter + Send + Sync>>,
+    pub HashMap<
+        &'static str,
+        Box<dyn ComponentFilter + Send + Sync>
+    >,
 );

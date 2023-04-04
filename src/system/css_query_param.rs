@@ -16,7 +16,8 @@ use bevy::{
 };
 
 #[derive(SystemParam)]
-pub(crate) struct CssQueryParam<'w, 's> {
+pub(crate) struct CssQueryParam<'w, 's>
+{
     pub assets: Res<'w, Assets<StyleSheetAsset>>,
     pub nodes: Query<
         'w, 's,
