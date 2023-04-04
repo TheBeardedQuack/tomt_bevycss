@@ -20,10 +20,16 @@ use bevy::{
 use smallvec::SmallVec;
 
 use crate::{
-    component::{MatchSelectorElement, StyleSheet},
+    component::{
+        MatchSelectorElement,
+        StyleSheet
+    },
     property::StyleSheetState,
-    selector::{Selector, SelectorElement},
-    StyleSheetAsset,
+    selector::{
+        Selector,
+        SelectorElement
+    },
+    stylesheet::StyleSheetAsset,
 };
 
 #[derive(Deref, DerefMut, Resource)]

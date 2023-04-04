@@ -1,5 +1,5 @@
 use bevy::{ecs::query::QueryItem, prelude::*};
-use tomt_bevycss::{prelude::*, Property, PropertyValues};
+use tomt_bevycss::prelude::*;
 
 fn main() {
     let mut app = App::new();
@@ -12,11 +12,14 @@ fn main() {
     app.run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>
+) {
     commands.spawn(Camera2dBundle::default());
 
     commands
-        .spawn(NodeBundle {
+        .spawn( NodeBundle {
             style: Style {
                 size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
                 justify_content: JustifyContent::SpaceBetween,
@@ -25,18 +28,21 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             background_color: Color::NONE.into(),
             ..default()
         })
-        .insert(StyleSheet::new(asset_server.load("sheets/alpha.css")))
-        .with_children(|parent| {
-            // bevy logo (image)
-            parent.spawn(ImageBundle {
-                style: Style {
-                    size: Size::new(Val::Auto, Val::Auto),
+        .insert( StyleSheet::new(asset_server.load("sheets/alpha.css")) )
+        .with_children(
+            |parent|
+            {
+                // bevy logo (image)
+                parent.spawn(ImageBundle {
+                    style: Style {
+                        size: Size::new(Val::Auto, Val::Auto),
+                        ..default()
+                    },
+                    image: asset_server.load("branding/bevy_logo_dark_big.png").into(),
                     ..default()
-                },
-                image: asset_server.load("branding/bevy_logo_dark_big.png").into(),
-                ..default()
-            });
-        });
+                });
+            }
+        );
 }
 
 #[derive(Default)]

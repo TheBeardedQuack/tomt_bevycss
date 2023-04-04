@@ -1,4 +1,4 @@
-use crate::StyleSheetAsset;
+use crate::prelude::StyleSheetAsset;
 use bevy::prelude::{
     Component,
     Reflect, ReflectComponent,

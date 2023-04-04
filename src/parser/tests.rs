@@ -1,7 +1,7 @@
 use super::*;
 
 use crate::{
-    SelectorElement,
+    selector::SelectorElement,
     property::PropertyToken,
 };
 

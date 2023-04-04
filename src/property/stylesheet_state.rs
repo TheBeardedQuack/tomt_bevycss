@@ -1,5 +1,5 @@
 use super::SelectedEntities;
-use crate::StyleSheetAsset;
+use crate::stylesheet::StyleSheetAsset;
 use bevy::{
     prelude::{
         Handle, Resource,

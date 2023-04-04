@@ -5,8 +5,11 @@ use super::{
 };
 use crate::{
     prelude::BevyCssError,
-    Selector, SelectorElement,
-    StyleRule,
+    selector::{
+        Selector,
+        SelectorElement,
+    },
+    stylesheet::StyleRule,
 };
 
 use tomt_cssparser::{

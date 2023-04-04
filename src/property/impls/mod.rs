@@ -4,8 +4,6 @@ use crate::prelude::BevyCssError;
 /// Impls for `bevy_ui` [`Style`] component
 pub mod style;
 
-pub(crate) use style::*;
-
 use bevy::{ecs::query::QueryItem, prelude::*};
 
 /// Applies the `background-color` property on [`BackgroundColor`] component of matched entities.

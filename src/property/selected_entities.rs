@@ -1,4 +1,4 @@
-use crate::Selector;
+use crate::selector::Selector;
 use smallvec::SmallVec;
 use bevy::{
     prelude::{
