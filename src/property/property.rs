@@ -93,18 +93,24 @@ pub trait Property:
         asset_server: Res<AssetServer>,
         mut commands: Commands,
     ) {
-        for (handle, selected) in apply_sheets.iter() {
-            if let Some(rules) = assets.get(handle) {
-                for (selector, entities) in selected.iter() {
-                    if let CacheState::Ok(cached) = local.get_or_parse(rules, selector) {
+        for (handle, selected) in apply_sheets.iter()
+        {
+            if let Some(rules) = assets.get(handle)
+            {
+                for (selector, entities) in selected.iter()
+                {
+                    if let CacheState::Ok(cached) = local.get_or_parse(rules, selector)
+                    {
                         trace!(
                             r#"Applying property "{}" from sheet "{}" ({})"#,
                             Self::name(),
                             rules.path(),
                             selector
                         );
-                        for entity in entities {
-                            if let Ok(components) = q_nodes.get_mut(*entity) {
+                        for entity in entities
+                        {
+                            if let Ok(components) = q_nodes.get_mut(*entity)
+                            {
                                 Self::apply(cached, components, &asset_server, &mut commands);
                             }
                         }
