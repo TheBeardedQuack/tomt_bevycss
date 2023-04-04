@@ -1,4 +1,8 @@
+mod cache_state;
+pub use cache_state::*;
+
 mod colors;
+
 pub(crate) mod impls;
 
 mod property_token;
@@ -27,18 +31,6 @@ use bevy::{
     },
     utils::HashMap,
 };
-
-/// Internal cache state. Used by [`CachedProperties`] to avoid parsing properties of the same rule on same sheet.
-#[derive(Default, Debug, Clone)]
-pub enum CacheState<T> {
-    /// No parse was performed yet
-    #[default]
-    None,
-    /// Parse was performed and yielded a valid value.
-    Ok(T),
-    /// Parse was performed but returned an error.
-    Error,
-}
 
 /// Internal cache map. Used by [`PropertyMeta`] to keep track of which properties was already parsed.
 #[derive(Debug, Default, Deref, DerefMut)]
