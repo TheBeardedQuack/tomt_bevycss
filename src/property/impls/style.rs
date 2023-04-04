@@ -31,10 +31,13 @@ macro_rules! impl_style_rect
             fn parse<'a>(
                 values: &PropertyValues
             ) -> Result<Self::Cache, BevyCssError> {
-                match values.rect()
+                if let Some(val) = values.rect()
                 {
-                    Some(val) => Ok(val),
-                    None => Err(BevyCssError::InvalidPropertyValue(Self::name().to_string())),
+                    Ok(val)
+                }
+                else
+                {
+                    Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
                 }
             }
 
@@ -83,10 +86,13 @@ macro_rules! impl_style_single_value
                 values: &PropertyValues
             ) -> Result<Self::Cache, BevyCssError>
             {
-                match values.$parse_func()
+                if let Some(val) = values.$parse_func()
                 {
-                    Some(val) => Ok(val),
-                    None => Err(BevyCssError::InvalidPropertyValue(Self::name().to_string())),
+                    Ok(val)
+                }
+                else
+                {
+                    Err(BevyCssError::InvalidPropertyValue(Self::name().to_string())),
                 }
             }
 
