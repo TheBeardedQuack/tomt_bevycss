@@ -92,7 +92,7 @@ macro_rules! impl_style_single_value
                 }
                 else
                 {
-                    Err(BevyCssError::InvalidPropertyValue(Self::name().to_string())),
+                    Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
                 }
             }
 
