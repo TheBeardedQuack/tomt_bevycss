@@ -17,30 +17,24 @@ pub use property_values::*;
 mod property_meta;
 pub use property_meta::*;
 
-use crate::{
-    prelude::{
-        BevyCssError,
-        StyleSheetAsset,
-    },
-    selector::Selector,
+mod selected_entities;
+pub use selected_entities::*;
+
+use crate::prelude::{
+    BevyCssError,
+    StyleSheetAsset,
 };
 
 use std::any::Any;
 
-use smallvec::SmallVec;
-
 use bevy::{
     ecs::query::{QueryItem, ReadOnlyWorldQuery, WorldQuery},
     prelude::{
-        error, trace, AssetServer, Assets, Commands, Deref, DerefMut, Entity, Handle, Local,
+        trace, AssetServer, Assets, Commands, Deref, DerefMut, Handle, Local,
         Query, Res, Resource,
     },
     utils::HashMap,
 };
-
-/// Maps which entities was selected by a [`Selector`]
-#[derive(Debug, Clone, Default, Deref, DerefMut)]
-pub struct SelectedEntities(HashMap<Selector, SmallVec<[Entity; 8]>>);
 
 /// Maps sheets for each [`StyleSheetAsset`].
 #[derive(Debug, Clone, Default, Deref, DerefMut, Resource)]
@@ -71,7 +65,9 @@ pub struct StyleSheetState(HashMap<Handle<StyleSheetAsset>, SelectedEntities>);
 /// Also, there one function which have default implementations:
 /// - [`apply_system`](Property::apply_system) is a [`system`](https://docs.rs/bevy_ecs/0.8.1/bevy_ecs/system/index.html) which interacts with
 /// [ecs world](`bevy::prelude::World`) and call the [`apply`](Property::apply) function on every matched entity.
-pub trait Property: Default + Sized + Send + Sync + 'static {
+pub trait Property:
+    Default + Sized + Send + Sync + 'static
+{
     /// The cached value type to be applied by property.
     type Cache: Default + Any + Send + Sync;
     /// Which components should be queried when applying the modification. Check [`WorldQuery`] for more.
@@ -82,13 +78,16 @@ pub trait Property: Default + Sized + Send + Sync + 'static {
     /// Indicates which property name should matched for. Must match the same property name as on `css` file.
     ///
     /// For compliance, use always `lower-case` and `kebab-case` names.
-    fn name() -> &'static str;
+    fn name()
+    -> &'static str;
 
     /// Parses the [`PropertyValues`] into the [`Cache`](Property::Cache) value to be reused across multiple entities.
     ///
     /// This function is called only once, on the first time a matching property is found while applying style rule.
     /// If an error is returned, it is also cached so no more attempt are made.
-    fn parse(values: &PropertyValues) -> Result<Self::Cache, BevyCssError>;
+    fn parse(
+        values: &PropertyValues
+    ) -> Result<Self::Cache, BevyCssError>;
 
     /// Applies on the given [`Components`](Property::Components) the [`Cache`](Property::Cache) value.
     /// Additionally, an [`AssetServer`] and [`Commands`] parameters are provided for more complex use cases.

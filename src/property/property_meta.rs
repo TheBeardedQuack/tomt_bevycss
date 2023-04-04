@@ -30,19 +30,25 @@ impl<T: Property> PropertyMeta<T> {
         let cached_properties = self.entry(rules.hash()).or_default();
 
         // Avoid using HashMap::entry since it requires ownership of key
-        if cached_properties.contains_key(selector) {
+        if cached_properties.contains_key(selector)
+        {
             cached_properties.get(selector).unwrap()
-        } else {
+        }
+        else
+        {
             let new_cache = rules
                 .get_properties(selector, T::name())
-                .map(|values| match T::parse(values) {
-                    Ok(cache) => CacheState::Ok(cache),
-                    Err(err) => {
-                        error!("Failed to parse property {}. Error: {}", T::name(), err);
-                        // TODO: Clear cache state when the asset is reloaded, since values may be changed.
-                        CacheState::Error
+                .map(
+                    |values| match T::parse(values)
+                    {
+                        Ok(cache) => CacheState::Ok(cache),
+                        Err(err) => {
+                            error!("Failed to parse property {}. Error: {}", T::name(), err);
+                            // TODO: Clear cache state when the asset is reloaded, since values may be changed.
+                            CacheState::Error
+                        },
                     }
-                })
+                )
                 .unwrap_or(CacheState::None);
 
             cached_properties.insert(selector.clone(), new_cache);
