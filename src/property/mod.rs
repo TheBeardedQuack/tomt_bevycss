@@ -1,6 +1,9 @@
 mod cache_state;
 pub use cache_state::*;
 
+mod cached_properties;
+pub use cached_properties::*;
+
 mod colors;
 
 pub(crate) mod impls;
@@ -31,10 +34,6 @@ use bevy::{
     },
     utils::HashMap,
 };
-
-/// Internal cache map. Used by [`PropertyMeta`] to keep track of which properties was already parsed.
-#[derive(Debug, Default, Deref, DerefMut)]
-pub struct CachedProperties<T>(HashMap<Selector, CacheState<T>>);
 
 /// Internal property cache map. Used by [`Property::apply_system`] to keep track of which properties was already parsed.
 #[derive(Debug, Default, Deref, DerefMut)]
