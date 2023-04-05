@@ -4,9 +4,6 @@ use crate::prelude::{
     StyleSheetAsset,
 };
 
-#[cfg(feature = "pseudo_class")]
-use crate::prelude::PseudoClass;
-
 #[cfg(feature = "pseudo_prop")]
 use crate::prelude::PseudoProp;
 
@@ -18,33 +15,57 @@ use bevy::{
 #[derive(SystemParam)]
 pub(crate) struct CssQueryParam<'w, 's>
 {
-    pub assets: Res<'w, Assets<StyleSheetAsset>>,
+    pub assets: StyleSheetResource<'w>,
     pub nodes: Query<
         'w, 's,
-        (Entity, Option<&'static Children>, &'static StyleSheet),   // Select
-        Changed<StyleSheet>,                                        // Filter
+        (Entity, Option<&'static Children>, &'static StyleSheet),
+        Changed<StyleSheet>
     >,
-    pub names: Query<
-        'w, 's,
-        (Entity, &'static Name)             // Select
-    >,
-    pub classes: Query<
-        'w, 's,
-        (Entity, &'static Class)            // Select
-    >,
+    pub names: QueryEntityNames<'w, 's>,
+    pub classes: QueryEntityClasses<'w, 's>,
+    pub children: QueryChildren<'w, 's>,
+    
     #[cfg(feature = "pseudo_class")]
-    pub pseudo_classes: Query<
-        'w, 's,
-        (Entity, &'static PseudoClass)      // Select
-    >,
-    #[cfg(feature = "pseudo_prop")]
-    pub pseudo_props: Query<
-        'w, 's,
-        (Entity, &'static PseudoProp)
-    >,
-    pub children: Query<
-        'w, 's,
-        &'static Children,      // Select
-        With<Node>              // Filter
-    >,
+    pub pseudo_classes: PseudoClassParam<'w, 's>,
 }
+
+#[derive(Deref, SystemParam)]
+pub(crate) struct StyleSheetResource<'w>(
+    Res<'w, Assets<StyleSheetAsset>>
+);
+
+#[derive(Deref, SystemParam,)]
+pub(crate) struct QueryEntityNames<'w, 's>(
+    Query<
+        'w, 's,
+        (Entity, &'static Name)
+    >
+);
+
+#[derive(Deref, SystemParam,)]
+pub(crate) struct QueryEntityClasses<'w, 's>(
+    Query<
+        'w, 's,
+        (Entity, &'static Class)
+    >
+);
+
+#[cfg(feature = "pseudo_class")]
+#[derive(SystemParam)]
+pub(crate) struct PseudoClassParam<'w, 's>
+{
+    pub interaction: Query<
+        'w, 's,
+        (Entity, &'static Interaction),  // Select
+    >,
+    
+}
+
+#[derive(Deref, SystemParam)]
+pub(crate) struct QueryChildren<'w, 's>(
+    Query<
+        'w, 's,
+        &'static Children,
+        With<Node>
+    >
+);

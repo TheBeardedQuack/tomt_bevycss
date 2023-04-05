@@ -12,8 +12,10 @@ pub(crate) use css_query_param::*;
 use bevy::{
     ecs::system::{SystemState},
     prelude::{
-        debug, error, trace, AssetEvent, Children, Component, Deref, DerefMut,
-        Entity, EventReader, Mut, Query, ResMut, Resource, With, World,
+        debug, error, trace,
+        AssetEvent, Children, Component, Deref, DerefMut,
+        Entity, EventReader, Interaction, Mut,
+        Query, ResMut, Resource, With, World,
     },
     ui::Node,
 };
@@ -160,12 +162,10 @@ fn select_entities_node(
                 }
                 #[cfg(feature = "pseudo_class")]
                 SelectorElement::PseudoClass(class) => {
-                    get_entities_with(class.as_str(), &css_query.pseudo_classes, filter)
+                    get_entities_with_pseudo_class(class.as_str(), &css_query.pseudo_classes, filter)
                 }
                 #[cfg(feature = "pseudo_prop")]
-                SelectorElement::PseudoProp(prop) => {
-                    get_entities_with(class.as_str(), &css_query.pseudo_props, filter)
-                }
+                SelectorElement::PseudoProp(prop) => todo!("Implement PseudoProperty selection"),
                 SelectorElement::Component(component) => {
                     get_entities_with_component(component.as_str(), world, registry, filter)
                 }
@@ -174,6 +174,29 @@ fn select_entities_node(
             })
         })
         .unwrap_or_default()
+}
+
+#[cfg(feature = "pseudo_class")]
+fn get_entities_with_pseudo_class(
+    name: &str,
+    query: &PseudoClassParam,
+    filter: Option<SmallVec<[Entity; 8]>>,
+) -> SmallVec<[Entity; 8]> {
+    query.interaction
+        .iter()
+        .filter_map(|(e, i)| match (name, *i) {
+            ("hover", Interaction::Hovered)
+            | ("click", Interaction::Clicked) => Some(e),
+            _ => None,
+        })
+        .filter(|e| {
+            if let Some(filter) = &filter {
+                filter.contains(e)
+            } else {
+                true
+            }
+        })
+        .collect()
 }
 
 /// Utility function to filter any entities by using a component with implements [`MatchSelectorElement`]

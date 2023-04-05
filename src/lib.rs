@@ -42,12 +42,6 @@ pub mod prelude {
         },
         stylesheet::StyleSheetAsset,
     };
-
-    #[cfg(feature = "pseudo_class")]
-    pub use super::component::PseudoClass;
-
-    #[cfg(feature = "pseudo_prop")]
-    pub use super::component::PseudoProp;
 }
 
 /// Utility trait which adds the [`register_component_selector`](RegisterComponentSelector::register_component_selector)

@@ -1,11 +1,6 @@
 mod class;
 pub use class::*;
 
-#[cfg(feature = "pseudo_class")]
-mod pseudo_class;
-#[cfg(feature = "pseudo_class")]
-pub use pseudo_class::*;
-
 mod style_sheet;
 pub use style_sheet::*;
 

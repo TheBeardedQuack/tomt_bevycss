@@ -23,7 +23,7 @@ pub enum SelectorElement
     /// A class name component selector element, like `:hover` or `:first-child` or `:empty`
     PseudoClass(String),
 
-    #[cfg(feature = "")]
+    #[cfg(feature = "pseudo_prop")]
     /// A class name component selector element, like `::first-line` or `::first-letter` or `::marker`
     PseudoProp(String),
 
