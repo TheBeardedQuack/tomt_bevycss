@@ -70,5 +70,6 @@ button text {
 }
 
 button:hover text {
-    color: black;
+    color: blue;
+    text-content: "Click me!";
 }

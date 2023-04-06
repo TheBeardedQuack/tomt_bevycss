@@ -70,5 +70,6 @@ button text {
 }
 
 button:hover text {
-    color: lightblue;
+    color: #00ddff;
+    text-content: "Click me!";
 }

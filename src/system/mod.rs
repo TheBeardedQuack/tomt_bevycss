@@ -10,7 +10,7 @@ mod css_query_param;
 pub(crate) use css_query_param::*;
 
 use bevy::{
-    ecs::system::{SystemState},
+    ecs::system::SystemState,
     prelude::{
         debug, error, trace,
         AssetEvent, Children, Component, Deref, DerefMut,
@@ -19,7 +19,10 @@ use bevy::{
     },
     ui::Node,
 };
-use smallvec::SmallVec;
+use smallvec::{
+    smallvec,
+    SmallVec,
+};
 
 use crate::{
     component::{
@@ -73,29 +76,67 @@ pub(crate) fn prepare_state(
 ) -> StyleSheetState {
     let mut state = StyleSheetState::default();
 
-    for (entity, children, sheet_handle) in &params.nodes {
-        if let Some(sheet) = params.assets.get(sheet_handle.handle()) {
-            debug!("Applying style {}", sheet.path());
-
-            for rule in sheet.iter() {
-                let entities =
-                    select_entities(entity, children, &rule.selector, world, &params, registry);
-
-                trace!(
-                    "Applying rule ({}) on {} entities",
-                    rule.selector.to_string(),
-                    entities.len()
-                );
-
-                state
-                    .entry(sheet_handle.handle().clone())
-                    .or_default()
-                    .insert(rule.selector.clone(), entities);
+    for (style_entity, children, sheet_handle) in &params.nodes
+    {
+        if let Some(sheet) = params.assets.get(sheet_handle.handle())
+        {
+            let changes = find_changes(style_entity, children, &params);
+            if !changes.is_empty() {
+                trace!("Found changes on {} entities", changes.len());
+            }
+            for entity in changes
+            {
+                debug!("Applying style {}", sheet.path());
+                
+                let children = params.children.get(entity).ok();
+                
+                for rule in sheet.iter()
+                {
+                    let entities =
+                        select_entities(entity, children, &rule.selector, world, &params, registry);
+    
+                    trace!(
+                        "Applying rule ({}) on {} entities",
+                        rule.selector.to_string(),
+                        entities.len()
+                    );
+    
+                    state
+                        .entry(sheet_handle.handle().clone())
+                        .or_default()
+                        .insert(rule.selector.clone(), entities);
+                }
             }
         }
     }
-
     state
+}
+
+/// Find the elemets (at highest level of hierarchy) that have component changes we're interested in
+/// With `monitor_changes` feature enabled, recursively scans children for changes, otherwise only inspects root entity
+fn find_changes<'w>(
+    root: Entity,
+    children: Option<&'w Children>,
+    query: &CssQueryParam<'w, '_>,
+) -> SmallVec<[Entity; 8]> {
+    if let Ok((me, _children)) = query.node_changes.get(root)
+    {
+        return smallvec![me]
+    }
+
+    // If feature is not enabled, only trigger refresh on root item changed (due to stylesheet changes)
+    #[cfg(feature = "monitor_changes")]
+    if let Some(children) = children
+    {
+        return children.into_iter().flat_map(
+            |c| {
+                let gc = query.children.get(*c).ok();
+                find_changes(*c, gc, query)
+            }
+        ).collect()
+    }
+
+    smallvec![]
 }
 
 /// Select all entities using the given [`Selector`](crate::Selector).
@@ -281,7 +322,9 @@ pub(crate) fn hot_reload_style_sheets(
 }
 
 /// Clear temporary state
-pub(crate) fn clear_state(mut sheet_rule: ResMut<StyleSheetState>) {
+pub(crate) fn clear_state(
+    mut sheet_rule: ResMut<StyleSheetState>
+) {
     if sheet_rule.len() > 0 {
         debug!("Finished applying style sheet.");
         sheet_rule.clear();

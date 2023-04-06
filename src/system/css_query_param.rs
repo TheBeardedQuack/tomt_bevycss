@@ -19,8 +19,13 @@ pub(crate) struct CssQueryParam<'w, 's>
     pub nodes: Query<
         'w, 's,
         (Entity, Option<&'static Children>, &'static StyleSheet),
-        Changed<StyleSheet>
     >,
+    pub node_changes: Query<
+        'w, 's,
+        (Entity, Option<&'static Children>),
+        Or<(Changed<StyleSheet>, Changed<Children>, Changed<Interaction>)>
+    >,
+
     pub names: QueryEntityNames<'w, 's>,
     pub classes: QueryEntityClasses<'w, 's>,
     pub children: QueryChildren<'w, 's>,
@@ -56,9 +61,14 @@ pub(crate) struct PseudoClassParam<'w, 's>
 {
     pub interaction: Query<
         'w, 's,
-        (Entity, &'static Interaction),  // Select
+        (Entity, &'static Interaction),
+        Changed<Interaction>
     >,
-    
+    pub _children: Query<
+        'w, 's,
+        (Entity, &'static Children),
+        Changed<Children>
+    >,
 }
 
 #[derive(Deref, SystemParam)]
