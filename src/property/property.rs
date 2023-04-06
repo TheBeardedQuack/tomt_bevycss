@@ -4,10 +4,10 @@ use super::{
     PropertyValues,
     StyleSheetState,
 };
-use crate::prelude::{
+use crate::{prelude::{
     BevyCssError,
     StyleSheetAsset,
-};
+}, selector::Selector};
 use std::any::Any;
 use bevy::{
     ecs::query::{
@@ -17,9 +17,10 @@ use bevy::{
     prelude::{
         trace,
         Assets, AssetServer,
-        Commands, Local, Query, Res,
+        Commands, Local, Query, Res, Entity,
     },
 };
+use smallvec::SmallVec;
 
 /// Determines how a property should interact and modify the [ecs world](`bevy::prelude::World`).
 ///
@@ -97,7 +98,13 @@ pub trait Property:
         {
             if let Some(rules) = assets.get(handle)
             {
-                for (selector, entities) in selected.iter()
+                let mut sorted_selected: Vec::<(&Selector, &SmallVec<[Entity;8]>)>;
+                sorted_selected = selected
+                    .iter()
+                    .collect();
+                sorted_selected.sort_by(|(lhs, _), (rhs, _)| (*lhs).cmp(*rhs));
+
+                for (selector, entities) in sorted_selected.iter().map(|(s, e)| (*s, *e))
                 {
                     if let CacheState::Ok(cached) = local.get_or_parse(rules, selector)
                     {

@@ -8,6 +8,7 @@ use crate::{
 use std::hash::{Hash, Hasher};
 use smallvec::SmallVec;
 use bevy::{
+    log::trace,
     utils::AHasher,
     reflect::TypeUuid,
 };
@@ -25,7 +26,8 @@ pub struct StyleSheetAsset {
     rules: SmallVec<[StyleRule; 8]>,
 }
 
-impl StyleSheetAsset {
+impl StyleSheetAsset
+{
     /// Parses a string with a valid CSS into a list of [`StyleRule`]s.
     ///
     /// This used by internal asset loader to keep track of where each asset came from.
@@ -34,6 +36,8 @@ impl StyleSheetAsset {
         path: &str,
         content: &str
     ) -> Self {
+        trace!("StyleSheetAsset::parse");
+
         let mut hasher = AHasher::default();
         content.hash(&mut hasher);
         let hash = hasher.finish();
@@ -41,7 +45,7 @@ impl StyleSheetAsset {
         Self {
             path: path.to_string(),
             hash,
-            rules: StyleSheetParser::parse(content),
+            rules: StyleSheetParser::parse(content)
         }
     }
 

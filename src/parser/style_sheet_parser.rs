@@ -19,10 +19,7 @@ use tomt_cssparser::{
     QualifiedRuleParser,
     ToCss,
 };
-use bevy::log::{
-    error,
-    trace,
-};
+use bevy::log::error;
 
 /// Parses a `css` string using [`RuleListParser`].
 pub(crate) struct StyleSheetParser;
@@ -31,7 +28,6 @@ impl StyleSheetParser {
     pub(crate) fn parse(
         content: &str
     ) -> SmallVec<[StyleRule; 8]> {
-        trace!("StyleSheetParser::parse");
         let mut input = ParserInput::new(content);
         let mut parser = Parser::new(&mut input);
 
@@ -60,7 +56,6 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
         &mut self,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self::Prelude, ParseError<'i, Self::Error>> {
-        trace!("QualifiedRuleParser::parse_prelude");
         let mut elements = smallvec![];
 
         #[derive(Debug, Default, Clone)]
@@ -155,11 +150,7 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
         _start: &tomt_cssparser::ParserState,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self::QualifiedRule, ParseError<'i, Self::Error>> {
-        trace!("QualifiedRuleParser::parse_block");
-        let mut rule = StyleRule {
-            selector: prelude,
-            properties: Default::default(),
-        };
+        let mut rule = StyleRule::new(prelude);
 
         for property in DeclarationListParser::new(input, PropertyParser) {
             match property {

@@ -7,7 +7,6 @@ use bevy::{
     },
     utils::HashMap,
 };
-
 /// Maps which entities was selected by a [`Selector`]
 #[derive(Debug, Clone, Default, Deref, DerefMut)]
 pub struct SelectedEntities(HashMap<Selector, SmallVec<[Entity; 8]>>);
