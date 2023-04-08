@@ -9,4 +9,9 @@ use bevy::{
 };
 /// Maps which entities was selected by a [`Selector`]
 #[derive(Debug, Clone, Default, Deref, DerefMut)]
-pub struct SelectedEntities(HashMap<Selector, SmallVec<[Entity; 8]>>);
+pub struct SelectedEntities(
+    HashMap<
+        Selector,
+        SmallVec<[Entity; 8]>
+    >
+);

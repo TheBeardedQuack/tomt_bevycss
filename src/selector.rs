@@ -4,7 +4,7 @@ use std::{
     sync::Mutex,
 };
 use bevy::utils::AHasher;
-use tomt_cssparser::CowRcStr;
+use cssparser::CowRcStr;
 use smallvec::{smallvec, SmallVec};
 
 

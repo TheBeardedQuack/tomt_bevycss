@@ -1,22 +1,19 @@
 use bevy::prelude::Color;
 
-pub(super) fn parse_hex_color(hex: &str) -> Option<Color> {
-    if let Ok(tomt_cssparser::Color::Rgba(tomt_cssparser::RGBA {
-        red,
-        green,
-        blue,
-        alpha,
-    })) = tomt_cssparser::parse_hash_color(hex.as_bytes())
-    {
-        Some(Color::rgba_u8(
-            red.unwrap_or_default(),
-            green.unwrap_or_default(),
-            blue.unwrap_or_default(),
-            tomt_cssparser::clamp_unit_f32(alpha.unwrap_or_default())
-        ))
-    } else {
-        None
-    }
+pub(super) fn parse_hex_color(
+    hex: &str
+) -> Option<Color> {
+    cssparser::Color::parse_hash(hex.as_bytes())
+        .ok()
+        .map_or_else(|| None, |c| match c {
+            cssparser::Color::RGBA(rgba) => Some(Color::rgba_u8(
+                rgba.red,
+                rgba.green,
+                rgba.blue,
+                rgba.alpha
+            )),
+            _ => None,
+        })
 }
 
 // Source: https://developer.mozilla.org/en-US/docs/Web/CSS/named-color
@@ -24,7 +21,9 @@ pub(super) fn parse_hex_color(hex: &str) -> Option<Color> {
 /// Parses a named color, like "silver" or "azure" into a [`Color`]
 ///
 /// Accepts any [valid CSS named-colors](https://developer.mozilla.org/en-US/docs/Web/CSS/named-color).
-pub(super) fn parse_named_color(name: &str) -> Option<Color> {
+pub(super) fn parse_named_color(
+    name: &str
+) -> Option<Color> {
     match name {
         // CSS Level 1 values
         "black" => Some(Color::rgba(0.0000, 0.0000, 0.0000, 1.0000)),

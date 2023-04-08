@@ -23,8 +23,8 @@ bevy = { version = "0.10", default-features = false, features = [
     "bevy_text",
     "bevy_render",
 ] }
-tomt_cssparser = { git = "https://bitbucket.org/TheBeardedQuack/tomt-cssparser.git" }
 smallvec = { version = "1.10", features = ["serde", "union", "const_generics"] }
+cssparser = "0.29.6"
 
 [dev-dependencies]
 bevy = { version = "0.10", features = [

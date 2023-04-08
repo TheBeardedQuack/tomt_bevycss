@@ -1,4 +1,4 @@
-use tomt_cssparser::Token;
+use cssparser::Token;
 
 /// A property value token which was parsed from a CSS rule.
 #[derive(Debug, Clone, PartialEq, PartialOrd)]

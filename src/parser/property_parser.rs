@@ -7,7 +7,7 @@ use crate::{
     property::PropertyValues,
 };
 
-use tomt_cssparser::{
+use cssparser::{
     AtRuleParser, DeclarationParser, Parser, ParseError,
 };
 
@@ -20,7 +20,7 @@ impl<'i> DeclarationParser<'i> for PropertyParser {
 
     fn parse_value<'t>(
         &mut self,
-        name: tomt_cssparser::CowRcStr<'i>,
+        name: cssparser::CowRcStr<'i>,
         parser: &mut Parser<'i, 't>,
     ) -> Result<Self::Declaration, ParseError<'i, BevyCssError>> {
         let mut tokens = smallvec![];

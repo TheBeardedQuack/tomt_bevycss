@@ -12,7 +12,7 @@ use crate::{
     stylesheet::StyleRule,
 };
 
-use tomt_cssparser::{
+use cssparser::{
     DeclarationListParser,
     AtRuleParser, RuleListParser,
     Parser, ParserInput, ParseError,
@@ -71,7 +71,7 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
         let mut prev_delim = DelimType::None;
 
         while let Ok(token) = input.next_including_whitespace() {
-            use tomt_cssparser::Token::*;
+            use cssparser::Token::*;
 
             match token {
                 Ident(v) => {
@@ -147,7 +147,7 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
     fn parse_block<'t>(
         &mut self,
         prelude: Self::Prelude,
-        _start: &tomt_cssparser::ParserState,
+        _start: &cssparser::ParserState,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self::QualifiedRule, ParseError<'i, Self::Error>> {
         let mut rule = StyleRule::new(prelude);
