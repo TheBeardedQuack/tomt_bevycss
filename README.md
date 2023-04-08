@@ -42,7 +42,7 @@ That's it, now your UI will indeed look _awesome_!
 
 ## CSS Subset
 
-TOMT_BevyCSS only supports a subset of CSS at moment, since many properties and features requires more advanced selectors, components and properties which currently isn't implemented.
+TOMT_BevyCSS only supports a subset of CSS at moment, since many properties and features requires more advanced selectors, components and properties which currently isn't implemented. The goal of this fork however, is to develop additional CSS comforts like additional selectors, and color functions.
 
 Here you can find a list of all currently supported selectors and properties:
 
@@ -53,6 +53,7 @@ Here you can find a list of all currently supported selectors and properties:
 |   _Name_    | Selects by using `bevy` built-int [`Name`](https://docs.rs/bevy/latest/bevy/core/struct.Name.html) component. | `#inventory { ... }` |
 |   _Class_   | Selects by using `Class` component, which is provided by TOMT_BevyCSS.                                           | `.enabled { ... }`   |
 | _Component_ | Selects by using any component, but it has to be registered before usage. You can find more details bellow.   | `button { ... }`     |
+| _PseudoClass_ | Selects by using an internal list of known rules run over ECS hierarchy. | `:hover { ... }`
 
 You may combine any of the above selector types to create a complex selector, if you like so. For instance, `window.enabled.pop-up` select all `window`s, which are `enabled` and are of `pop-up` type. The same rules of [`CSS Class selectors`](https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors) applies here. 
 
@@ -150,7 +151,7 @@ _Before reading properties description, we'll use this notation to describe acce
 
 ## Component Selector Builtin
 
-TOMT_BevyCSS provites the following components selector:
+TOMT_BevyCSS provides the following component selectors:
 
 |      Selector      |                                         Component                                         |
 | :----------------: | :---------------------------------------------------------------------------------------: |
@@ -163,6 +164,16 @@ TOMT_BevyCSS provites the following components selector:
 |   `interaction`    |      [`Interaction`](https://docs.rs/bevy/latest/bevy/prelude/enum.Interaction.html)      |
 
 This list will be expanded to match `bevy_ui` and other `bevy` core components.
+
+## PseudoClass Selector Builtin
+
+TOMT_BevyCSS provides the following pseudo-class selector:
+
+|       Selector        |                                       Component                                   |
+| :-------------------: | :-------------------------------------------------------------------------------: |
+| `:click` \| `:hover`  | [`Interaction`](https://docs.rs/bevy/latest/bevy/prelude/enum.Interaction.html)   |
+
+This list will be exanpded as additional selectors are added into this library.
 
 ## Custom Component Selector
 
