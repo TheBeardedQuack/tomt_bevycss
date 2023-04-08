@@ -16,3 +16,15 @@ pub struct StyleSheetState(
         SelectedEntities
     >
 );
+
+impl StyleSheetState
+{
+    pub(crate) fn compile(
+        &mut self
+    ) {
+        for (_sheet, entities) in self.iter_mut()
+        {
+            entities.compile();
+        }
+    }
+}

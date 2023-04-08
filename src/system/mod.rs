@@ -109,6 +109,8 @@ pub(crate) fn prepare_state(
             }
         }
     }
+    
+    state.compile();
     state
 }
 
