@@ -5,19 +5,26 @@
 [![Crate](https://img.shields.io/crates/v/bevy_ecss.svg)](https://crates.io/crates/bevy_ecss)
 [![Bevy tracking](https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue)](https://github.com/bevyengine/bevy/blob/main/docs/plugins_guidelines.md#main-branch-tracking)
 
-# Bevy ECSS
+# TOMT BevyCSS
 
-## What is Bevy ECSS?
+## What is TOMT BevyCSS?
 
-Bevy ECSS is a crate which allows the usage of a subset of [`CSS`](https://developer.mozilla.org/en-US/docs/Web/CSS) to interact with [`bevy_ecs`](https://crates.io/crates/bevy_ecs). It's mainly aimed to apply styling on [`bevy_ui`](https://crates.io/crates/bevy) but it can be used by any component by implementing custom properties.
+TOMT BevyCSS is a fork project derived from [Bevy ECSS](https://github.com/afonsolage/bevy_ecss) is a crate which allows the usage of a subset of [`CSS`](https://developer.mozilla.org/en-US/docs/Web/CSS) to interact with [`bevy_ecs`](https://crates.io/crates/bevy_ecs). It's mainly aimed to apply styling on [`bevy_ui`](https://crates.io/crates/bevy) but it can be used by any component by implementing custom properties.
 
 ### Why the name?
 
-Just because Bevy ECS + CSS is a perfect fit!
+TOMT = Tome of Many Things
+BevyCSS = Bevy + CSS, This library brings CSS features into the Bevy UI
+
+### Who is TOMT (Tome of Many Things)?
+
+Tome of Many Things is a small friendship group with various internet projects, primarily focussing on the [Tome of Many Things](youtube.com/tomeofmanythings) YouTube channel.
+
+This library project is brought to you by TheBeardedQuack ([BitBucket](https://bitbucket.org/TheBeardedQuack), [YouTube](https://www.youtube.com/@TheBeardedQuack)). Forked from BevyECSS, and released under the same MIT and Apahe v2.0 licences to allow for continued freedom of use, modification and distribution.
 
 ## Usage
 
-To use Bevy ECSS just add a `StyleSheet` with a loaded `css` file to any entity and all style sheet rules will be applied to the entity and _all_ its [`descendants`](https://stackoverflow.com/questions/1182189/css-child-vs-descendant-selectors) (children of children of children and so on).
+To use TOMT_BevyCSS just add a `StyleSheet` with a loaded `css` file to any entity and all style sheet rules will be applied to the entity and _all_ its [`descendants`](https://stackoverflow.com/questions/1182189/css-child-vs-descendant-selectors) (children of children of children and so on).
 
 ```rust
 use bevy::prelude::*;
@@ -35,7 +42,7 @@ That's it, now your UI will indeed look _awesome_!
 
 ## CSS Subset
 
-Bevy ECSS only supports a subset of CSS at moment, since many properties and features requires more advanced selectors, components and properties which currently isn't implemented.
+TOMT_BevyCSS only supports a subset of CSS at moment, since many properties and features requires more advanced selectors, components and properties which currently isn't implemented.
 
 Here you can find a list of all currently supported selectors and properties:
 
@@ -44,14 +51,14 @@ Here you can find a list of all currently supported selectors and properties:
 |    Type     | Details                                                                                                       | Example              |
 | :---------: | :------------------------------------------------------------------------------------------------------------ | :------------------- |
 |   _Name_    | Selects by using `bevy` built-int [`Name`](https://docs.rs/bevy/latest/bevy/core/struct.Name.html) component. | `#inventory { ... }` |
-|   _Class_   | Selects by using `Class` component, which is provided by Bevy ECSS.                                           | `.enabled { ... }`   |
+|   _Class_   | Selects by using `Class` component, which is provided by TOMT_BevyCSS.                                           | `.enabled { ... }`   |
 | _Component_ | Selects by using any component, but it has to be registered before usage. You can find more details bellow.   | `button { ... }`     |
 
 You may combine any of the above selector types to create a complex selector, if you like so. For instance, `window.enabled.pop-up` select all `window`s, which are `enabled` and are of `pop-up` type. The same rules of [`CSS Class selectors`](https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors) applies here. 
 
 _This assumes that `window` is a `bevy_ecs` component and was registered before usage. Also assumes the entities has the `Class` component with at least `enabled pop-up` class name._
 
-Aditionally, Bevy ECSS also supports [`descendant combinator`](https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator) which selects _all_ entities that are descendant the given selector tree.
+Aditionally, TOMT_BevyCSS also supports [`descendant combinator`](https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator) which selects _all_ entities that are descendant the given selector tree.
 
 ```css
 #quest-window text {
@@ -73,7 +80,7 @@ This rule will match all components which has a `Class` with the value of `borde
 
 ### <ins>Properties</ins>
 
-Here is a list of all currently supported properties. Note that these are properties which are provived by Bevy ECSS but you can also add your own properties at anytime.
+Here is a list of all currently supported properties. Note that these are properties which are provived by TOMT_BevyCSS but you can also add your own properties at anytime.
 
 
 
@@ -143,7 +150,7 @@ _Before reading properties description, we'll use this notation to describe acce
 
 ## Component Selector Builtin
 
-Bevy ECSS provites the following components selector:
+TOMT_BevyCSS provites the following components selector:
 
 |      Selector      |                                         Component                                         |
 | :----------------: | :---------------------------------------------------------------------------------------: |
@@ -256,7 +263,7 @@ Got some idea, feedback, question or found any bug? Feel free to open an issue a
 
 ## License
 
-Bevy ECSS is dual-licensed under either:
+TOMT_BevyCSS is dual-licensed under either:
 
 * MIT License ([LICENSE-MIT](LICENSE-MIT) or [http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT))
 * Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0))
