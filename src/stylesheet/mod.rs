@@ -1,12 +1,12 @@
-mod asset;
-mod loader;
+mod style_sheet_asset;
+mod style_sheet_loader;
 mod style_rule;
 
 pub use {
-    asset::StyleSheetAsset,
+    style_sheet_asset::StyleSheetAsset,
     style_rule::StyleRule,
 };
 
 pub(crate) use {
-    loader::StyleSheetLoader,
+    style_sheet_loader::StyleSheetLoader,
 };
