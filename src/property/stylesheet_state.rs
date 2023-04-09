@@ -19,12 +19,12 @@ pub struct StyleSheetState(
 
 impl StyleSheetState
 {
-    pub(crate) fn compile(
+    pub(crate) fn _compile(
         &mut self
     ) {
         for (_sheet, entities) in self.iter_mut()
         {
-            entities.compile();
+            entities._compile();
         }
     }
 }

@@ -18,7 +18,7 @@ pub struct SelectedEntities(
 
 impl SelectedEntities
 {
-    pub(crate) fn compile(
+    pub(crate) fn _compile(
         &mut self
     ) {
         let mut inverted: HashMap::<Entity, Vec<Selector>> = HashMap::new();

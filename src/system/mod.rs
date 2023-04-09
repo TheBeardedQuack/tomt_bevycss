@@ -1,5 +1,3 @@
-pub mod sets;
-
 mod component_filter;
 pub(crate) use component_filter::*;
 
@@ -9,20 +7,23 @@ pub(crate) use component_filter_registry::*;
 mod css_query_param;
 pub(crate) use css_query_param::*;
 
+pub(crate) mod query;
+
+pub mod sets;
+
+mod style_tree;
+use style_tree::StyleTree;
+
 use bevy::{
     ecs::system::SystemState,
     prelude::{
-        debug, error, trace,
+        error, debug, trace,
         AssetEvent, Children, Component, Deref, DerefMut,
         Entity, EventReader, Interaction, Mut,
-        Query, ResMut, Resource, With, World, Parent, Handle,
+        Query, ResMut, Resource, World,
     },
-    ui::Node, utils::HashMap,
 };
-use smallvec::{
-    smallvec,
-    SmallVec,
-};
+use smallvec::SmallVec;
 
 use crate::{
     component::{
@@ -68,98 +69,6 @@ pub(crate) fn prepare(
     });
 }
 
-struct StyleTreeNode
-{
-    pub entity: Entity,
-    pub sheet_handle: Handle<StyleSheetAsset>,
-    pub parent: Option<Handle<StyleSheetAsset>>,
-}
-
-#[derive(Default, Deref, DerefMut)]
-struct StyleTree(
-    HashMap<
-        Handle<StyleSheetAsset>,
-        StyleTreeNode
-    >
-);
-
-impl StyleTree
-{
-    fn resolve(
-        &self,
-        child_node: &Handle<StyleSheetAsset>,
-    ) -> Vec<Handle<StyleSheetAsset>> {
-        match self.get(child_node)
-        {
-            Some(style) => {
-                let iter = std::iter::once(style.sheet_handle);
-                match &style.parent
-                {
-                    Some(parent) => {
-                        self.resolve(parent)
-                            .into_iter()
-                            .chain(iter)
-                            .collect()
-                    },
-                    None => iter.collect(),
-                }
-            },
-            None => vec![],
-        }
-    }
-
-    fn get_or_find_root(
-        &mut self,
-        entity: Entity,
-        parent: Option<&'static Parent>,
-        sheet: Option<&'static StyleSheet>,
-        query: &'static QueryUiChanges
-    ) -> Option<&StyleTreeNode> {
-        match sheet
-        {
-            Some(style) => Some(
-                self.entry(style.handle().clone())
-                    .or_insert_with(|| {
-                        let parent = match parent {
-                            Some(p) => match query.get(p.get()) {
-                                Ok((e, p, _, s)) => self.get_or_find_root(e, p, s, query),
-                                Err(_) => None,
-                            },
-                            None => None,
-                        }.map(|p| p.sheet_handle);
-
-                        StyleTreeNode {
-                            entity,
-                            sheet_handle: style.handle().clone(),
-                            parent
-                        }
-                    })
-            ),
-            None => match parent {
-                Some(p) => match query.get(p.get()) {
-                    Ok((e, p, _, s)) => self.get_or_find_root(e, p, s, query),
-                    Err(_) => None,
-                },
-                None => None,
-            },
-        }
-    }
-
-    pub fn get_styles(
-        &mut self,
-        entity: Entity,
-        parent: Option<&'static Parent>,
-        sheet: Option<&'static StyleSheet>,
-        query: &'static QueryUiChanges
-    ) -> Vec<Handle<StyleSheetAsset>> {
-        match self.get_or_find_root(entity, parent, sheet, query)
-        {
-            Some(root) => self.resolve(&root.sheet_handle),
-            None => vec![],
-        }
-    }
-}
-
 /// Prepare state to be used by [`Property`](crate::Property) systems
 pub(crate) fn prepare_state(
     world: &World,
@@ -174,7 +83,7 @@ pub(crate) fn prepare_state(
     {
         // Find list of stylesheets that apply to this component (and cache in style_tree for next iterations)
         for sheet_handle in style_tree
-            .get_styles(entity, parent, sheet, &params.ui_changes)
+            .get_styles(parent, sheet, &params.ui_changes)
             .iter()
         {
             if let Some(style_sheet) = params.assets.get(sheet_handle)
@@ -201,7 +110,6 @@ pub(crate) fn prepare_state(
         }
     }
     
-    state.compile();
     state
 }
 
@@ -242,7 +150,7 @@ fn select_entities(
             let children = entities
                 .into_iter()
                 .filter_map(|e| css_query.children.get(e).ok())
-                .flat_map(|children| get_children_recursively(children, &css_query.children))
+                .flat_map(|(_e, ch)| get_children_recursively(ch, &css_query.children))
                 .collect();
             filter = Some(children);
         }
@@ -355,15 +263,15 @@ fn get_entities_with_component(
 
 fn get_children_recursively(
     children: &Children,
-    q_childs: &Query<&Children, With<Node>>,
+    query_childs: &query::QueryEntityChildren,
 ) -> SmallVec<[Entity; 8]> {
     children
         .iter()
         .flat_map(|&e| {
             std::iter::once(e).chain(
-                q_childs
+                query_childs
                     .get(e)
-                    .map_or(SmallVec::new(), |gc| get_children_recursively(gc, q_childs)),
+                    .map_or(SmallVec::new(), |(_c, gc)| get_children_recursively(gc, query_childs)),
             )
         })
         .collect()
