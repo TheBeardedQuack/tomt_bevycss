@@ -83,7 +83,7 @@ pub(crate) fn prepare_state(
     {
         // Find list of stylesheets that apply to this component (and cache in style_tree for next iterations)
         for sheet_handle in style_tree
-            .get_styles(parent, sheet, &params.ui_changes)
+            .get_styles(parent, sheet, &params.ui_nodes)
             .iter()
         {
             if let Some(style_sheet) = params.assets.get(sheet_handle)
@@ -110,6 +110,7 @@ pub(crate) fn prepare_state(
         }
     }
     
+    // state._compile();
     state
 }
 

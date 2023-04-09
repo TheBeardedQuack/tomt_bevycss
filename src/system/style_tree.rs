@@ -1,9 +1,9 @@
-use super::query::QueryUiChanges;
+use super::query;
 use crate::prelude::{StyleSheet, StyleSheetAsset};
 
 use bevy::{
     prelude::{
-        warn, info,
+        error, warn, info, debug, trace,
         Deref, DerefMut,
         Handle, Parent,
     },
@@ -57,26 +57,32 @@ impl<'me, 'w, 's> StyleTree
         &'me mut self,
         parent: Option<&'w Parent>,
         sheet: Option<&'w StyleSheet>,
-        query: &'w QueryUiChanges<'w, 's>
+        query: &'w query::QueryUiNodes<'w, 's>,
     ) -> Option<StyleTreeNode> {
         if let Some(style) = sheet
         {
+            trace!("Stylesheet found on this node");
             if let Some(node) = self.get(style.handle())
             {
+                trace!("Found existing node entry in tree, returning early");
                 Some(node.clone())
             }
             else
             {
+                trace!("Node entry does not exist in tree, creating entry");
                 let parent = match parent {
                     Some(p) => match query.get(p.get())
                     {
                         Ok((_, p, _, s)) => self.get_or_find_root(p, s, query),
                         Err(_) => {
-                            info!("No parent node found, terminating search");
+                            debug!("No more style parents found");
                             None
                         },
                     },
-                    None => None,
+                    None => {
+                        debug!("No parent node found, terminating search");
+                        None
+                    },
                 }.map(|p| p.sheet_handle);
 
                 Some(self.insert_unique_unchecked(
@@ -93,9 +99,15 @@ impl<'me, 'w, 's> StyleTree
             match parent {
                 Some(p) => match query.get(p.get()) {
                     Ok((_, p, _, s)) => self.get_or_find_root(p, s, query),
-                    Err(_) => None,
+                    Err(err) => {
+                        error!("Query on parent failed, {err}");
+                        None
+                    },
                 },
-                None => None,
+                None => {
+                    info!("No parent node provided to find styles");
+                    None
+                }
             }
         }
     }
@@ -104,7 +116,7 @@ impl<'me, 'w, 's> StyleTree
         &'me mut self,
         parent: Option<&'w Parent>,
         sheet: Option<&'w StyleSheet>,
-        query: &'w QueryUiChanges<'w, 's>
+        query: &'w query::QueryUiNodes<'w, 's>,
     ) -> Vec<Handle<StyleSheetAsset>> {
         let root_node = self.get_or_find_root(parent, sheet, query);
         match root_node

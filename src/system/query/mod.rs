@@ -1,14 +1,17 @@
-pub mod query_entity_children;
-pub use query_entity_children::QueryEntityChildren;
+pub mod entity_children;
+pub use entity_children::QueryEntityChildren;
 
-pub mod query_entity_classes;
-pub use query_entity_classes::QueryEntityClasses;
+pub mod entity_classes;
+pub use entity_classes::QueryEntityClasses;
 
-pub mod query_entity_names;
-pub use query_entity_names::QueryEntityNames;
+pub mod entity_names;
+pub use entity_names::QueryEntityNames;
 
-pub mod query_entity_interaction;
-pub use query_entity_interaction::QueryEntityInteraction;
+pub mod entity_interaction;
+pub use entity_interaction::QueryEntityInteraction;
 
-pub mod query_ui_changes;
-pub use query_ui_changes::QueryUiChanges;
+pub mod ui_changes;
+pub use ui_changes::QueryUiChanges;
+
+pub mod ui_nodes;
+pub use ui_nodes::QueryUiNodes;

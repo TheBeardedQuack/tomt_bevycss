@@ -13,6 +13,7 @@ use bevy::{
 pub(crate) struct CssQueryParam<'w, 's>
 {
     pub assets: StyleSheetResource<'w>,
+    pub ui_nodes: query::QueryUiNodes<'w, 's>,
     pub ui_changes: query::QueryUiChanges<'w, 's>,
     pub names: query::QueryEntityNames<'w, 's>,
     pub classes: query::QueryEntityClasses<'w, 's>,
