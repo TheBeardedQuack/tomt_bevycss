@@ -13,11 +13,8 @@ pipelines:
             - rm /etc/apt/apt.conf.d/docker-clean
             - apt update
             - apt install -y -q pkg-config libx11-dev libasound2-dev libudev-dev
-            - cargo test --release
+            - rustup component add clippy-preview
+            - cargo clippy --release  # Build main project library
+            - cargo test --release    # Build tests and examples
           artifacts: 
             - /target/release/libtomt_bevycss.rlib
-      - step:
-          name: 'Lint with clippy'
-          script:
-            - rustup component add clippy-preview
-            - cargo clippy --release
