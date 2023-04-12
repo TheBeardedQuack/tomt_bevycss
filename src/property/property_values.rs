@@ -89,6 +89,7 @@ impl PropertyValues {
             {
                 PropertyToken::Percentage(val) => Some(Val::Percent(*val)),
                 PropertyToken::Dimension(val) => Some(Val::Px(*val)),
+                PropertyToken::Identifier(val) if val == "auto" => Some(Val::Auto),
                 _ => None,
             }
         )
@@ -169,6 +170,7 @@ impl PropertyValues {
                         let val = match token {
                             PropertyToken::Percentage(val) => Val::Percent(*val),
                             PropertyToken::Dimension(val) => Val::Px(*val),
+                            PropertyToken::Identifier(val) if val == "auto" => Val::Auto,
                             _ => return (rect, idx),
                         };
                         let mut rect: UiRect = rect.unwrap_or_default();
