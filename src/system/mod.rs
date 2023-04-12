@@ -18,7 +18,7 @@ use bevy::{
     ecs::system::SystemState,
     prelude::{
         error, debug, trace,
-        AssetEvent, Children, Component, Deref, DerefMut,
+        Assets, AssetEvent, Children, Component, Deref, DerefMut,
         Entity, EventReader, Interaction, Mut,
         Query, ResMut, Resource, World,
     },
@@ -30,7 +30,10 @@ use crate::{
         MatchSelectorElement,
         StyleSheet
     },
-    property::StyleSheetState,
+    property::{
+        StyleSheetState,
+        StyleSheetStateBuilder,
+    },
     selector::{
         Selector,
         SelectorElement
@@ -51,12 +54,13 @@ impl PrepareParams {
 
 /// Exclusive system which selects all entities and prepare the internal state used by [`Property`](crate::Property) systems.
 pub(crate) fn prepare(
-    world: &mut World
+    world: &mut World,
 ) {
     world.resource_scope(|world, mut params: Mut<PrepareParams>| {
         world.resource_scope(|world, mut registry: Mut<ComponentFilterRegistry>| {
+            let assets = world.resource::<Assets<StyleSheetAsset>>();
             let css_query = params.get(world);
-            let state = prepare_state(world, css_query, &mut registry);
+            let state = prepare_state(world, assets, css_query, &mut registry);
 
             if !state.is_empty() {
                 let mut state_res = world
@@ -72,10 +76,11 @@ pub(crate) fn prepare(
 /// Prepare state to be used by [`Property`](crate::Property) systems
 pub(crate) fn prepare_state(
     world: &World,
+    assets: &Assets<StyleSheetAsset>,
     params: CssQueryParam,
     registry: &mut ComponentFilterRegistry,
 ) -> StyleSheetState {
-    let mut state = StyleSheetState::default();
+    let mut state = StyleSheetStateBuilder::default();
     let mut style_tree: StyleTree = Default::default();
 
     // Find only changed components
@@ -110,8 +115,7 @@ pub(crate) fn prepare_state(
         }
     }
     
-    // state._compile();
-    state
+    state.build(assets)
 }
 
 /// Select all entities using the given [`Selector`](crate::Selector).

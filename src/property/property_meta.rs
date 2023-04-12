@@ -37,7 +37,7 @@ impl<T: Property> PropertyMeta<T> {
         else
         {
             let new_cache = rules
-                .get_properties(selector, T::name())
+                .get_property_value(selector, T::name())
                 .map(
                     |values| match T::parse(values)
                     {

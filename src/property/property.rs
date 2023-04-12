@@ -15,7 +15,6 @@ use bevy::{
         ReadOnlyWorldQuery, WorldQuery,
     },
     prelude::{
-        trace,
         Assets, AssetServer,
         Commands, Local, Query, Res,
     },
@@ -93,30 +92,33 @@ pub trait Property:
         asset_server: Res<AssetServer>,
         mut commands: Commands,
     ) {
-        for (handle, selected) in apply_sheets.iter()
+        for (entity, style) in apply_sheets.iter()
         {
-            if let Some(rules) = assets.get(handle)
+            let source = match style.get_key_value(Self::name())
             {
-                for (selector, entities) in selected.iter()
-                {
-                    if let CacheState::Ok(cached) = local.get_or_parse(rules, selector)
-                    {
-                        trace!(
-                            r#"Applying property "{}" from sheet "{}" ({})"#,
-                            Self::name(),
-                            rules.path(),
-                            selector
-                        );
-                        for entity in entities
-                        {
-                            if let Ok(components) = q_nodes.get_mut(*entity)
-                            {
-                                Self::apply(cached, components, &asset_server, &mut commands);
-                            }
-                        }
-                    }
-                }
-            }
+                Some((_prop, source)) => source,
+                None => continue,
+            };
+
+            let rules = match assets.get(&source.styleheet)
+            {
+                Some(asset) => asset,
+                None => continue,
+            };
+
+            let cached_value = match local.get_or_parse(rules, &source.selector)
+            {
+                CacheState::Ok(cached) => cached,
+                _other => continue,
+            };
+
+            let components = match q_nodes.get_mut(*entity)
+            {
+                Ok(cmp) => cmp,
+                Err(_) => continue,
+            };
+
+            Self::apply(cached_value, components, &asset_server, &mut commands);
         }
     }
 }

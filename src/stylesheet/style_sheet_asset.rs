@@ -49,8 +49,22 @@ impl StyleSheetAsset
         }
     }
 
+    /// Returns the list of properties defined by the given [`Selector`].
+    pub fn get_property_names(
+        &self,
+        selector: &Selector
+    ) -> Option<Vec<String>> {
+        self.rules.iter()
+            .find(|&rule| rule.selector == *selector)
+            .map(|rule|
+                rule.properties.iter()
+                    .map(|(prop, _val)| prop.clone())
+                    .collect::<Vec<String>>()
+            )
+    }
+
     /// Returns the [`PropertyValues`] on the given [`Selector`] with the given name.
-    pub fn get_properties(
+    pub fn get_property_value(
         &self,
         selector: &Selector,
         name: &str
