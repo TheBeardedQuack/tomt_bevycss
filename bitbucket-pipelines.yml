@@ -5,20 +5,19 @@ definitions:
     apt-cache: /var/cache/apt
 
 pipelines:
-  default:
-    - step:
-        name: 'Build and test'
-        script:
-          - rm /etc/apt/apt.conf.d/docker-clean
-          - apt update
-          - apt install -y -q pkg-config libx11-dev libasound2-dev libudev-dev
-          - cargo test --release
-        artifacts: 
-          - /target/release/libtomt_bevycss.rlib
-        trigger: manual
-    - step:
-        name: 'Lint with clippy'
-        script:
-          - cargo install clippy
-          - cargo clippy --release
-        trigger: manual
+  branches:
+    main:
+      - step:
+          name: 'Build and test'
+          script:
+            - rm /etc/apt/apt.conf.d/docker-clean
+            - apt update
+            - apt install -y -q pkg-config libx11-dev libasound2-dev libudev-dev
+            - cargo test --release
+          artifacts: 
+            - /target/release/libtomt_bevycss.rlib
+      - step:
+          name: 'Lint with clippy'
+          script:
+            - cargo install clippy
+            - cargo clippy --release
