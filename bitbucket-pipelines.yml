@@ -5,13 +5,14 @@ pipelines:
     - step:
         name: "Install dependencies"
         script:
-          - sudo apt update
-          - sudo apt install pkg-config libx11-dev libasound2-dev libudev-dev
+          - apt update
+          - apt install pkg-config libx11-dev libasound2-dev libudev-dev
     - step:
-        name: 'Build and Test'
+        name: 'Build and test'
         script:
           - cargo test
     - step:
-        name: 'Run Clippy'
+        name: 'Lint with clippy'
         script:
+          - cargo install clippy
           - cargo clippy
