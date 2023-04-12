@@ -1,8 +1,11 @@
-# [![Bevy](assets/branding/bevy_ecss.png)](https://bevyengine.org)
-[![MIT/Apache 2.0](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)](https://github.com/afonsolage/bevy_ecss#license)
-[![Realease Doc](https://docs.rs/bevy_ecss/badge.svg)](https://docs.rs/bevy_ecss)
-[![Rust](https://github.com/afonsolage/bevy_ecss/workflows/CI/badge.svg)](https://github.com/afonsolage/bevy_ecss/actions)
-[![Crate](https://img.shields.io/crates/v/bevy_ecss.svg)](https://crates.io/crates/bevy_ecss)
+[![TOMT_BevyCSS](assets/branding/tomt_bevycss.png)](https://bitbucket.org/TheBeardedQuack/tomt-bevycss)
+[![BevyECSS](assets/branding/bevy_ecss.png)](https://github.com/afonsolage/bevy_ecss)
+[![Bevy](assets/branding/bevy_logo_dark_big.png)](https://bevyengine.org/)
+
+[![MIT/Apache 2.0](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)](https://bitbucket.org/TheBeardedQuack/tomt_bevycss#license)
+[![Realease Doc](https://docs.rs/tomt_bevycss/badge.svg)](https://docs.rs/tomt_bevycss)
+[![Rust](https://bitbucket.org/TheBeardedQuack/tomt_bevycss/workflows/CI/badge.svg)](https://bitbucket.org/TheBeardedQuack/tomt_bevycss/pipelines)
+[![Crate](https://img.shields.io/crates/v/tomt_bevycss.svg)](https://crates.io/crates/tomt_bevycss)
 [![Bevy tracking](https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue)](https://github.com/bevyengine/bevy/blob/main/docs/plugins_guidelines.md#main-branch-tracking)
 
 # TOMT BevyCSS
@@ -11,10 +14,10 @@
 
 TOMT BevyCSS is a fork project derived from [Bevy ECSS](https://github.com/afonsolage/bevy_ecss) is a crate which allows the usage of a subset of [`CSS`](https://developer.mozilla.org/en-US/docs/Web/CSS) to interact with [`bevy_ecs`](https://crates.io/crates/bevy_ecs). It's mainly aimed to apply styling on [`bevy_ui`](https://crates.io/crates/bevy) but it can be used by any component by implementing custom properties.
 
-### Why the name?
+### Package name?
 
-TOMT = Tome of Many Things
-BevyCSS = Bevy + CSS, This library brings CSS features into the Bevy UI
+- `TOMT` = Tome of Many Things
+- `BevyCSS` = Bevy + CSS, This library brings CSS features into the Bevy UI
 
 ### Who is TOMT (Tome of Many Things)?
 
@@ -257,11 +260,11 @@ Now just register the property on `App`:
 app.register_property::<AlphaProperty>();
 ```
 
-Done! Whenever an `alpha` property is found on any `css` file, the `AlphaProperty` will be applied. You can find this full example [`here`](https://github.com/afonsolage/bevy_ecss/blob/main/examples/alpha.rs).
+Done! Whenever an `alpha` property is found on any `css` file, the `AlphaProperty` will be applied. You can find this full example [`here`](https://bitbucket.org/TheBeardedQuack/tomt_bevycss/blob/main/examples/alpha.rs).
 
 
 ## Bevy support table
-| bevy  | bevy_ecss |
+| bevy  | tomt_bevycss |
 | :---: | :-------: |
 |  0.8  |    0.1    |
 |  0.9  |    0.2    |
