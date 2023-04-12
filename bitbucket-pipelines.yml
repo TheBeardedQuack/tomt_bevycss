@@ -1,18 +1,24 @@
 image: rust:1.67
+definitions:
+  caches:
+    apt-lists: /var/lib/apt/lists
+    apt-cache: /var/cache/apt
 
 pipelines:
   default:
     - step:
-        name: "Install dependencies"
-        script:
-          - apt update
-          - apt install -y pkg-config libx11-dev libasound2-dev libudev-dev
-    - step:
         name: 'Build and test'
         script:
-          - cargo test
+          - rm /etc/apt/apt.conf.d/docker-clean
+          - apt update
+          - apt install -y -q pkg-config libx11-dev libasound2-dev libudev-dev
+          - cargo test --release
+        artifacts: 
+          - /target/release/libtomt_bevycss.rlib
+        trigger: manual
     - step:
         name: 'Lint with clippy'
         script:
           - cargo install clippy
-          - cargo clippy
+          - cargo clippy --release
+        trigger: manual
