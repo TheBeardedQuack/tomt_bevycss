@@ -1,0 +1,17 @@
+image: rust:1.67
+
+pipelines:
+  default:
+    - step:
+        name: "Install dependencies"
+        script:
+          - sudo apt update
+          - sudo apt install pkg-config libx11-dev libasound2-dev libudev-dev
+    - step:
+        name: 'Build and Test'
+        script:
+          - cargo test
+    - step:
+        name: 'Run Clippy'
+        script:
+          - cargo clippy
