@@ -6,7 +6,7 @@ pipelines:
         name: "Install dependencies"
         script:
           - apt update
-          - apt install pkg-config libx11-dev libasound2-dev libudev-dev
+          - apt install -y pkg-config libx11-dev libasound2-dev libudev-dev
     - step:
         name: 'Build and test'
         script:
