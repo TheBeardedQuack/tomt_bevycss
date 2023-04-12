@@ -19,5 +19,5 @@ pipelines:
       - step:
           name: 'Lint with clippy'
           script:
-            - cargo install clippy
+            - rustup component add clippy-preview
             - cargo clippy --release
