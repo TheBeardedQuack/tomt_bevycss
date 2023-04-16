@@ -83,12 +83,14 @@ pub(crate) fn prepare_state(
     let mut state = StyleSheetStateBuilder::default();
     let mut style_tree: StyleTree = Default::default();
 
+    let handled_roots: SmallVec<[Entity; 8]> = Default::default();
+
     // Find only changed components
-    for (entity, parent, children, sheet) in &params.ui_changes
+    for (entity, children) in &params.ui_changes
     {
         // Find list of stylesheets that apply to this component (and cache in style_tree for next iterations)
         for sheet_handle in style_tree
-            .get_styles(parent, sheet, &params.ui_nodes)
+            .get_styles(entity, &params.ui_nodes)
             .iter()
         {
             if let Some(style_sheet) = params.assets.get(sheet_handle)
@@ -173,25 +175,31 @@ fn select_entities_node(
 ) -> SmallVec<[Entity; 8]> {
     node.into_iter()
         .fold(filter, |filter, element| {
-            Some(match element {
+            let result = match element {
                 SelectorElement::Name(name) => {
                     get_entities_with(name.as_str(), &css_query.names, filter)
-                }
+                },
                 SelectorElement::Class(class) => {
                     get_entities_with(class.as_str(), &css_query.classes, filter)
-                }
+                },
                 #[cfg(feature = "pseudo_class")]
                 SelectorElement::PseudoClass(class) => {
                     get_entities_with_pseudo_class(class.as_str(), &css_query.pseudo_classes, filter)
-                }
+                },
                 #[cfg(feature = "pseudo_prop")]
-                SelectorElement::PseudoProp(prop) => todo!("Implement PseudoProperty selection"),
+                SelectorElement::PseudoProp(prop) => {
+                    todo!("Implement PseudoProperty selection")
+                },
                 SelectorElement::Component(component) => {
                     get_entities_with_component(component.as_str(), world, registry, filter)
-                }
+                },
                 // All child elements are filtered by [`get_parent_tree`](Selector::get_parent_tree)
-                SelectorElement::Child => unreachable!(),
-            })
+                SelectorElement::Child => {
+                    unreachable!()
+                },
+            };
+            trace!("selected elements={}", result.iter().len());
+            Some(result)
         })
         .unwrap_or_default()
 }

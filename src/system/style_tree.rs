@@ -1,11 +1,11 @@
 use super::query;
-use crate::prelude::{StyleSheet, StyleSheetAsset};
+use crate::prelude::StyleSheetAsset;
 
 use bevy::{
     prelude::{
         error, warn, info, debug, trace,
         Deref, DerefMut,
-        Handle, Parent,
+        Handle, Entity,
     },
     utils::HashMap
 };
@@ -55,70 +55,62 @@ impl<'me, 'w, 's> StyleTree
 {
     fn get_or_find_root(
         &'me mut self,
-        parent: Option<&'w Parent>,
-        sheet: Option<&'w StyleSheet>,
+        entity: Entity,
         query: &'w query::QueryUiNodes<'w, 's>,
     ) -> Option<StyleTreeNode> {
-        if let Some(style) = sheet
+        let (_e, parent, _c, sheet) = match query.get(entity)
         {
-            trace!("Stylesheet found on this node");
-            if let Some(node) = self.get(style.handle())
-            {
-                trace!("Found existing node entry in tree, returning early");
-                Some(node.clone())
-            }
-            else
-            {
-                trace!("Node entry does not exist in tree, creating entry");
-                let parent = match parent {
-                    Some(p) => match query.get(p.get())
-                    {
-                        Ok((_, p, _, s)) => self.get_or_find_root(p, s, query),
-                        Err(_) => {
-                            debug!("No more style parents found");
+            Ok((e, p, c, s)) => (e, p, c, s),
+            Err(err) => {
+                error!("Query on entity {entity:?} failed, {err}");
+                return None;
+            },
+        };
+        
+        match (sheet, parent)
+        {
+            (Some(style), _p) => {
+                trace!("Stylesheet found on this node");
+                let result = if let Some(node) = self.get(style.handle())
+                {
+                    trace!("Found existing node entry in tree, returning early");
+                    node
+                }
+                else
+                {
+                    trace!("Node entry does not exist in tree, creating entry");
+                    let parent = match parent {
+                        Some(p) => self.get_or_find_root(p.get(), query),
+                        None => {
+                            debug!("No parent node found, terminating search");
                             None
                         },
-                    },
-                    None => {
-                        debug!("No parent node found, terminating search");
-                        None
-                    },
-                }.map(|p| p.sheet_handle);
-
-                Some(self.insert_unique_unchecked(
-                    style.handle().clone(),
-                    StyleTreeNode {
-                        sheet_handle: style.handle().clone(),
-                        parent
-                    }
-                ).1.clone())
-            }
-        }
-        else
-        {
-            match parent {
-                Some(p) => match query.get(p.get()) {
-                    Ok((_, p, _, s)) => self.get_or_find_root(p, s, query),
-                    Err(err) => {
-                        error!("Query on parent failed, {err}");
-                        None
-                    },
-                },
-                None => {
-                    info!("No parent node provided to find styles");
-                    None
-                }
+                    }.map(|p| p.sheet_handle);
+    
+                    self.insert_unique_unchecked(
+                        style.handle().clone(),
+                        StyleTreeNode {
+                            sheet_handle: style.handle().clone(),
+                            parent
+                        }
+                    ).1
+                };
+                Some(result.clone())
+            },
+            (None, Some(parent)) => self.get_or_find_root(parent.get(), query),
+            (None, None) => {
+                info!("No parent node provided to find styles");
+                None
             }
         }
     }
 
     pub fn get_styles(
         &'me mut self,
-        parent: Option<&'w Parent>,
-        sheet: Option<&'w StyleSheet>,
+        entity: Entity,
         query: &'w query::QueryUiNodes<'w, 's>,
     ) -> Vec<Handle<StyleSheetAsset>> {
-        let root_node = self.get_or_find_root(parent, sheet, query);
+        let root_node = self.get_or_find_root(entity, query);
         match root_node
         {
             Some(node) => {

@@ -1,6 +1,7 @@
 use crate::prelude::StyleSheet;
 use bevy::prelude::{
-    Query, Children, Or, Changed,
+    Entity, Children,
+    Query, Or, Changed,
 };
 
 #[cfg(feature = "monitor_changes")]
@@ -12,7 +13,7 @@ pub type QueryUiChanges<'w, 's> = Query<
     ReadOnlyWorldQuery,
 >;
 
-pub type WorldQuery = super::ui_nodes::WorldQuery;
+pub type WorldQuery = (Entity, Option<&'static Children>);
 
 #[cfg(not(feature = "monitor_changes"))]
 pub type ReadOnlyWorldQuery = Changed<StyleSheet>;
