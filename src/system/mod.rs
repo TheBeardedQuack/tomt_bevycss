@@ -83,37 +83,46 @@ pub(crate) fn prepare_state(
     let mut state = StyleSheetStateBuilder::default();
     let mut style_tree: StyleTree = Default::default();
 
-    let handled_roots: SmallVec<[Entity; 8]> = Default::default();
+    let mut handled_roots: SmallVec<[Entity; 8]> = Default::default();
 
     // Find only changed components
     for (entity, children) in &params.ui_changes
     {
         // Find list of stylesheets that apply to this component (and cache in style_tree for next iterations)
-        for sheet_handle in style_tree
+        for (root_entity, sheet_handle) in style_tree
             .get_styles(entity, &params.ui_nodes)
             .iter()
         {
-            if let Some(style_sheet) = params.assets.get(sheet_handle)
+            if handled_roots.contains(root_entity) { continue; }
+
+            let style_sheet = match params.assets.get(sheet_handle)
             {
-                debug!("Applying style {}", style_sheet.path());
-
-                for rule in style_sheet.iter()
-                {
-                    let entities =
-                        select_entities(entity, children, &rule.selector, world, &params, registry);
-
-                    trace!(
-                        "Applying rule ({}) on {} entities",
-                        rule.selector.to_string(),
-                        entities.len()
-                    );
-
-                    state
-                        .entry(sheet_handle.clone())
-                        .or_default()
-                        .insert(rule.selector.clone(), entities);
+                Some(sheet) => sheet,
+                None => {
+                    error!("Failed to load stylesheet from handle {sheet_handle:?}");
+                    continue;
                 }
+            };
+            
+            debug!("Applying style {}", style_sheet.path());
+            for rule in style_sheet.iter()
+            {
+                let entities =
+                    select_entities(*root_entity, children, &rule.selector, world, &params, registry);
+
+                trace!(
+                    "Applying rule ({}) on {} entities",
+                    rule.selector.to_string(),
+                    entities.len()
+                );
+
+                state
+                    .entry(sheet_handle.clone())
+                    .or_default()
+                    .insert(rule.selector.clone(), entities);
             }
+
+            handled_roots.push(*root_entity);
         }
     }
     
@@ -198,7 +207,6 @@ fn select_entities_node(
                     unreachable!()
                 },
             };
-            trace!("selected elements={}", result.iter().len());
             Some(result)
         })
         .unwrap_or_default()
@@ -210,21 +218,33 @@ fn get_entities_with_pseudo_class(
     query: &PseudoClassParam,
     filter: Option<SmallVec<[Entity; 8]>>,
 ) -> SmallVec<[Entity; 8]> {
-    query.interaction
-        .iter()
-        .filter_map(|(e, i)| match (name, *i) {
-            ("hover", Interaction::Hovered)
-            | ("click", Interaction::Clicked) => Some(e),
-            _ => None,
-        })
-        .filter(|e| {
-            if let Some(filter) = &filter {
-                filter.contains(e)
-            } else {
-                true
-            }
-        })
-        .collect()
+    let mut result: SmallVec<[Entity; 8]> = Default::default();
+
+    if let Some(f) = &filter
+    {
+        for e in f
+        {
+            trace!("Entity {e:?} in filter");
+        }
+    }
+
+    for (entity, action) in query.interaction.iter()
+    {
+        match (name, *action)
+        {
+            ("hover", Interaction::Hovered) => trace!("Entity[{entity:?}]:hover"),
+            ("click", Interaction::Clicked) => trace!("Entity[{entity:?}]:click"),
+            _ => continue,
+        };
+
+        if match &filter {
+            Some(f) => f.contains(&entity),
+            None => true,
+        } {
+            result.push(entity);
+        }
+    }
+    result
 }
 
 /// Utility function to filter any entities by using a component with implements [`MatchSelectorElement`]
@@ -236,6 +256,10 @@ fn get_entities_with<T>(
 where
     T: Component + MatchSelectorElement,
 {
+    for (e, t) in query.iter()
+    {
+        
+    }
     query
         .iter()
         .filter_map(|(e, rhs)| if rhs.matches(name) { Some(e) } else { None })

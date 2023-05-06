@@ -13,6 +13,7 @@ use bevy::{
 #[derive(Clone)]
 pub(super)struct StyleTreeNode
 {
+    pub entity: Entity,
     pub sheet_handle: Handle<StyleSheetAsset>,
     pub parent: Option<Handle<StyleSheetAsset>>,
 }
@@ -30,11 +31,11 @@ impl StyleTree
     fn resolve(
         &self,
         child_node: &Handle<StyleSheetAsset>,
-    ) -> Vec<Handle<StyleSheetAsset>> {
+    ) -> Vec<(Entity, Handle<StyleSheetAsset>)> {
         match self.get(child_node)
         {
             Some(style) => {
-                let iter = std::iter::once(style.sheet_handle.clone());
+                let iter = std::iter::once((style.entity, style.sheet_handle.clone()));
                 match &style.parent
                 {
                     Some(parent) => {
@@ -58,7 +59,7 @@ impl<'me, 'w, 's> StyleTree
         entity: Entity,
         query: &'w query::QueryUiNodes<'w, 's>,
     ) -> Option<StyleTreeNode> {
-        let (_e, parent, _c, sheet) = match query.get(entity)
+        let (entity, parent, _c, sheet) = match query.get(entity)
         {
             Ok((e, p, c, s)) => (e, p, c, s),
             Err(err) => {
@@ -90,6 +91,7 @@ impl<'me, 'w, 's> StyleTree
                     self.insert_unique_unchecked(
                         style.handle().clone(),
                         StyleTreeNode {
+                            entity,
                             sheet_handle: style.handle().clone(),
                             parent
                         }
@@ -109,7 +111,7 @@ impl<'me, 'w, 's> StyleTree
         &'me mut self,
         entity: Entity,
         query: &'w query::QueryUiNodes<'w, 's>,
-    ) -> Vec<Handle<StyleSheetAsset>> {
+    ) -> Vec<(Entity, Handle<StyleSheetAsset>)> {
         let root_node = self.get_or_find_root(entity, query);
         match root_node
         {
