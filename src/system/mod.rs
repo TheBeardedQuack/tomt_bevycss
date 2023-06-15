@@ -256,10 +256,6 @@ fn get_entities_with<T>(
 where
     T: Component + MatchSelectorElement,
 {
-    for (e, t) in query.iter()
-    {
-        
-    }
     query
         .iter()
         .filter_map(|(e, rhs)| if rhs.matches(name) { Some(e) } else { None })
