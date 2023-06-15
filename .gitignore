@@ -1,4 +1,4 @@
-/target
-/Cargo.lock
-/.vscode
-/.cargo
+target/
+.vscode/
+.cargo/
+.github/
