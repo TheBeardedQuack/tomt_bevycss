@@ -2,13 +2,19 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
 * text=auto
 
-# Explicitly declare text files you want to always be normalized and converted
-# to native line endings on checkout.
+# Explicitly declare text files you want to always be normalized and converted to native line endings on checkout.
+# Rust
 *.rs text eol=lf
 *.toml text eol=lf
+# Shaders
 *.frag text eol=lf
 *.vert text eol=lf
 *.wgsl text eol=lf
+# Style
+*.css text eol=lf
+*.less test eol=lf
+*.sass text eol=lf
+*.scss text eol=lf
 
 # Declare files that will always have CRLF line endings on checkout.
 *.sln text eol=crlf
