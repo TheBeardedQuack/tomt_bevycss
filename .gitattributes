@@ -15,6 +15,9 @@
 *.less test eol=lf
 *.sass text eol=lf
 *.scss text eol=lf
+# Text
+*.md text eol=lf
+*.txt text eol=lf
 
 # Declare files that will always have CRLF line endings on checkout.
 *.sln text eol=crlf
