@@ -183,30 +183,44 @@ fn select_entities_node(
     filter: Option<SmallVec<[Entity; 8]>>,
 ) -> SmallVec<[Entity; 8]> {
     node.into_iter()
-        .fold(filter, |filter, element| {
-            let result = match element {
-                SelectorElement::Name(name) => {
+        .fold(filter, |filter, element|
+        {
+            let result = match element 
+            {
+                SelectorElement::Name(name) =>
+                {
                     get_entities_with(name.as_str(), &css_query.names, filter)
                 },
-                SelectorElement::Class(class) => {
+
+                SelectorElement::Class(class) =>
+                {
                     get_entities_with(class.as_str(), &css_query.classes, filter)
                 },
+
                 #[cfg(feature = "pseudo_class")]
-                SelectorElement::PseudoClass(class) => {
+                SelectorElement::PseudoClass(class) =>
+                {
                     get_entities_with_pseudo_class(class.as_str(), &css_query.pseudo_classes, filter)
                 },
+
                 #[cfg(feature = "pseudo_prop")]
-                SelectorElement::PseudoProp(prop) => {
+                SelectorElement::PseudoProp(prop) =>
+                {
                     todo!("Implement PseudoProperty selection")
                 },
-                SelectorElement::Component(component) => {
+
+                SelectorElement::Component(component) =>
+                {
                     get_entities_with_component(component.as_str(), world, registry, filter)
                 },
+
                 // All child elements are filtered by [`get_parent_tree`](Selector::get_parent_tree)
-                SelectorElement::Child => {
+                SelectorElement::Child =>
+                {
                     unreachable!()
                 },
             };
+
             Some(result)
         })
         .unwrap_or_default()
@@ -237,13 +251,17 @@ fn get_entities_with_pseudo_class(
             _ => continue,
         };
 
-        if match &filter {
-            Some(f) => f.contains(&entity),
-            None => true,
-        } {
-            result.push(entity);
+        if let Some(f) = &filter
+        {
+            if !f.contains(&entity)
+            {
+                continue
+            }
         }
+
+        result.push(entity);
     }
+
     result
 }
 
@@ -258,14 +276,14 @@ where
 {
     query
         .iter()
-        .filter_map(|(e, rhs)| if rhs.matches(name) { Some(e) } else { None })
-        .filter(|e| {
-            if let Some(filter) = &filter {
-                filter.contains(e)
-            } else {
-                true
-            }
-        })
+        .filter_map(|(e, rhs)| 
+            if rhs.matches(name) { Some(e) }
+            else { None }
+        )
+        .filter(|e|
+            if let Some(filter) = &filter { filter.contains(e) }
+            else { true }
+        )
         .collect()
 }
 
@@ -278,17 +296,23 @@ fn get_entities_with_component(
     components: &mut ComponentFilterRegistry,
     filter: Option<SmallVec<[Entity; 8]>>,
 ) -> SmallVec<[Entity; 8]> {
-    if let Some(query) = components.0.get_mut(name) {
-        if let Some(filter) = filter {
+    if let Some(query) = components.0.get_mut(name)
+    {
+        if let Some(filter) = filter
+        {
             query
                 .filter(world)
                 .into_iter()
                 .filter(|e| filter.contains(e))
                 .collect()
-        } else {
+        }
+        else
+        {
             query.filter(world)
         }
-    } else {
+    }
+    else
+    {
         error!("Unregistered component selector {}", name);
         SmallVec::new()
     }
@@ -300,13 +324,13 @@ fn get_children_recursively(
 ) -> SmallVec<[Entity; 8]> {
     children
         .iter()
-        .flat_map(|&e| {
+        .flat_map(|&e|
             std::iter::once(e).chain(
                 query_childs
                     .get(e)
                     .map_or(SmallVec::new(), |(_c, gc)| get_children_recursively(gc, query_childs)),
             )
-        })
+        )
         .collect()
 }
 
@@ -315,12 +339,15 @@ pub(crate) fn hot_reload_style_sheets(
     mut assets_events: EventReader<AssetEvent<StyleSheetAsset>>,
     mut q_sheets: Query<&mut StyleSheet>,
 ) {
-    for evt in assets_events.iter() {
-        if let AssetEvent::Modified { handle } = evt {
+    for evt in assets_events.iter()
+    {
+        if let AssetEvent::Modified { handle } = evt
+        {
             q_sheets
                 .iter_mut()
                 .filter(|sheet| sheet.handle() == handle)
-                .for_each(|mut sheet| {
+                .for_each(|mut sheet|
+                {
                     debug!("Refreshing sheet {:?}", sheet);
                     sheet.refresh();
                 });
@@ -332,7 +359,8 @@ pub(crate) fn hot_reload_style_sheets(
 pub(crate) fn clear_state(
     mut sheet_rule: ResMut<StyleSheetState>
 ) {
-    if sheet_rule.len() > 0 {
+    if sheet_rule.len() > 0
+    {
         debug!("Finished applying style sheet.");
         sheet_rule.clear();
     }
