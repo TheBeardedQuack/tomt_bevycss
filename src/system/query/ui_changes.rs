@@ -13,7 +13,7 @@ pub type QueryUiChanges<'w, 's> = Query<
     ReadOnlyWorldQuery,
 >;
 
-pub type WorldQuery = (Entity, Option<&'static Children>);
+pub type WorldQuery = Entity;
 
 #[cfg(not(feature = "monitor_changes"))]
 pub type ReadOnlyWorldQuery = Changed<StyleSheet>;

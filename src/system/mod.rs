@@ -86,11 +86,11 @@ pub(crate) fn prepare_state(
     let mut handled_roots: SmallVec<[Entity; 8]> = Default::default();
 
     // Find only changed components
-    for (entity, children) in &params.ui_changes
+    for updated_entity in &params.ui_changes
     {
         // Find list of stylesheets that apply to this component (and cache in style_tree for next iterations)
         for (root_entity, sheet_handle) in style_tree
-            .get_styles(entity, &params.ui_nodes)
+            .get_style_roots_for(updated_entity, &params.ui_nodes)
             .iter()
         {
             if handled_roots.contains(root_entity) { continue; }
@@ -107,8 +107,12 @@ pub(crate) fn prepare_state(
             debug!("Applying style {}", style_sheet.path());
             for rule in style_sheet.iter()
             {
+                let root_children = params.children.get(*root_entity)
+                    .map(|(_e, c)| c)
+                    .ok();
+
                 let entities =
-                    select_entities(*root_entity, children, &rule.selector, world, &params, registry);
+                    select_entities(*root_entity, root_children, &rule.selector, world, &params, registry);
 
                 trace!(
                     "Applying rule ({}) on {} entities",
@@ -182,47 +186,49 @@ fn select_entities_node(
     registry: &mut ComponentFilterRegistry,
     filter: Option<SmallVec<[Entity; 8]>>,
 ) -> SmallVec<[Entity; 8]> {
-    node.into_iter()
-        .fold(filter, |filter, element|
+    let fold_fn = |filter: Option<SmallVec<[Entity; 8]>>, element: &SelectorElement|
+    -> Option<SmallVec<[Entity; 8]>> {
+        let result = match element 
         {
-            let result = match element 
+            SelectorElement::Name(name) =>
             {
-                SelectorElement::Name(name) =>
-                {
-                    get_entities_with(name.as_str(), &css_query.names, filter)
-                },
+                get_entities_with(name.as_str(), &css_query.names, filter)
+            },
 
-                SelectorElement::Class(class) =>
-                {
-                    get_entities_with(class.as_str(), &css_query.classes, filter)
-                },
+            SelectorElement::Class(class) =>
+            {
+                get_entities_with(class.as_str(), &css_query.classes, filter)
+            },
 
-                #[cfg(feature = "pseudo_class")]
-                SelectorElement::PseudoClass(class) =>
-                {
-                    get_entities_with_pseudo_class(class.as_str(), &css_query.pseudo_classes, filter)
-                },
+            #[cfg(feature = "pseudo_class")]
+            SelectorElement::PseudoClass(class) =>
+            {
+                get_entities_with_pseudo_class(class.as_str(), &css_query.pseudo_classes, filter)
+            },
 
-                #[cfg(feature = "pseudo_prop")]
-                SelectorElement::PseudoProp(prop) =>
-                {
-                    todo!("Implement PseudoProperty selection")
-                },
+            #[cfg(feature = "pseudo_prop")]
+            SelectorElement::PseudoProp(prop) =>
+            {
+                todo!("Implement PseudoProperty selection")
+            },
 
-                SelectorElement::Component(component) =>
-                {
-                    get_entities_with_component(component.as_str(), world, registry, filter)
-                },
+            SelectorElement::Component(component) =>
+            {
+                get_entities_with_component(component.as_str(), world, registry, filter)
+            },
 
-                // All child elements are filtered by [`get_parent_tree`](Selector::get_parent_tree)
-                SelectorElement::Child =>
-                {
-                    unreachable!()
-                },
-            };
+            // All child elements are filtered by [`get_parent_tree`](Selector::get_parent_tree)
+            SelectorElement::Child =>
+            {
+                unreachable!()
+            },
+        };
 
-            Some(result)
-        })
+        Some(result)
+    };
+
+    node.into_iter()
+        .fold(filter, fold_fn)
         .unwrap_or_default()
 }
 
@@ -233,14 +239,6 @@ fn get_entities_with_pseudo_class(
     filter: Option<SmallVec<[Entity; 8]>>,
 ) -> SmallVec<[Entity; 8]> {
     let mut result: SmallVec<[Entity; 8]> = Default::default();
-
-    if let Some(f) = &filter
-    {
-        for e in f
-        {
-            trace!("Entity {e:?} in filter");
-        }
-    }
 
     for (entity, action) in query.interaction.iter()
     {
@@ -255,7 +253,8 @@ fn get_entities_with_pseudo_class(
         {
             if !f.contains(&entity)
             {
-                continue
+                trace!("Entity {entity:?} discarded by filter");
+                continue;
             }
         }
 

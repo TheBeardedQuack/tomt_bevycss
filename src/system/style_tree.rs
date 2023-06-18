@@ -107,7 +107,7 @@ impl<'me, 'w, 's> StyleTree
         }
     }
 
-    pub fn get_styles(
+    pub fn get_style_roots_for(
         &'me mut self,
         entity: Entity,
         query: &'w query::QueryUiNodes<'w, 's>,
