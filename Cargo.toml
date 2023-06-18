@@ -8,7 +8,7 @@ exclude = [".github/"]
 keywords = ["css", "bevy", "style", "theme", "ui"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-repository = "https://bitbucket.org/TheBeardedQuack/tomt-bevycss.git"
+repository = "https://github.com/TheBeardedQuack/tomt_bevycss.git"
 
 [features]
 default = ["pseudo_class"]
