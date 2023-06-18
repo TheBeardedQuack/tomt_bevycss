@@ -1,0 +1,25 @@
+text {
+    color: black;
+    font-size: 16.0;
+    font: "fonts/FiraSans-Bold.ttf"
+}
+
+.main-menu {
+    align-items: center;
+    justify-content: center;
+}
+
+.main-menu text {
+    color: white;
+    font-size: 50.0
+}
+
+.main-menu button {
+    background-color: grey;
+    size: 300px, 50px;
+    margin: 10px;
+}
+
+button:hover text {
+    color: cyan;
+}
