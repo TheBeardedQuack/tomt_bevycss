@@ -1,18 +1,18 @@
-[![TOMT_BevyCSS][1]][11]
-[![BevyECSS][2]][12]
-[![Bevy][3]][13]
+[![TOMT_BevyCSS][30]][34]
+[![BevyECSS][40]][41]
+[![Bevy][50]][51]
 
-[![MIT/Apache 2.0][4]][14]
-[![Realease Doc][5]][15]
-[![Rust][6]][16]
-[![Crate][7]][17]
-[![Bevy tracking][8]][18]
+[![MIT/Apache 2.0][1]][35]
+[![Realease Doc][2]][32]
+[![Rust][36]][37]
+[![Crate][3]][31]
+[![Bevy tracking][4]][54]
 
 # TOMT BevyCSS
 
 ## What is TOMT BevyCSS?
 
-TOMT BevyCSS is a fork project derived from [Bevy ECSS][12] is a crate which allows the usage of a subset of [`CSS`][20] to interact with [`bevy_ecs`][21]. It's mainly aimed to apply styling on [`bevy_ui`][22] but it can be used by any component by implementing custom properties.
+TOMT BevyCSS is a fork project derived from [Bevy ECSS][41] is a crate which allows the usage of a subset of [`CSS`][81] to interact with [`bevy_ecs`][53]. It's mainly aimed to apply styling on [`bevy_ui`][52] but it can be used by any component by implementing custom properties.
 
 ### Package name?
 
@@ -21,13 +21,13 @@ TOMT BevyCSS is a fork project derived from [Bevy ECSS][12] is a crate which all
 
 ### Who is TOMT (Tome of Many Things)?
 
-Tome of Many Things is a small friendship group with various internet projects, primarily focussing on the [Tome of Many Things YouTube][26] channel.
+Tome of Many Things is a small friendship group with various internet projects, primarily focussing on the [Tome of Many Things YouTube][21] channel.
 
-This library project is brought to you by TheBeardedQuack ([GitHub][23], [YouTube][24]). Forked from BevyECSS, and released under the same MIT and Apahe v2.0 licences to allow for continued freedom of use, modification and distribution.
+This library project is brought to you by TheBeardedQuack ([GitHub][33], [YouTube][20]). Forked from BevyECSS, and released under the same MIT and Apahe v2.0 licences to allow for continued freedom of use, modification and distribution.
 
 # Usage
 
-To use TOMT_BevyCSS just add a `StyleSheet` with a loaded `css` file to any entity and all style sheet rules will be applied to the entity and _all_ its [`descendants`][25] (children of children of children and so on).
+To use TOMT_BevyCSS just add a `StyleSheet` with a loaded `css` file to any entity and all style sheet rules will be applied to the entity and _all_ its [`descendants`][80] (children of children of children and so on).
 
 ```rust
 use bevy::prelude::*;
@@ -92,11 +92,11 @@ See [Custom Properties](docs/custom-properties.md) (docs/custom-properties.md) f
 
 # Bevy support table
 | bevy  | tomt_bevycss |
-| :---: | :-------: |
-|  0.8  |    0.1    |
-|  0.9  |    0.2    |
-|  0.10 |    0.3    |
-|  0.10 |   0.4.x   |
+| :---: | :----------: |
+|  0.8  |     0.1      |
+|  0.9  |     0.2      |
+|  0.10 |     0.3      |
+|  0.10 |    0.4.x     |
 
 
 # Contributing
@@ -114,29 +114,37 @@ This means you can select the license you prefer!
 This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are [very good reasons](https://github.com/bevyengine/bevy/issues/2373) to include both.
 
 
+<!-- Icons -->
+[1]: https://img.shields.io/badge/license-MIT%2FApache-blue.svg
+[2]: https://docs.rs/tomt_bevycss/badge.svg
+[3]: https://img.shields.io/crates/v/tomt_bevycss.svg
+[4]: https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue
 
-[1]: assets/branding/tomt_bevycss.png
-[2]: assets/branding/bevy_ecss.png
-[3]: assets/branding/bevy_logo_dark_big.png
-[4]: https://img.shields.io/badge/license-MIT%2FApache-blue.svg
-[5]: https://docs.rs/tomt_bevycss/badge.svg
-[6]: https://github.com/TheBeardedQuack/tomt_bevycss/workflows/CI/badge.svg
-[7]: https://img.shields.io/crates/v/tomt_bevycss.svg
-[8]: https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue
+<!-- Author Details -->
+[20]: https://www.youtube.com/@TheBeardedQuack
+[21]: https://www.youtube.com/TomeOfManyThings
 
-[11]: https://github.com/TheBeardedQuack/tomt_bevycss
-[12]: https://github.com/afonsolage/bevy_ecss
-[13]: https://bevyengine.org/
-[14]: https://github.com/TheBeardedQuack/tomt_bevycss#license
-[15]: https://docs.rs/tomt_bevycss
-[16]: https://github.com/TheBeardedQuack/tomt_bevycss/actions
-[17]: https://crates.io/crates/tomt_bevycss
-[18]: https://github.com/bevyengine/bevy/blob/main/docs/plugins_guidelines.md#main-branch-tracking
+<!-- TOMT_BevyCSS -->
+[30]: assets/branding/tomt_bevycss.png
+[31]: https://crates.io/crates/tomt_bevycss
+[32]: https://docs.rs/tomt_bevycss
+[33]: https://github.com/TheBeardedQuack
+[34]: https://github.com/TheBeardedQuack/tomt_bevycss
+[35]: https://github.com/TheBeardedQuack/tomt_bevycss#license
+[36]: https://github.com/TheBeardedQuack/tomt_bevycss/workflows/CI/badge.svg
+[37]: https://github.com/TheBeardedQuack/tomt_bevycss/actions
 
-[20]: https://developer.mozilla.org/en-US/docs/Web/CSS
-[21]: https://crates.io/crates/bevy_ecs
-[22]: https://crates.io/crates/bevy
-[23]: https://github.com/TheBeardedQuack
-[24]: https://www.youtube.com/@TheBeardedQuack
-[25]: https://stackoverflow.com/questions/1182189/css-child-vs-descendant-selectors
-[26]: https://youtube.com/tomeofmanythings
+<!-- BevyECSS crate -->
+[40]: assets/branding/bevy_ecss.png
+[41]: https://github.com/afonsolage/bevy_ecss
+
+<!-- Bevy Engine -->
+[50]: assets/branding/bevy_logo_dark_big.png
+[51]: https://bevyengine.org/
+[52]: https://crates.io/crates/bevy
+[53]: https://crates.io/crates/bevy_ecs
+[54]: https://github.com/bevyengine/bevy/blob/main/docs/plugins_guidelines.md#main-branch-tracking
+
+<!-- Relevent Help Pages -->
+[80]: https://stackoverflow.com/questions/1182189/css-child-vs-descendant-selectors
+[81]: https://developer.mozilla.org/en-US/docs/Web/CSS
