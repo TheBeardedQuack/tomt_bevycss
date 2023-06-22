@@ -48,7 +48,7 @@ That's it, now your UI will indeed look _awesome_!
 This crate aims to support the most common CSS features first, and add more over time as suggestions are provided.
 This for now means that only a subset of CSS features are provided.
 
-To view the currently supported CSS features, please see [CSS Support](docs/css-support.md) (docs/css-support.md).
+To view the currently supported CSS features, please see [CSS Support][25] (docs/css-support.md).
 
 ## Custom Component Selector
 
@@ -61,7 +61,7 @@ Should you decide to roll your own selector for any bevy built-in componenets, p
 app.register_component_selector::<MyComponent>("selectorname");
 ```
 
-See [Custom Components](docs/custom-components.md) (docs/custom-components.md) for more information.
+See [Custom Components][26] (docs/custom-components.md) for more information.
 
 ## Custom Property
 
@@ -87,7 +87,7 @@ fn main()
 }
 ```
 
-See [Custom Properties](docs/custom-properties.md) (docs/custom-properties.md) for more information.
+See [Custom Properties][27] (docs/custom-properties.md) for more information.
 
 
 # Bevy support table
@@ -107,12 +107,11 @@ Got some idea, feedback, question or found a bug? Feel free to open an issue at 
 
 TOMT_BevyCSS is dual-licensed under either:
 
-* MIT License ([LICENSE-MIT](LICENSE-MIT) or [http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT))
-* Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0))
+* MIT License (in [repository](10) or from [source][11])
+* Apache License, Version 2.0 (in [repository][12] or from [source][13])
 
 This means you can select the license you prefer!
-This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are [very good reasons](https://github.com/bevyengine/bevy/issues/2373) to include both.
-
+This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are [very good reasons][55] to include both.
 
 <!-- Icons -->
 [1]: https://img.shields.io/badge/license-MIT%2FApache-blue.svg
@@ -120,9 +119,20 @@ This dual-licensing approach is the de-facto standard in the Rust ecosystem and 
 [3]: https://img.shields.io/crates/v/tomt_bevycss.svg
 [4]: https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue
 
+<!-- Licenses -->
+[10]: LICENSE-MIT
+[11]: http://opensource.org/licenses/MIT
+[12]: LICENSE-APACHE
+[12]: http://www.apache.org/licenses/LICENSE-2.0
+
 <!-- Author Details -->
 [20]: https://www.youtube.com/@TheBeardedQuack
 [21]: https://www.youtube.com/TomeOfManyThings
+
+<!-- More Readme -->
+[25]: https://github.com/TheBeardedQuack/tomt_bevycss/blob/main/docs/css-support.md
+[26]: https://github.com/TheBeardedQuack/tomt_bevycss/blob/main/docs/custom-components.md
+[27]: https://github.com/TheBeardedQuack/tomt_bevycss/blob/main/docs/custom-properties.md
 
 <!-- TOMT_BevyCSS -->
 [30]: assets/branding/tomt_bevycss.png
@@ -144,6 +154,7 @@ This dual-licensing approach is the de-facto standard in the Rust ecosystem and 
 [52]: https://crates.io/crates/bevy
 [53]: https://crates.io/crates/bevy_ecs
 [54]: https://github.com/bevyengine/bevy/blob/main/docs/plugins_guidelines.md#main-branch-tracking
+[55]: https://github.com/bevyengine/bevy/issues/2373
 
 <!-- Relevent Help Pages -->
 [80]: https://stackoverflow.com/questions/1182189/css-child-vs-descendant-selectors
