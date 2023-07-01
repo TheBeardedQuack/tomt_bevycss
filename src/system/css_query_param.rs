@@ -1,7 +1,5 @@
 use super::query;
 
-#[cfg(feature = "pseudo_prop")]
-use crate::prelude::PseudoProp;
 use crate::prelude::StyleSheetAsset;
 
 use bevy::{

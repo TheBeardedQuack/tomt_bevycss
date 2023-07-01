@@ -1,6 +1,6 @@
 use std::{error::Error, fmt::Display};
 
-/// Errors which can happens while parsing `css` into [`Selector`] or [`Property`].
+/// Errors which can happens while parsing `css` into [`crate::selector::Selector`] or [`crate::Property`].
 // TODO: Change this to Cow<'static, str>
 #[derive(Debug)]
 pub enum BevyCssError {

@@ -53,7 +53,7 @@ use bevy::{
 /// - [`Components`](Property::Components) is which components will be send to [`apply`](`Property::apply`) function whenever a
 /// valid cache exists and a matching property was found on any sheet rule. Check [`WorldQuery`] for more.
 /// - [`Filters`](Property::Filters) is used to filter which entities will be applied the property modification.
-/// Entities are first filtered by [`selectors`](`Selector`), but it can be useful to also ensure some behavior for safety reasons,
+/// Entities are first filtered by [`selectors`](`crate::selector::Selector`), but it can be useful to also ensure some behavior for safety reasons,
 /// like only inserting [`TextAlignment`](bevy::prelude::TextAlignment) if the entity also has a [`Text`](bevy::prelude::Text) component.
 ///  Check [`WorldQuery`] for more.
 ///

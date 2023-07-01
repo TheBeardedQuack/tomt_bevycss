@@ -133,7 +133,7 @@ pub(crate) fn prepare_state(
     state.build(assets)
 }
 
-/// Select all entities using the given [`Selector`](crate::Selector).
+/// Select all entities using the given [`Selector`](crate::selector::Selector).
 ///
 /// If no [`Children`] is supplied, then the selector is applied only on root entity.
 fn select_entities(

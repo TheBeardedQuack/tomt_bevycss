@@ -98,7 +98,7 @@ TOMT_BevyCSS supports custom component selectors so you're not limited to compon
 Should you need a core bevy component available as a selector that is not currently supported, this feature can also be used to roll your own support.
 Should you decide to roll your own selector for any bevy built-in componenets, pull requests will be appreciated.
 
-```rust
+```ignore
 app.register_component_selector::<MyComponent>("selectorname");
 ```
 
@@ -110,7 +110,7 @@ TOMT_BevyCSS supports custom property setters.
 
 This with the above custom component select should enable you to use the CSS system for more than just styling if you so desired.
 
-```rust
+```ignore
 #[derive(Default)]
 pub(crate) struct MyProperty;
 
@@ -148,7 +148,7 @@ Got some idea, feedback, question or found a bug? Feel free to open an issue at 
 
 TOMT_BevyCSS is dual-licensed under either:
 
-* MIT License (in [repository](10) or from [source][11])
+* MIT License (in [repository][10] or from [source][11])
 * Apache License, Version 2.0 (in [repository][12] or from [source][13])
 
 This means you can select the license you prefer!
@@ -164,7 +164,7 @@ This dual-licensing approach is the de-facto standard in the Rust ecosystem and 
 [10]: LICENSE-MIT
 [11]: http://opensource.org/licenses/MIT
 [12]: LICENSE-APACHE
-[12]: http://www.apache.org/licenses/LICENSE-2.0
+[13]: http://www.apache.org/licenses/LICENSE-2.0
 
 <!-- Author Details -->
 [20]: https://www.youtube.com/@TheBeardedQuack

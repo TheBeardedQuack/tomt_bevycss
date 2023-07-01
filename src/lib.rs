@@ -52,21 +52,22 @@ pub mod prelude {
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// # use bevy::prelude::*;
 /// # use tomt_bevycss::prelude::*;
-/// #
-/// # #[derive(Component)]
-/// # struct MyFancyComponentSelector;
-/// #
+/// # 
 /// # fn some_main() {
 /// #    let mut app = App::new();
 /// #    app.add_plugins(DefaultPlugins).add_plugin(BevyCssPlugin::default());
-/// // You may use it as selector now, like
-/// // fancy-pants {
-/// //      background-color: pink;
-/// // }
-/// app.register_component_selector::<MyFancyComponentSelector>("fancy-pants");
+/// #
+///      #[derive(Component)]
+///      struct MyFancyComponentSelector;
+/// 
+///      app.register_component_selector::<MyFancyComponentSelector>("fancy-pants");
+///      // You may use it as selector now, like
+///      // fancy-pants {
+///      //      background-color: pink;
+///      // }
 /// # }
 /// ```
 

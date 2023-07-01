@@ -5,10 +5,12 @@ edition = "2021"
 categories = ["game-development", "gui", "web-programming"]
 description = "Allows using a subset of CSS to interact with Bevy ECS"
 exclude = [".github/"]
-keywords = ["css", "bevy", "style", "theme", "ui"]
+keywords = ["css", "bevy", "style", "theme", "ui", "game"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/TheBeardedQuack/tomt_bevycss.git"
+documentation = "https://docs.rs/tomt_bevycss"
+homepage = "https://crates.io/crates/tomt_bevycss"
 
 [features]
 default = ["pseudo_class"]

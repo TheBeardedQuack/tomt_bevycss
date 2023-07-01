@@ -1,4 +1,4 @@
-/// Internal cache state. Used by [`CachedProperties`] to avoid parsing properties of the same rule on same sheet.
+/// Internal cache state. Used by [`crate::property::CachedProperties`] to avoid parsing properties of the same rule on same sheet.
 #[derive(Default, Debug, Clone)]
 pub enum CacheState<T> {
     /// No parse was performed yet
