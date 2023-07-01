@@ -56,6 +56,10 @@ This crate marks the first public release from both Tome of Many Things.
             <li>Reapply styles based on ECS changes (add/modify of UI node)</li>
             <li>Additional contexts for <code>auto</code> keyword</li>
         </ul></li>
+        <li>Documentation<ul>
+            <li>Added pseudo-class interaction to 'theme' example</li>
+            <li>Added an example to specifically demonstrate pseudo-class support</li>
+        </ul></li>
     </ul></td>
 </tr>
 <tr>
@@ -69,6 +73,7 @@ This crate marks the first public release from both Tome of Many Things.
             <li>Updated project references after fork</li>
             <li>Added changelog and future goals for the project</li>
             <li>Fixed broken doc links after project fork</li>
+            <li>Added missing item 'example-menu' into changelog for 0.4.0</li>
         </ul></li>
     </ul></td>
 </tr>
