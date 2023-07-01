@@ -1,19 +1,44 @@
-use bevy::prelude::Color;
+use bevy::prelude::{
+    error,
+    Color,
+};
 
 pub(super) fn parse_hex_color(
-    hex: &str
+    hex_str: &str
 ) -> Option<Color> {
-    cssparser::Color::parse_hash(hex.as_bytes())
-        .ok()
-        .map_or_else(|| None, |c| match c {
-            cssparser::Color::RGBA(rgba) => Some(Color::rgba_u8(
-                rgba.red,
-                rgba.green,
-                rgba.blue,
-                rgba.alpha
-            )),
-            _ => None,
-        })
+    match hex_str.len()
+    {
+        3 => parse_hex_color(&format!("{hex_str}f")),
+        4 => {
+            let mut str = String::new();
+            for c in hex_str.chars()
+            {
+                str.push(c);
+                str.push(c);
+            }
+            parse_hex_color(&str)
+        }
+        6 => parse_hex_color(&format!("{hex_str}ff")),
+        8 => u32::from_str_radix(hex_str, 16)
+            .map(|num| 
+            {
+                const DIV: f32 = u8::MAX as f32;
+                Color::rgba(
+                    (num >> 24) as u8 as f32 / DIV,
+                    (num >> 16) as u8 as f32 / DIV,
+                    (num >>  8) as u8 as f32 / DIV,
+                    num as u8 as f32 / DIV
+                )
+            })
+            .ok(),
+        _ => {
+            error!(
+                "Invalid length of characters `{}` provided to `parse_hex_color()`",
+                hex_str.len()
+            );
+            None
+        },
+    }
 }
 
 // Source: https://developer.mozilla.org/en-US/docs/Web/CSS/named-color
@@ -43,7 +68,7 @@ pub(super) fn parse_named_color(
         "teal" => Some(Color::rgba(0.0000, 0.5020, 0.5020, 1.0000)),
         "aqua" => Some(Color::rgba(0.0000, 1.0000, 1.0000, 1.0000)),
 
-        // CSS Level 2 values
+        // CSS Level 2 (rev 1) values
         "orange" => Some(Color::rgba(1.0000, 0.6471, 0.0000, 1.0000)),
 
         // CSS Level 3 values
