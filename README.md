@@ -58,6 +58,15 @@ This crate marks the first public release from both Tome of Many Things.
         </ul></li>
     </ul></td>
 </tr>
+<tr>
+    <td>
+        0.4.1
+        0.4.2
+    </td>
+    <td><ul>
+        <li>Documentation additions & updates</li>
+    </ul></td>
+</tr>
 </table>
 
 ### Future Goals
