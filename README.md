@@ -72,7 +72,7 @@ This crate marks the first public release from both Tome of Many Things.
     </ul></td>
 </tr>
 <tr>
-    <td>0.4.2</td>
+    <td>0.4.2<br />Docs Update</td>
     <td><ul>
         <li>Documentation<ul>
             <li>Added changelog and future goals for the project</li>
