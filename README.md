@@ -72,12 +72,11 @@ This crate marks the first public release from both Tome of Many Things.
     </ul></td>
 </tr>
 <tr>
-    <td>0.4.2<br />Docs Update</td>
+    <td>0.4.2 <sup>(unreleased)</sup><br />Docs Update</td>
     <td><ul>
         <li>Documentation<ul>
             <li>Added changelog and future goals for the project</li>
             <li>Fixed broken doc links after project fork</li>
-            <li>Added missing item 'example-menu' into changelog for 0.4.0</li>
         </ul></li>
     </ul></td>
 </tr>
