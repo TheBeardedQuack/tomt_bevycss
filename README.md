@@ -87,7 +87,6 @@ This crate marks the first public release from both Tome of Many Things.
 
 ### Future Goals
 - Backport fixes into BevyECSS
-- Optimise `prepare` system node tree
 - Higher level language support (LESS / SCSS / SASS)
 - Add CSS color functions
 
