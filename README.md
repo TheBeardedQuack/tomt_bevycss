@@ -37,7 +37,7 @@ This crate marks the first public release from both Tome of Many Things.
 <table>
 <tr>
     <th>Version</th>
-    <th>Changes</th>
+    <th>Change Log</th>
 </tr>
 <tr>
     <td>0.4.0</td>
