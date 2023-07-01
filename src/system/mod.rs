@@ -207,7 +207,7 @@ fn select_entities_node(
             },
 
             #[cfg(feature = "pseudo_prop")]
-            SelectorElement::PseudoProp(prop) =>
+            SelectorElement::PseudoProp(_prop) =>
             {
                 todo!("Implement PseudoProperty selection")
             },
