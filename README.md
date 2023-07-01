@@ -64,7 +64,12 @@ This crate marks the first public release from both Tome of Many Things.
         0.4.2
     </td>
     <td><ul>
-        <li>Documentation additions & updates</li>
+        <li>Documentation<ul>
+            <li>ReadMe split into smaller documents</li>
+            <li>Updated project references after fork</li>
+            <li>Added changelog and future goals for the project</li>
+            <li>Fixed broken doc links after project fork</li>
+        </ul></li>
     </ul></td>
 </tr>
 </table>
