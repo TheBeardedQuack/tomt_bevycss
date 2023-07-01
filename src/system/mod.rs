@@ -18,12 +18,15 @@ use bevy::{
     ecs::system::SystemState,
     prelude::{
         error, debug, trace,
-        Assets, AssetEvent, Children, Component, Deref, DerefMut,
+        Assets, AssetEvent, Component, Deref, DerefMut,
         Entity, EventReader, Interaction, Mut,
-        Query, ResMut, Resource, World,
+        Query, Children, Parent, ResMut, Resource, World,
     },
 };
-use smallvec::SmallVec;
+use smallvec::{
+    smallvec,
+    SmallVec,
+};
 
 use crate::{
     component::{
@@ -107,12 +110,8 @@ pub(crate) fn prepare_state(
             debug!("Applying style {}", style_sheet.path());
             for rule in style_sheet.iter()
             {
-                let root_children = params.children.get(*root_entity)
-                    .map(|(_e, c)| c)
-                    .ok();
-
                 let entities =
-                    select_entities(*root_entity, root_children, &rule.selector, world, &params, registry);
+                    select_entities(*root_entity, updated_entity, &rule.selector, world, &params, registry);
 
                 trace!(
                     "Applying rule ({}) on {} entities",
@@ -133,12 +132,35 @@ pub(crate) fn prepare_state(
     state.build(assets)
 }
 
+fn build_entity_filter(
+    root: Entity,
+    updated_node: Entity,
+    css_query: &CssQueryParam
+) -> Option<SmallVec<[Entity; 8]>> {
+    css_query.ui_nodes.get(updated_node)
+        .map(|(_e, p, c, _s)|
+        {
+            // Add parents recursively
+            p.map_or_else(SmallVec::default, |parent| get_parents_recursively(root, parent, &css_query.parent))
+                .into_iter()
+                // Add the entity that triggered the change
+                .chain(std::iter::once(updated_node))
+                // Add children recursively
+                .chain(
+                    c.map_or_else(SmallVec::default, |children| get_children_recursively(children, &css_query.children))
+                        .into_iter()
+                )
+                .collect()
+        })
+        .ok()
+}
+
 /// Select all entities using the given [`Selector`](crate::selector::Selector).
 ///
 /// If no [`Children`] is supplied, then the selector is applied only on root entity.
 fn select_entities(
-    root: Entity,
-    children: Option<&Children>,
+    root_node: Entity,
+    updated_node: Entity,
     selector: &Selector,
     world: &World,
     css_query: &CssQueryParam,
@@ -146,22 +168,16 @@ fn select_entities(
 ) -> SmallVec<[Entity; 8]> {
     let mut parent_tree = selector.get_parent_tree();
 
-    if parent_tree.is_empty() {
+    if parent_tree.is_empty()
+    {
         return SmallVec::new();
     }
 
-    let mut filter = children.map(|children| {
-        // Include root, since style sheet may be applied on root too.
-        std::iter::once(root)
-            .chain(get_children_recursively(children, &css_query.children).into_iter())
-            .collect()
-    });
-
+    let mut filter = build_entity_filter(root_node, updated_node, css_query);
     loop {
         // TODO: Rework this to use a index to avoid recreating parent_tree every time the systems runs.
         // This is has little to no impact on performance, since this system doesn't runs often.
         let node = parent_tree.remove(0);
-
         let entities = select_entities_node(node, world, css_query, registry, filter.clone());
 
         if parent_tree.is_empty() {
@@ -317,6 +333,35 @@ fn get_entities_with_component(
     }
 }
 
+/// Starting with the provided [Parent], collect all UI parent entities, recurisevely up the entity tree
+/// # Arguments
+/// `root` - The top-level [Entity] which contains the stylesheet, passed in to provide early stop when root hit
+/// `parent` - First [Parent] component to start search with (appears last in returned list)
+/// `query_parent` - Bevy [Query] paramter to perform recursive searching
+#[cfg(feature = "monitor_changes")]
+fn get_parents_recursively(
+    root: Entity,
+    parent: &Parent,
+    query_parent: &query::QueryEntityParent
+) -> SmallVec<[Entity; 8]> {
+    let mut result = match query_parent.get(parent.get())
+    {
+        Ok((entity, parent)) => match entity == root
+        {
+            true => smallvec![entity],
+            false => get_parents_recursively(root, parent, query_parent),
+        },
+        Err(_err) => Default::default(),
+    };
+
+    result.push(parent.get());
+    result
+}
+
+/// Starting with the provided [Children] component, collect all UI children entities, recursively down the entity tree
+/// # Arguments
+/// `children` First [Children] component to start search with (children appear depth first in returned list)
+/// `query_children` - Bevy [Query] parameter to perform recursive searching with
 fn get_children_recursively(
     children: &Children,
     query_childs: &query::QueryEntityChildren,

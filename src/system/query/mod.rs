@@ -1,6 +1,9 @@
 pub mod entity_children;
 pub use entity_children::QueryEntityChildren;
 
+pub mod entity_parent;
+pub use entity_parent::QueryEntityParent;
+
 pub mod entity_classes;
 pub use entity_classes::QueryEntityClasses;
 

@@ -15,6 +15,7 @@ pub(crate) struct CssQueryParam<'w, 's>
     pub ui_changes: query::QueryUiChanges<'w, 's>,
     pub names: query::QueryEntityNames<'w, 's>,
     pub classes: query::QueryEntityClasses<'w, 's>,
+    pub parent: query::QueryEntityParent<'w, 's>,
     pub children: query::QueryEntityChildren<'w, 's>,
     
     #[cfg(feature = "pseudo_class")]
