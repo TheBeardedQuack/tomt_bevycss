@@ -72,11 +72,11 @@ This crate marks the first public release from both Tome of Many Things.
     </ul></td>
 </tr>
 <tr>
-    <td>0.4.2 <sup>(unreleased)</sup><br />Docs Update</td>
+    <td>0.4.2</td>
     <td><ul>
         <li>Fixes<ul>
             <li>Optimised select_entities() when triggered by Changed<> by searching only direct ancestors and children of the modified node</li>
-        </ul><li>
+        </ul></li>
         <li>Documentation<ul>
             <li>Added changelog and future goals for the project</li>
             <li>Fixed broken doc links after project fork</li>
