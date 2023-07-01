@@ -86,6 +86,7 @@ This crate marks the first public release from both Tome of Many Things.
 </table>
 
 ### Future Goals
+- Update crate dependencies
 - Backport fixes into BevyECSS
 - Higher level language support (LESS / SCSS / SASS)
 - Add CSS color functions
