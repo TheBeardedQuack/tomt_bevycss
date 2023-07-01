@@ -12,7 +12,30 @@
 
 ## What is TOMT BevyCSS?
 
-TOMT BevyCSS is a fork project derived from [Bevy ECSS][41] is a crate which allows the usage of a subset of [`CSS`][81] to interact with [`bevy_ecs`][53]. It's mainly aimed to apply styling on [`bevy_ui`][52] but it can be used by any component by implementing custom properties.
+TOMT BevyCSS is a fork project derived from [Bevy ECSS][41], which allows the usage of a subset of [`CSS`][81] to interact with [`bevy_ecs`][53]. It's mainly aimed to apply styling on [`bevy_ui`][52] but it can be used by any component by implementing custom properties.
+
+The goal of this project fork is two-fold:
+- To provide faster update periods for downstream crates
+- Expand on the feature set offered by BevyECSS
+
+### Changes from BevyECSS
+#### Fixes:
+- Respects CSS rule ordering
+
+#### Features:
+- Support for pseudoclass
+  - Support for `:hover` and `:click` on Interaction component
+  - No additional pseudoclasses implemented at this time
+- Placeholder support for pseudoprops
+  - No pseudoproperties implemented att this time
+- Reapply styles based on ECS changes (add/modify of UI node)
+- Additonal contexts for `auto` keyword
+
+#### Future Goals
+- Backport fixes into BevyECSS
+- Optimise `prepare` system node tree
+- Higher level language support (LESS / SCSS / SASS)
+- Add CSS color functions
 
 ### Package name?
 
