@@ -14,28 +14,10 @@
 
 TOMT BevyCSS is a fork project derived from [Bevy ECSS][41], which allows the usage of a subset of [`CSS`][81] to interact with [`bevy_ecs`][53]. It's mainly aimed to apply styling on [`bevy_ui`][52] but it can be used by any component by implementing custom properties.
 
-The goal of this project fork is two-fold:
-- To provide faster update periods for downstream crates
-- Expand on the feature set offered by BevyECSS
-
-### Changes from BevyECSS
-#### Fixes:
-- Respects CSS rule ordering
-
-#### Features:
-- Support for pseudoclass
-  - Support for `:hover` and `:click` on Interaction component
-  - No additional pseudoclasses implemented at this time
-- Placeholder support for pseudoprops
-  - No pseudoproperties implemented att this time
-- Reapply styles based on ECS changes (add/modify of UI node)
-- Additonal contexts for `auto` keyword
-
-#### Future Goals
-- Backport fixes into BevyECSS
-- Optimise `prepare` system node tree
-- Higher level language support (LESS / SCSS / SASS)
-- Add CSS color functions
+The primary goals for this project fork are as follows:
+- Provide more frequent updates for downstream crates
+- Improve upon and expand the existing documentation, tests and examples for downstream users
+- Expand on the feature set currently offered by BevyECSS
 
 ### Package name?
 
@@ -46,9 +28,45 @@ The goal of this project fork is two-fold:
 
 Tome of Many Things is a small friendship group with various internet projects, primarily focussing on the [Tome of Many Things YouTube][21] channel.
 
-This library project is brought to you by TheBeardedQuack ([GitHub][33], [YouTube][20]). Forked from BevyECSS, and released under the same MIT and Apahe v2.0 licences to allow for continued freedom of use, modification and distribution.
+This library project is brought to you by TheBeardedQuack ([GitHub][33], [YouTube][20]), forked from BevyECSS, and released under the same MIT and Apahe v2.0 licences to allow for continued freedom of use, modification and distribution.
 
-# Usage
+This crate marks the first public release from both Tome of Many Things.
+
+## Changes from BevyECSS
+
+<table>
+<tr>
+    <th>Version</th>
+    <th>Changes</th>
+</tr>
+<tr>
+    <td>0.4.0</td>
+    <td><ul>
+        <li>Fixes<ul>
+            <li>Respects CSS rule ordering</li>
+        </ul></li>
+        <li>Features<ul>
+            <li>Support for pseudo-classes<ul>
+                <li>Support for <code>:hover</code> and <code>:click</code> on Interaction component</li>
+                <li>No additional pseudo-classes implemented at this time</li>
+            </ul></li>
+            <li>Placeholder support for pseudo-properties<ul>
+                <li>No pseudo-properties implemented at this time</li>
+            </ul></li>
+            <li>Reapply styles based on ECS changes (add/modify of UI node)</li>
+            <li>Additional contexts for <code>auto</code> keyword</li>
+        </ul></li>
+    </ul></td>
+</tr>
+</table>
+
+### Future Goals
+- Backport fixes into BevyECSS
+- Optimise `prepare` system node tree
+- Higher level language support (LESS / SCSS / SASS)
+- Add CSS color functions
+
+# Getting Started (Usage)
 
 To use TOMT_BevyCSS just add a `StyleSheet` with a loaded `css` file to any entity and all style sheet rules will be applied to the entity and _all_ its [`descendants`][80] (children of children of children and so on).
 
