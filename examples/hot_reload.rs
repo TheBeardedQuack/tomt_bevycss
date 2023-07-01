@@ -9,7 +9,7 @@ fn main() {
             watch_for_changes: true,
             ..Default::default()
         }))
-        .add_plugin(EditorPlugin)
+        .add_plugin(EditorPlugin::default())
         .add_plugin(BevyCssPlugin::with_hot_reload())
         .add_startup_system(setup)
         .run();

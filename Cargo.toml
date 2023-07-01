@@ -36,7 +36,7 @@ bevy = { version = "0.10", features = [
     "bevy_render",
     "filesystem_watcher",
 ] }
-bevy_editor_pls = "0.3"
+bevy_editor_pls = "0.4.0"
 
 [[example]]
 name = "simple_ui"
