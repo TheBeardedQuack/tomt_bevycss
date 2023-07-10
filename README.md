@@ -57,7 +57,7 @@ This crate marks the first public release from both Tome of Many Things.
             <li>Additional contexts for <code>auto</code> keyword</li>
         </ul></li>
         <li>Documentation<ul>
-            <li>Added pseudo-class interaction to 'theme' example</li>
+            <li>Added pseudo-class interaction to the example <i>"theme"</i></li>
             <li>Added an example to specifically demonstrate pseudo-class support</li>
         </ul></li>
     </ul></td>
@@ -75,22 +75,28 @@ This crate marks the first public release from both Tome of Many Things.
     <td>0.4.2</td>
     <td><ul>
         <li>Fixes<ul>
-            <li>Optimised select_entities() when triggered by Changed<> by searching only direct ancestors and children of the modified node</li>
+            <li>Optimised <code>select_entities()</code> when triggered by <code>Changed&lt;&gt;</code> by searching only direct ancestors and children of the modified node</li>
         </ul></li>
         <li>Documentation<ul>
             <li>Added changelog and future goals for the project</li>
             <li>Fixed broken doc links after project fork</li>
         </ul></li>
     </ul></td>
-    <td>0.5.0</td>
+</tr>
+<tr>
+    <td>0.5.0<br />(in progress)</td>
     <td><ul>
-        <li>Dependencies</ul>
+        <li>Dependencies<ul>
             <li>bevy - Updated to 0.11 (in progress)</li>
             <li>bevy_editor_pls - Updated to 0.4.0</li>
             <li>cssparser - Updated to 0.30.0</li>
         </ul></li>
         <li>Features<ul>
-            <li>`overflow` property split into `overflow-x` and `overflow-y` to reflect changes to `bevy::ui::Overflow`</li>
+            <li><code>overflow</code> css property split into <code>overflow-x</code> and <code>overflow-y</code> to reflect changes to <code>bevy::ui::Overflow</code></li>
+        </ul></li>
+        <li>Documentation<ul>
+            <li>Details of changes between bevy 0.10 and 0.11 support (mainly in Features above)</li>
+            <li>Minor format and phrasing changes for readme</li>
         </ul></li>
     </ul></td>
 </tr>
