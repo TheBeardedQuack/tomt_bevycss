@@ -28,7 +28,7 @@ use bevy::{
         Node,
         Style,
         Text,
-        UiImage,
+        UiImage, PreUpdate, PostUpdate,
     },
 };
 
@@ -112,7 +112,6 @@ use bevy::{
     asset::AssetSet,
     prelude::{
         AddAsset,
-        CoreSet,
         Plugin,
         IntoSystemSetConfig,
     },
@@ -129,19 +128,8 @@ impl Plugin for BevyCssPlugin
         app.register_type::<Class>()
             .register_type::<StyleSheet>()
             .add_asset::<StyleSheetAsset>()
-            .configure_set(
-                BevyCssSet::Prepare
-                    .in_base_set(CoreSet::PreUpdate)
-            )
-            .configure_set(
-                BevyCssSet::Apply
-                    .in_base_set(CoreSet::PreUpdate)
-                    .after(BevyCssSet::Prepare),
-            )
-            .configure_set(
-                BevyCssSet::Cleanup
-                    .in_base_set(CoreSet::PostUpdate)
-            )
+            .configure_set(PreUpdate, BevyCssSet::Prepare.before(BevyCssSet::Apply))
+            .configure_set(PostUpdate, BevyCssSet::Cleanup)
             .init_resource::<StyleSheetState>()
             .init_resource::<ComponentFilterRegistry>()
             .init_asset_loader::<StyleSheetLoader>()
