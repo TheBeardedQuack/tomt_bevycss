@@ -13,27 +13,31 @@ impl_style_rect!("padding", PaddingProperty, padding);
 impl_style_rect!("border", BorderProperty, border);
 
 // Val (number) type property fields
-impl_style_single_value!("left", LeftProperty, Val, val, position.left);
-impl_style_single_value!("right", RightProperty, Val, val, position.right);
-impl_style_single_value!("top", TopProperty, Val, val, position.top);
-impl_style_single_value!("bottom", BottomProperty, Val, val, position.bottom);
+impl_style_single_value!("left", LeftProperty, Val, val, left);
+impl_style_single_value!("right", RightProperty, Val, val, right);
+impl_style_single_value!("top", TopProperty, Val, val, top);
+impl_style_single_value!("bottom", BottomProperty, Val, val, bottom);
 
-impl_style_single_value!("width", WidthProperty, Val, val, size.width);
-impl_style_single_value!("height", HeightProperty, Val, val, size.height);
+impl_style_single_value!("width", WidthProperty, Val, val, width);
+impl_style_single_value!("height", HeightProperty, Val, val, height);
 
-impl_style_single_value!("min-width", MinWidthProperty, Val, val, min_size.width);
-impl_style_single_value!("min-height", MinHeightProperty, Val, val, min_size.height);
+impl_style_single_value!("min-width", MinWidthProperty, Val, val, min_width);
+impl_style_single_value!("min-height", MinHeightProperty, Val, val, min_height);
 
-impl_style_single_value!("max-width", MaxWidthProperty, Val, val, max_size.width);
-impl_style_single_value!("max-height", MaxHeightProperty, Val, val, max_size.height);
+impl_style_single_value!("max-width", MaxWidthProperty, Val, val, max_width);
+impl_style_single_value!("max-height", MaxHeightProperty, Val, val, max_height);
 
-impl_style_single_value!("flex-basis", FlexBasisProperty, Val, val, max_size.height);
+impl_style_single_value!("flex-basis", FlexBasisProperty, Val, val, max_height);
 
 // f32 (number) type property fields
 impl_style_single_value!("flex-grow", FlexGrowProperty, f32, f32, flex_grow);
 impl_style_single_value!("flex-shrink", FlexShrinkProperty, f32, f32, flex_shrink);
 
 impl_style_single_value!("aspect-ratio", AspectRatioProperty, Option<f32>, option_f32, aspect_ratio);
+
+// OverflowAxis type property fields (special case)
+impl_style_single_value!("overflow-x", OverflowXProperty, OverflowAxis, overflow, overflow.x);
+impl_style_single_value!("overflow-y", OverflowYProperty, OverflowAxis, overflow, overflow.y);
 
 impl_style_enum!(
     Display,            // Bevy enum
@@ -110,10 +114,4 @@ impl_style_enum!(
     "space-between" => SpaceBetween,
     "space-around" => SpaceAround,
     "space-evenly" => SpaceEvenly,
-);
-
-impl_style_enum!(
-    Overflow, "overflow", OverflowProperty, overflow,
-    "visible" => Visible,
-    "hidden" => Hidden,
 );

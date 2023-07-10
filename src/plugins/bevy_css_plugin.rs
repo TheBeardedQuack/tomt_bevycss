@@ -21,15 +21,11 @@ use crate::{
 };
 use bevy::{
     prelude::{
-        BackgroundColor,
-        Button,
-        Interaction,
-        IntoSystemConfig,
-        Node,
-        Style,
-        Text,
-        UiImage, PreUpdate, PostUpdate, Update, Last,
-    }, asset::Asset,
+        Button, Interaction,
+        BackgroundColor, Style,
+        Text, UiImage,
+        PreUpdate, PostUpdate,
+    },
 };
 
 /// Plugin which add all types, assets, systems and internal resources needed by `tomt_bevycss`.
@@ -72,7 +68,8 @@ impl BevyCssPlugin
         app.register_property::<AlignSelfProperty>();
         app.register_property::<AlignContentProperty>();
         app.register_property::<JustifyContentProperty>();
-        app.register_property::<OverflowProperty>();
+        app.register_property::<OverflowXProperty>();
+        app.register_property::<OverflowYProperty>();
     
         app.register_property::<LeftProperty>();
         app.register_property::<RightProperty>();
@@ -109,7 +106,6 @@ impl BevyCssPlugin
 }
 
 use bevy::{
-    asset::AssetEvents,
     prelude::{
         AddAsset,
         Plugin,

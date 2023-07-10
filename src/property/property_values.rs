@@ -8,7 +8,7 @@ use bevy::{
     prelude::{
         Color, Deref,
     },
-    ui::{UiRect, Val},
+    ui::{UiRect, Val, OverflowAxis},
 };
 
 /// A list of [`PropertyToken`] which was parsed from a single property.
@@ -54,6 +54,28 @@ impl PropertyValues {
         {
             // TODO: Implement color function like rgba(255, 255, 255, 255)
             // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
+            None
+        }
+    }
+
+    /// Tries to parse the current value as a single [`OverflowAxis`].
+    pub fn overflow(
+        &self
+    ) -> Option<OverflowAxis> {
+        if self.0.len() == 1
+        {
+            match &self.0[0]
+            {
+                PropertyToken::Identifier(overflow) => match overflow
+                {
+                    "visible" => Some(OverflowAxis::Visible),
+                    "hidden" | "clip" => Some(OverflowAxis::Clip),
+                },
+                _ => None
+            }
+        }
+        else
+        {
             None
         }
     }
