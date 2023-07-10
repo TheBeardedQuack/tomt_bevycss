@@ -18,7 +18,6 @@ use bevy::{
     prelude::{
         Component,
         Entity,
-        IntoSystemConfig,
         Query,
         With,
     },
@@ -123,10 +122,6 @@ impl RegisterProperty for bevy::prelude::App {
     where
         T: Property + 'static,
     {
-        self.add_system(
-            T::apply_system
-                .in_set(system::sets::BevyCssSet::Apply)
-        );
-        self
+        self.add_systems(system::sets::BevyCssSet::Apply, T::apply_system)
     }
 }
