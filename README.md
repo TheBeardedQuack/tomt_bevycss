@@ -82,6 +82,17 @@ This crate marks the first public release from both Tome of Many Things.
             <li>Fixed broken doc links after project fork</li>
         </ul></li>
     </ul></td>
+    <td>0.5.0</td>
+    <td><ul>
+        <li>Dependencies</ul>
+            <li>bevy - Updated to 0.11 (in progress)</li>
+            <li>bevy_editor_pls - Updated to 0.4.0</li>
+            <li>cssparser - Updated to 0.30.0</li>
+        </ul></li>
+        <li>Features<ul>
+            <li>`overflow` property split into `overflow-x` and `overflow-y` to reflect changes to `bevy::ui::Overflow`</li>
+        </ul></li>
+    </ul></td>
 </tr>
 </table>
 
@@ -163,6 +174,7 @@ See [Custom Properties][27] (docs/custom-properties.md) for more information.
 |  0.9  |     0.2      |
 |  0.10 |     0.3      |
 |  0.10 |    0.4.x     |
+|  0.11 |    0.5.x     |
 
 
 # Contributing
