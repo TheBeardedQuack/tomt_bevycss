@@ -261,7 +261,7 @@ fn get_entities_with_pseudo_class(
         match (name, *action)
         {
             ("hover", Interaction::Hovered) => trace!("Entity[{entity:?}]:hover"),
-            ("click", Interaction::Clicked) => trace!("Entity[{entity:?}]:click"),
+            ("click", Interaction::Pressed) => trace!("Entity[{entity:?}]:click"),
             _ => continue,
         };
 

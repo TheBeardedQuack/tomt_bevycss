@@ -37,7 +37,7 @@ fn change_theme(
         match *interaction {
             Interaction::None => info!("Button left"),
             Interaction::Hovered => info!("Button hovered"),
-            Interaction::Clicked => {
+            Interaction::Pressed => {
                 info!("Button clicked");
                 if let Ok(mut sheet) = styles_query.get_mut(themes.root)
                 {
