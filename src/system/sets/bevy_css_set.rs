@@ -1,9 +1,12 @@
-use bevy::ecs::schedule::SystemSet;
+use bevy::ecs::schedule::{
+    ScheduleLabel,
+    SystemSet,
+};
 
 /// System sets  used by `tomt_bevycss` systems
 #[derive(Debug, Copy, Clone)]
 #[derive(PartialEq, Eq, Hash)]
-#[derive(SystemSet)]
+#[derive(ScheduleLabel, SystemSet)]
 pub enum BevyCssSet {
     /// Prepares internal state before running apply systems.
     /// This system runs on [`bevy::prelude::CoreSet::PreUpdate`].

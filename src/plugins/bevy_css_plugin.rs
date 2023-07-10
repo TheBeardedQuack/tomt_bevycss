@@ -28,8 +28,8 @@ use bevy::{
         Node,
         Style,
         Text,
-        UiImage, PreUpdate, PostUpdate,
-    },
+        UiImage, PreUpdate, PostUpdate, Update, Last,
+    }, asset::Asset,
 };
 
 /// Plugin which add all types, assets, systems and internal resources needed by `tomt_bevycss`.
@@ -109,7 +109,7 @@ impl BevyCssPlugin
 }
 
 use bevy::{
-    asset::AssetSet,
+    asset::AssetEvents,
     prelude::{
         AddAsset,
         Plugin,
@@ -125,39 +125,32 @@ impl Plugin for BevyCssPlugin
     ) {
         use system::sets::*;
 
+        // Type registration
         app.register_type::<Class>()
-            .register_type::<StyleSheet>()
-            .add_asset::<StyleSheetAsset>()
-            .configure_set(PreUpdate, BevyCssSet::Prepare.before(BevyCssSet::Apply))
-            .configure_set(PostUpdate, BevyCssSet::Cleanup)
+            .register_type::<StyleSheet>();
+
+        // Resources
+        let prepared_state = PrepareParams::new(&mut app.world);
+        app.add_asset::<StyleSheetAsset>()
+            .init_asset_loader::<StyleSheetLoader>()
             .init_resource::<StyleSheetState>()
             .init_resource::<ComponentFilterRegistry>()
-            .init_asset_loader::<StyleSheetLoader>()
-            .add_system(
-                system::prepare
-                    .in_set(BevyCssSet::Prepare)
-            )
-            .add_system(
-                system::clear_state
-                    .in_set(BevyCssSet::Cleanup)
-            );
+            .insert_resource(prepared_state);
 
-        let prepared_state = PrepareParams::new(&mut app.world);
-        app.insert_resource(prepared_state);
+        // Systems
+        app.configure_set(PreUpdate, BevyCssSet::Prepare.before(BevyCssSet::Apply))
+            .configure_set(PostUpdate, BevyCssSet::Cleanup)
+            .add_systems(BevyCssSet::Prepare, system::prepare)
+            .add_systems(BevyCssSet::Cleanup, system::clear_state);
 
+        if self.hot_reload
+        {
+            app.configure_set(PostUpdate, BevyCssHotReload)
+                .add_systems(BevyCssHotReload, system::hot_reload_style_sheets);
+        }
+
+        // CSS registrations
         Self::register_component_selector(app);
         Self::register_properties(app);
-
-        if self.hot_reload {
-            app.configure_set(
-                BevyCssHotReload
-                    .after(AssetSet::AssetEvents)
-                    .before(CoreSet::Last),
-            )
-            .add_system(
-                system::hot_reload_style_sheets
-                    .in_base_set(BevyCssHotReload)
-            );
-        }
     }
 }
