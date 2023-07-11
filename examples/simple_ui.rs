@@ -3,9 +3,11 @@ use tomt_bevycss::prelude::{Class, BevyCssPlugin, StyleSheet};
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
-        .add_plugin(BevyCssPlugin::default())
-        .add_startup_system(setup)
+        .add_plugins((
+            DefaultPlugins,
+            BevyCssPlugin::default(),
+        ))
+        .add_systems(Startup, setup)
         .run();
 }
 
