@@ -3,12 +3,13 @@ use tomt_bevycss::prelude::*;
 
 fn main() {
     let mut app = App::new();
-    app.add_plugins(DefaultPlugins)
-        .add_plugin(BevyCssPlugin::default())
-        .add_startup_system(setup);
+    app.add_plugins((
+            DefaultPlugins,
+            BevyCssPlugin::default()
+        ))
+        .add_systems(Startup, setup);
 
     app.register_property::<AlphaProperty>();
-
     app.run();
 }
 
