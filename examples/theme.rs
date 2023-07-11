@@ -172,7 +172,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                                 align_self: AlignSelf::Center,
                                 width: Val::Percent(100.0),
                                 height: Val::Percent(100.0),
-                                overflow: Overflow::Hidden,
+                                overflow: Overflow{
+                                    x: OverflowAxis::Clip,
+                                    y: OverflowAxis::Clip,
+                                },
                                 ..default()
                             },
                             background_color: Color::rgb(0.10, 0.10, 0.10).into(),
