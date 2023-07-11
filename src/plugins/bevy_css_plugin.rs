@@ -104,12 +104,10 @@ impl BevyCssPlugin
     }
 }
 
-use bevy::{
-    prelude::{
-        AddAsset,
-        Plugin,
-        IntoSystemSetConfig,
-    },
+use bevy::prelude::{
+    AddAsset,
+    Plugin,
+    IntoSystemSetConfig,
 };
 
 impl Plugin for BevyCssPlugin
