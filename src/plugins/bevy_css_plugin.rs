@@ -19,13 +19,12 @@ use crate::{
     RegisterProperty,
     RegisterComponentSelector,
 };
-use bevy::{
-    prelude::{
-        Button, Interaction,
-        BackgroundColor, Style,
-        Text, UiImage,
-        PreUpdate, PostUpdate,
-    },
+
+use bevy::prelude::{
+    Button, Interaction,
+    BackgroundColor, Style,
+    Node, Text, UiImage,
+    PreUpdate, PostUpdate,
 };
 
 /// Plugin which add all types, assets, systems and internal resources needed by `tomt_bevycss`.

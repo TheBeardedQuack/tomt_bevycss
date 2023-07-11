@@ -66,10 +66,11 @@ impl PropertyValues {
         {
             match &self.0[0]
             {
-                PropertyToken::Identifier(overflow) => match overflow
+                PropertyToken::Identifier(overflow) => match overflow.as_ref()
                 {
                     "visible" => Some(OverflowAxis::Visible),
                     "hidden" | "clip" => Some(OverflowAxis::Clip),
+                    _ => None,
                 },
                 _ => None
             }
