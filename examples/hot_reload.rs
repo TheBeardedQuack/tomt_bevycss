@@ -1,17 +1,30 @@
-use bevy::prelude::*;
-use tomt_bevycss::prelude::{Class, BevyCssPlugin, StyleSheet};
+use std::time::Duration;
+
+use bevy::{
+    asset::ChangeWatcher,
+    prelude::*,
+};
 use bevy_editor_pls::prelude::*;
 
+use tomt_bevycss::prelude::{
+    BevyCssPlugin,
+    StyleSheet,
+    Class,
+};
+
+
 fn main() {
+    // Whenever an StyleSheet is loaded, it'll be applied automatically
     App::new()
-        // Whenever an StyleSheet is loaded, it'll be applied automatically
-        .add_plugins(DefaultPlugins.set(AssetPlugin {
-            watch_for_changes: true,
-            ..Default::default()
-        }))
-        .add_plugin(EditorPlugin::default())
-        .add_plugin(BevyCssPlugin::with_hot_reload())
-        .add_startup_system(setup)
+        .add_plugins((
+            DefaultPlugins.set(AssetPlugin {
+                watch_for_changes: ChangeWatcher::with_delay(Duration::from_millis(100)),
+                ..Default::default()
+            }),
+            EditorPlugin::default(),
+            BevyCssPlugin::with_hot_reload(),
+        ))
+        .add_systems(Startup, setup)
         .run();
 }
 
