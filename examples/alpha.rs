@@ -21,7 +21,8 @@ fn setup(
     commands
         .spawn( NodeBundle {
             style: Style {
-                size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+                width: Val::Percent(100.0),
+                height: Val::Percent(100.0),
                 justify_content: JustifyContent::SpaceBetween,
                 ..default()
             },
@@ -35,7 +36,8 @@ fn setup(
                 // bevy logo (image)
                 parent.spawn(ImageBundle {
                     style: Style {
-                        size: Size::new(Val::Auto, Val::Auto),
+                        width: Val::Auto,
+                        height: Val::Auto,
                         ..default()
                     },
                     image: asset_server.load("branding/bevy_logo_dark_big.png").into(),
