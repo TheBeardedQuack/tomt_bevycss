@@ -4,7 +4,7 @@ use bevy::{
     asset::ChangeWatcher,
     prelude::*,
 };
-use bevy_editor_pls::prelude::*;
+// use bevy_editor_pls::prelude::*;
 
 use tomt_bevycss::prelude::{
     BevyCssPlugin,
@@ -21,7 +21,7 @@ fn main() {
                 watch_for_changes: ChangeWatcher::with_delay(Duration::from_millis(100)),
                 ..Default::default()
             }),
-            EditorPlugin::default(),
+            // EditorPlugin::default(),
             BevyCssPlugin::with_hot_reload(),
         ))
         .add_systems(Startup, setup)
