@@ -53,17 +53,19 @@ fn main()
 {
     let mut app = App::new();
 
-    app.add_plugins(DefaultPlugins)
-        .add_plugin(BevyCssPlugin::default())
+    app.add_plugins((
+            DefaultPlugins,
+            BevyCssPlugin::default()
+        ))
         .register_type::<Class>()
         .register_type::<StyleSheet>();
 
-    app.add_startup_system(spawn_camera);
+    app.add_systems(Startup, spawn_camera);
 
     app.add_state::<GameState>()
         .register_type::<MainMenuSelection>()
-        .add_system(enter_main_menu.in_schedule(OnEnter(GameState::MainMenu)))
-        .add_system(exit_main_menu.in_schedule(OnExit(GameState::MainMenu)));
+        .add_systems(OnEnter(GameState::MainMenu), enter_main_menu)
+        .add_systems(OnExit(GameState::MainMenu), exit_main_menu);
 
     app.run();
 }
@@ -88,7 +90,8 @@ fn enter_main_menu(
             Class::new(CLASS_MAIN_MENU),
             NodeBundle {
                 style: Style {
-                    size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
                     ..default()
                 },
                 ..default()
