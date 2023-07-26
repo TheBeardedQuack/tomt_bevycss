@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use bevy::{prelude::*, ui::FocusPolicy, asset::ChangeWatcher};
+use bevy_inspector_egui::quick::*;
 use tomt_bevycss::prelude::{
     Class, BevyCssPlugin, RegisterComponentSelector, StyleSheet, StyleSheetAsset,
 };
@@ -18,6 +19,7 @@ fn main() {
                 ..Default::default()
             }),
             BevyCssPlugin::with_hot_reload(),
+            WorldInspectorPlugin::new(),
         ))
         .add_systems(Startup, setup)
         .add_systems(Update, change_theme)
@@ -271,7 +273,7 @@ fn setup(
                             NodeBundle {
                                 style: Style {
                                     width: Val::Px(100.0),
-                                    height: Val::Percent(100.0),
+                                    height: Val::Px(100.0),
                                     ..default()
                                 },
                                 background_color: Color::rgb(1.0, 0.0, 0.0).into(),
