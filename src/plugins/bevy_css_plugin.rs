@@ -20,12 +20,7 @@ use crate::{
     RegisterComponentSelector,
 };
 
-use bevy::prelude::{
-    Button, Interaction,
-    BackgroundColor, Style,
-    Node, Text, UiImage,
-    PreUpdate, PostUpdate,
-};
+use bevy::prelude::*;
 
 /// Plugin which add all types, assets, systems and internal resources needed by `tomt_bevycss`.
 /// You must add this plugin in order to use `tomt_bevycss`.
@@ -104,20 +99,12 @@ impl BevyCssPlugin
     }
 }
 
-use bevy::prelude::{
-    AddAsset,
-    Plugin,
-    IntoSystemSetConfig,
-};
-
 impl Plugin for BevyCssPlugin
 {
     fn build(
         &self,
         app: &mut bevy::prelude::App
     ) {
-        use system::sets::*;
-
         // Type registration
         app.register_type::<Class>()
             .register_type::<StyleSheet>();
@@ -130,16 +117,20 @@ impl Plugin for BevyCssPlugin
             .init_resource::<ComponentFilterRegistry>()
             .insert_resource(prepared_state);
 
+        // Schedules
+        use system::sets::*;
+        app.configure_set(PreUpdate, BevyCssSet::Prepare)
+            .configure_set(PreUpdate, BevyCssSet::Apply.after(BevyCssSet::Prepare))
+            .configure_set(PostUpdate, BevyCssSet::Cleanup);
+
         // Systems
-        app.configure_set(PreUpdate, BevyCssSet::Prepare.before(BevyCssSet::Apply))
-            .configure_set(PostUpdate, BevyCssSet::Cleanup)
-            .add_systems(BevyCssSet::Prepare, system::prepare)
-            .add_systems(BevyCssSet::Cleanup, system::clear_state);
+        app.add_systems(PreUpdate, system::prepare.in_set(BevyCssSet::Prepare))
+            .add_systems(PostUpdate, system::clear_state.in_set(BevyCssSet::Cleanup));
 
         if self.hot_reload
         {
             app.configure_set(PostUpdate, BevyCssHotReload)
-                .add_systems(BevyCssHotReload, system::hot_reload_style_sheets);
+                .add_systems(PostUpdate, system::hot_reload_style_sheets.in_set(BevyCssHotReload));
         }
 
         // CSS registrations

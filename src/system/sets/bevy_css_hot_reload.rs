@@ -1,9 +1,6 @@
-use bevy::ecs::schedule::{
-    ScheduleLabel,
-    SystemSet,
-};
+use bevy::ecs::schedule::SystemSet;
 
 #[derive(Debug, Clone)]
 #[derive(Hash, PartialEq, Eq)]
-#[derive(ScheduleLabel, SystemSet)]
+#[derive(SystemSet)]
 pub struct BevyCssHotReload;

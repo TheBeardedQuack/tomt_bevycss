@@ -11,16 +11,15 @@ pub mod system;
 
 use crate::{
     property::Property,
-    system::ComponentFilterRegistry,
+    system::{
+        ComponentFilterRegistry,
+        sets::BevyCssSet,
+    },
 };
+
 use bevy::{
     ecs::system::SystemState,
-    prelude::{
-        Component,
-        Entity,
-        Query,
-        With,
-    },
+    prelude::*,
 };
 
 
@@ -122,6 +121,9 @@ impl RegisterProperty for bevy::prelude::App {
     where
         T: Property + 'static,
     {
-        self.add_systems(system::sets::BevyCssSet::Apply, T::apply_system)
+        self.add_systems(
+            Update,
+            T::apply_system.in_set(BevyCssSet::Apply)
+        )
     }
 }
