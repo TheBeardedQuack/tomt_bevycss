@@ -188,7 +188,7 @@ fn setup(
                                     flex_direction: FlexDirection::ColumnReverse,
                                     align_self: AlignSelf::Center,
                                     width: Val::Percent(100.0),
-                                    height: Val::Percent(100.0),
+                                    height: Val::Percent(50.0),
                                     overflow: Overflow{
                                         x: OverflowAxis::Clip,
                                         y: OverflowAxis::Clip,
@@ -208,8 +208,6 @@ fn setup(
                                         style: Style {
                                             flex_direction: FlexDirection::ColumnReverse,
                                             flex_grow: 1.0,
-                                            max_width: Val::Px(0.0),
-                                            max_height: Val::Px(0.0),
                                             ..default()
                                         },
                                         background_color: Color::NONE.into(),
@@ -228,12 +226,13 @@ fn setup(
                                                     TextStyle {
                                                         font: asset_server
                                                             .load("fonts/FiraSans-Bold.ttf"),
-                                                        font_size: 20.,
+                                                        font_size: 20.0,
                                                         color: Color::WHITE,
                                                     },
                                                 )
                                                 .with_style(Style {
                                                     flex_shrink: 0.,
+                                                    width: Val::DEFAULT,
                                                     height: Val::Px(20.0),
                                                     margin: UiRect {
                                                         left: Val::Auto,
