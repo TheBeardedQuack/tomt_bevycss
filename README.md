@@ -88,7 +88,7 @@ This crate marks the first public release from both Tome of Many Things.
     <td><ul>
         <li>Dependencies<ul>
             <li>bevy - Updated to 0.11</li>
-            <li>bevy_editor_pls - Updated to 0.4.0</li>
+            <li>bevy_editor_pls - Removed until updated for bevy 0.11</li>
             <li>cssparser - Updated to 0.30.0</li>
         </ul></li>
         <li>Features<ul>
