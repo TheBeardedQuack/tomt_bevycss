@@ -34,6 +34,17 @@ pub struct StyleSheetAsset {
 
 impl StyleSheetAsset
 {
+    #[inline]
+    fn parse_as_sass(
+        path: &str
+    ) -> bool {
+        #[cfg(feature = "sass")]
+        { path.ends_with(".scss") }
+        
+        #[cfg(not(feature = "sass"))]
+        { false }
+    }
+
     /// Parses a string with a valid CSS into a list of [`crate::stylesheet::StyleRule`]s.
     ///
     /// This used by internal asset loader to keep track of where each asset came from.
@@ -48,10 +59,16 @@ impl StyleSheetAsset
         content.hash(&mut hasher);
         let hash = hasher.finish();
 
+        let mut parse_mode = StyleSheetType::default();
+        if Self::parse_as_sass(path)
+        {
+            parse_mode = StyleSheetType::Sass;
+        }
+
         Self {
             path: path.to_string(),
             hash,
-            rules: StyleSheetParser::parse(content, StyleSheetType::Css)
+            rules: StyleSheetParser::parse(content, parse_mode)
         }
     }
 
