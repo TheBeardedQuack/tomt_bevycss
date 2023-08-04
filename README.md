@@ -84,19 +84,23 @@ This crate marks the first public release from both Tome of Many Things.
     </ul></td>
 </tr>
 <tr>
-    <td>0.5.0<br />(in progress)</td>
+    <td>0.5.0</td>
     <td><ul>
         <li>Dependencies<ul>
-            <li>bevy - Updated to 0.11 (in progress)</li>
+            <li>bevy - Updated to 0.11</li>
             <li>bevy_editor_pls - Updated to 0.4.0</li>
             <li>cssparser - Updated to 0.30.0</li>
         </ul></li>
         <li>Features<ul>
             <li><code>overflow</code> css property split into <code>overflow-x</code> and <code>overflow-y</code> to reflect changes to <code>bevy::ui::Overflow</code></li>
         </ul></li>
+        <li>Fixed<ul>
+            <li>Fixed a bug causing some UI items to not have styling applied until they were updated</li>
+        </ul></li>
         <li>Documentation<ul>
             <li>Details of changes between bevy 0.10 and 0.11 support (mainly in Features above)</li>
             <li>Minor format and phrasing changes for readme</li>
+            <li>Added entity # to some of the trace log outputs to help with diagnosing issues</li>
         </ul></li>
     </ul></td>
 </tr>

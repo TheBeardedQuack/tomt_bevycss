@@ -59,8 +59,14 @@ impl PrepareParams {
 pub(crate) fn prepare(
     world: &mut World,
 ) {
-    world.resource_scope(|world, mut params: Mut<PrepareParams>| {
-        world.resource_scope(|world, mut registry: Mut<ComponentFilterRegistry>| {
+    world.resource_scope(|
+        world,
+        mut params: Mut<PrepareParams>
+    | {
+        world.resource_scope(|
+            world,
+            mut registry: Mut<ComponentFilterRegistry>
+        | {
             let assets = world.resource::<Assets<StyleSheetAsset>>();
             let css_query = params.get(world);
             let state = prepare_state(world, assets, css_query, &mut registry);
@@ -86,18 +92,16 @@ pub(crate) fn prepare_state(
     let mut state = StyleSheetStateBuilder::default();
     let mut style_tree: StyleTree = Default::default();
 
-    let mut handled_roots: SmallVec<[Entity; 8]> = Default::default();
-
     // Find only changed components
     for updated_entity in &params.ui_changes
     {
+        debug!("Updated detected for entity {}", updated_entity.index());
+
         // Find list of stylesheets that apply to this component (and cache in style_tree for next iterations)
         for (root_entity, sheet_handle) in style_tree
             .get_style_roots_for(updated_entity, &params.ui_nodes)
             .iter()
         {
-            if handled_roots.contains(root_entity) { continue; }
-
             let style_sheet = match params.assets.get(sheet_handle)
             {
                 Some(sheet) => sheet,
@@ -124,8 +128,6 @@ pub(crate) fn prepare_state(
                     .or_default()
                     .insert(rule.selector.clone(), entities);
             }
-
-            handled_roots.push(*root_entity);
         }
     }
     
@@ -138,17 +140,26 @@ fn build_entity_filter(
     css_query: &CssQueryParam
 ) -> Option<SmallVec<[Entity; 8]>> {
     css_query.ui_nodes.get(updated_node)
-        .map(|(_e, p, c, _s)|
-        {
+        .map(|(
+            _entity,
+            parent,
+            children,
+            _stylesheet
+        )| {
             // Add parents recursively
-            p.map_or_else(SmallVec::default, |parent| get_parents_recursively(root, parent, &css_query.parent))
+            parent.map_or_else(
+                    SmallVec::default,
+                    |parent| get_parents_recursively(root, parent, &css_query.parent)
+                )
                 .into_iter()
                 // Add the entity that triggered the change
                 .chain(std::iter::once(updated_node))
                 // Add children recursively
-                .chain(
-                    c.map_or_else(SmallVec::default, |children| get_children_recursively(children, &css_query.children))
-                        .into_iter()
+                .chain(children.map_or_else(
+                        SmallVec::default,
+                        |children| get_children_recursively(children, &css_query.children)
+                    )
+                    .into_iter()
                 )
                 .collect()
         })
@@ -202,8 +213,10 @@ fn select_entities_node(
     registry: &mut ComponentFilterRegistry,
     filter: Option<SmallVec<[Entity; 8]>>,
 ) -> SmallVec<[Entity; 8]> {
-    let fold_fn = |filter: Option<SmallVec<[Entity; 8]>>, element: &SelectorElement|
-    -> Option<SmallVec<[Entity; 8]>> {
+    let fold_fn = |
+        filter: Option<SmallVec<[Entity; 8]>>,
+        element: &SelectorElement
+    | -> Option<SmallVec<[Entity; 8]>> {
         let result = match element 
         {
             SelectorElement::Name(name) =>

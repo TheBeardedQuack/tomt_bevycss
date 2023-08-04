@@ -1,10 +1,11 @@
 use std::time::Duration;
 
-use bevy::{prelude::*, ui::FocusPolicy, asset::ChangeWatcher};
-use bevy_inspector_egui::quick::*;
-use tomt_bevycss::prelude::{
-    Class, BevyCssPlugin, RegisterComponentSelector, StyleSheet, StyleSheetAsset,
+use bevy::{
+    prelude::*,
+    ui::FocusPolicy,
+    asset::ChangeWatcher
 };
+use tomt_bevycss::prelude::*;
 
 #[derive(Component, Debug, Default, Reflect)]
 #[reflect(Component)]
@@ -19,7 +20,6 @@ fn main() {
                 ..Default::default()
             }),
             BevyCssPlugin::with_hot_reload(),
-            WorldInspectorPlugin::new(),
         ))
         .add_systems(Startup, setup)
         .add_systems(Update, change_theme)
@@ -143,111 +143,111 @@ fn setup(
 
             // right vertical fill
             parent.spawn((
+                NodeBundle {
+                    style: Style {
+                        flex_direction: FlexDirection::ColumnReverse,
+                        justify_content: JustifyContent::Center,
+                        width: Val::Px(200.0),
+                        height: Val::Percent(100.0),
+                        ..default()
+                    },
+                    background_color: Color::rgb(0.15, 0.15, 0.15).into(),
+                    ..default()
+                },
+                Name::new("right-border"),
+            ))
+            .with_children(|parent|
+            {
+                // Title
+                parent.spawn((
+                        TextBundle::from_section(
+                            "Scrolling list",
+                            TextStyle {
+                                font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                                font_size: 25.,
+                                color: Color::WHITE,
+                            },
+                        )
+                        .with_style(Style {
+                            height: Val::Px(25.0),
+                            margin: UiRect {
+                                left: Val::Auto,
+                                right: Val::Auto,
+                                ..default()
+                            },
+                            ..default()
+                        }),
+                        Name::new("right-bg"),
+                        Title,
+                    ));
+
+                // List with hidden overflow
+                parent.spawn((
                     NodeBundle {
                         style: Style {
                             flex_direction: FlexDirection::ColumnReverse,
-                            justify_content: JustifyContent::Center,
-                            width: Val::Px(200.0),
-                            height: Val::Percent(100.0),
+                            align_self: AlignSelf::Center,
+                            width: Val::Percent(100.0),
+                            height: Val::Percent(50.0),
+                            overflow: Overflow{
+                                x: OverflowAxis::Clip,
+                                y: OverflowAxis::Clip,
+                            },
                             ..default()
                         },
-                        background_color: Color::rgb(0.15, 0.15, 0.15).into(),
+                        background_color: Color::rgb(0.10, 0.10, 0.10).into(),
                         ..default()
                     },
-                    Name::new("right-border"),
+                    Name::new("right-list"),
                 ))
                 .with_children(|parent|
                 {
-                    // Title
+                    // Moving panel
                     parent.spawn((
-                            TextBundle::from_section(
-                                "Scrolling list",
-                                TextStyle {
-                                    font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                                    font_size: 25.,
-                                    color: Color::WHITE,
-                                },
-                            )
-                            .with_style(Style {
-                                height: Val::Px(25.0),
-                                margin: UiRect {
-                                    left: Val::Auto,
-                                    right: Val::Auto,
-                                    ..default()
-                                },
-                                ..default()
-                            }),
-                            Name::new("right-bg"),
-                            Title,
-                        ));
-
-                    // List with hidden overflow
-                    parent.spawn((
-                            NodeBundle {
-                                style: Style {
-                                    flex_direction: FlexDirection::ColumnReverse,
-                                    align_self: AlignSelf::Center,
-                                    width: Val::Percent(100.0),
-                                    height: Val::Percent(50.0),
-                                    overflow: Overflow{
-                                        x: OverflowAxis::Clip,
-                                        y: OverflowAxis::Clip,
-                                    },
-                                    ..default()
-                                },
-                                background_color: Color::rgb(0.10, 0.10, 0.10).into(),
+                        NodeBundle {
+                            style: Style {
+                                flex_direction: FlexDirection::ColumnReverse,
+                                flex_grow: 1.0,
                                 ..default()
                             },
-                            Name::new("right-list"),
-                        ))
-                        .with_children(|parent|
+                            background_color: Color::NONE.into(),
+                            ..default()
+                        },
+                        Name::new("right-moving-panel"),
+                    ))
+                    .with_children(|parent|
+                    {
+                        // List items
+                        for i in 0..30
                         {
-                            // Moving panel
                             parent.spawn((
-                                    NodeBundle {
-                                        style: Style {
-                                            flex_direction: FlexDirection::ColumnReverse,
-                                            flex_grow: 1.0,
-                                            ..default()
-                                        },
-                                        background_color: Color::NONE.into(),
+                                TextBundle::from_section(
+                                    format!("Item {i}"),
+                                    TextStyle {
+                                        font: asset_server
+                                            .load("fonts/FiraSans-Bold.ttf"),
+                                        font_size: 20.0,
+                                        color: Color::WHITE,
+                                    },
+                                )
+                                .with_style(Style {
+                                    flex_shrink: 0.,
+                                    width: Val::DEFAULT,
+                                    height: Val::Px(20.0),
+                                    margin: UiRect {
+                                        left: Val::Auto,
+                                        right: Val::Auto,
                                         ..default()
                                     },
-                                    Name::new("right-moving-panel"),
-                                ))
-                                .with_children(|parent|
-                                {
-                                    // List items
-                                    for i in 0..30
-                                    {
-                                        parent.spawn((
-                                                TextBundle::from_section(
-                                                    format!("Item {i}"),
-                                                    TextStyle {
-                                                        font: asset_server
-                                                            .load("fonts/FiraSans-Bold.ttf"),
-                                                        font_size: 20.0,
-                                                        color: Color::WHITE,
-                                                    },
-                                                )
-                                                .with_style(Style {
-                                                    flex_shrink: 0.,
-                                                    width: Val::DEFAULT,
-                                                    height: Val::Px(20.0),
-                                                    margin: UiRect {
-                                                        left: Val::Auto,
-                                                        right: Val::Auto,
-                                                        ..default()
-                                                    },
-                                                    ..default()
-                                                }),
-                                                Name::new(format!("right-item-{}", i)),
-                                                Class::new("big-text"),
-                                            ));
-                                    }
-                                });
-                        });
+                                    ..default()
+                                }),
+                                Name::new(format!("right-item-{}", i)),
+                                Class::new("big-text"),
+                            ));
+                        }
+                    });
                 });
+            });
 
             // render order test: reddest in the back, whitest in the front (flex center)
             parent.spawn((

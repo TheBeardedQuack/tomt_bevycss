@@ -3,7 +3,7 @@ use crate::prelude::StyleSheetAsset;
 
 use bevy::{
     prelude::{
-        error, warn, info, debug, trace,
+        error, warn, debug, trace,
         Deref, DerefMut,
         Handle, Entity,
     },
@@ -59,11 +59,13 @@ impl<'me, 'w, 's> StyleTree
         entity: Entity,
         query: &'w query::QueryUiNodes<'w, 's>,
     ) -> Option<StyleTreeNode> {
+        let entity_idx = entity.index();
+
         let (entity, parent, _c, sheet) = match query.get(entity)
         {
             Ok((e, p, c, s)) => (e, p, c, s),
             Err(err) => {
-                error!("Query on entity {entity:?} failed, {err}");
+                error!("Query on entity {entity_idx} failed, {err}");
                 return None;
             },
         };
@@ -71,19 +73,19 @@ impl<'me, 'w, 's> StyleTree
         match (sheet, parent)
         {
             (Some(style), _p) => {
-                trace!("Stylesheet found on this node");
+                trace!("Stylesheet found on entity {entity_idx}");
                 let result = if let Some(node) = self.get(style.handle())
                 {
-                    trace!("Found existing node entry in tree, returning early");
+                    trace!("Entity {entity_idx} is already in the tree, returning early");
                     node
                 }
                 else
                 {
-                    trace!("Node entry does not exist in tree, creating entry");
+                    trace!("Creating entry in tree for entity {entity_idx}");
                     let parent = match parent {
                         Some(p) => self.get_or_find_root(p.get(), query),
                         None => {
-                            debug!("No parent node found, terminating search");
+                            debug!("Entity {entity_idx} has no parent UI node, terminating search");
                             None
                         },
                     }.map(|p| p.sheet_handle);
@@ -101,7 +103,7 @@ impl<'me, 'w, 's> StyleTree
             },
             (None, Some(parent)) => self.get_or_find_root(parent.get(), query),
             (None, None) => {
-                info!("No parent node provided to find styles");
+                debug!("Entity {entity_idx} has no UI parent, or attached stylesheet");
                 None
             }
         }
