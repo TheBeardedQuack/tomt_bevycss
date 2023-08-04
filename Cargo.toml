@@ -16,7 +16,7 @@ homepage = "https://crates.io/crates/tomt_bevycss"
 default = ["pseudo_class"]
 monitor_changes = []
 pseudo_class = ["monitor_changes"]
-pseudo_prop = ["pseudo_class"]
+# pseudo_prop = ["pseudo_class"]
 sass = ["dep:grass"]
 
 [dependencies]
