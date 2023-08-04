@@ -1,6 +1,9 @@
 use super::StyleRule;
 use crate::{
-    parser::StyleSheetParser,
+    parser::{
+        StyleSheetParser,
+        StyleSheetType
+    },
     property::PropertyValues,
     selector::Selector,
 };
@@ -48,7 +51,7 @@ impl StyleSheetAsset
         Self {
             path: path.to_string(),
             hash,
-            rules: StyleSheetParser::parse(content)
+            rules: StyleSheetParser::parse(content, StyleSheetType::Css)
         }
     }
 

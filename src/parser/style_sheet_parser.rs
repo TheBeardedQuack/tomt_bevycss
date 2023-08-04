@@ -1,8 +1,9 @@
 use super::{
-    smallvec, SmallVec,
     format_error,
-    PropertyParser
+    PropertyParser,
+    StyleSheetType
 };
+
 use crate::{
     prelude::BevyCssError,
     selector::{
@@ -10,6 +11,11 @@ use crate::{
         SelectorElement,
     },
     stylesheet::StyleRule,
+};
+
+use smallvec::{
+    smallvec,
+    SmallVec,
 };
 
 use cssparser::{
@@ -25,7 +31,7 @@ use bevy::log::error;
 pub(crate) struct StyleSheetParser;
 
 impl StyleSheetParser {
-    pub(crate) fn parse(
+    fn parse_css(
         content: &str
     ) -> SmallVec<[StyleRule; 8]> {
         let mut input = ParserInput::new(content);
@@ -45,6 +51,33 @@ impl StyleSheetParser {
             })
             .collect()
     }
+
+    #[cfg(feature = "sass")]
+    fn parse_sass(
+        content: &str
+    ) -> SmallVec<[StyleRule; 8]> {
+        match grass::from_string(content, &grass::Options::default())
+        {
+            Ok(css) => Self::parse_css(&css),
+            Err(err) => {
+                error!("Failed to compile CSS from SASS, {err}");
+                smallvec![]
+            }
+        }
+    }
+    
+    pub(crate) fn parse(
+        content: &str,
+        parse_mode: StyleSheetType
+    ) -> SmallVec<[StyleRule; 8]> {
+        match parse_mode
+        {
+            StyleSheetType::Css => Self::parse_css(content),
+
+            #[cfg(feature = "sass")]
+            StyleSheetType::Sass => Self::parse_sass(content),
+        }
+    }
 }
 
 impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
@@ -58,14 +91,13 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
     ) -> Result<Self::Prelude, ParseError<'i, Self::Error>> {
         let mut elements = smallvec![];
 
-        #[derive(Debug, Default, Clone)]
-        enum DelimType {
-            #[default] None,
-            Class,
-            #[cfg(feature = "pseudo_class")]
-            PseudoClass,
-            #[cfg(feature = "pseudo_prop")]
-            PseudoProp,
+        #[derive(Debug, Default, Copy, Clone)]
+        enum DelimType
+        {
+            #[default]                          None,
+                                                Class,
+            #[cfg(feature = "pseudo_class")]    PseudoClass,
+            #[cfg(feature = "pseudo_prop")]     PseudoProp,
         }
 
         let mut prev_delim = DelimType::None;

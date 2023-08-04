@@ -1,6 +1,9 @@
 mod style_sheet_parser;
 pub(crate) use style_sheet_parser::*;
 
+mod style_sheet_type;
+pub use style_sheet_type::*;
+
 mod property_parser;
 use property_parser::PropertyParser;
 

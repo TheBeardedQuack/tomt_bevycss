@@ -8,34 +8,37 @@ use crate::{
 #[test]
 fn parse_empty() {
     assert!(
-        StyleSheetParser::parse("").is_empty(),
+        StyleSheetParser::parse("", StyleSheetType::Css).is_empty(),
         "Should return an empty list of rules"
     );
     assert!(
-        StyleSheetParser::parse("{}").is_empty(),
+        StyleSheetParser::parse("{}", StyleSheetType::Css).is_empty(),
         "\"{{}}\" Should return an empty list of rules"
     );
     assert!(
-        StyleSheetParser::parse(" {}").is_empty(),
+        StyleSheetParser::parse(" {}", StyleSheetType::Css).is_empty(),
         "\" {{}}\" Should return an empty list of rules"
     );
     assert!(
-        StyleSheetParser::parse("# {}").is_empty(),
+        StyleSheetParser::parse("# {}", StyleSheetType::Css).is_empty(),
         "\"# {{}}\" Should return an empty list of rules"
     );
     assert!(
-        StyleSheetParser::parse("@@@ {}").is_empty(),
+        StyleSheetParser::parse("@@@ {}", StyleSheetType::Css).is_empty(),
         "Should return an empty list of rules"
     );
     assert!(
-        StyleSheetParser::parse("{}{}").is_empty(),
+        StyleSheetParser::parse("{}{}", StyleSheetType::Css).is_empty(),
         "Should return an empty list of rules"
     );
 }
 
 #[test]
 fn parse_single_name_selector_no_property() {
-    let rules = StyleSheetParser::parse("#id {}");
+    let rules = StyleSheetParser::parse(
+        "#id {}",
+        StyleSheetType::Css
+    );
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
     let rule = &rules[0];
@@ -55,7 +58,10 @@ fn parse_single_name_selector_no_property() {
 
 #[test]
 fn parse_single_class_selector_no_property() {
-    let rules = StyleSheetParser::parse(".class {}");
+    let rules = StyleSheetParser::parse(
+        ".class {}",
+        StyleSheetType::Css
+    );
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
     let rule = &rules[0];
@@ -75,7 +81,10 @@ fn parse_single_class_selector_no_property() {
 
 #[test]
 fn parse_single_component_selector_no_property() {
-    let rules = StyleSheetParser::parse("button {}");
+    let rules = StyleSheetParser::parse(
+        "button {}",
+        StyleSheetType::Css
+    );
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
     let rule = &rules[0];
@@ -95,7 +104,10 @@ fn parse_single_component_selector_no_property() {
 
 #[test]
 fn parse_single_complex_class_selector_no_property() {
-    let rules = StyleSheetParser::parse(".a.b.c.d.e.f.g {}");
+    let rules = StyleSheetParser::parse(
+        ".a.b.c.d.e.f.g {}",
+        StyleSheetType::Css
+    );
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
     let rule = &rules[0];
@@ -128,7 +140,10 @@ fn parse_single_complex_class_selector_no_property() {
 
 #[test]
 fn parse_single_composed_selector_no_property() {
-    let rules = StyleSheetParser::parse("a.b#c.d {}");
+    let rules = StyleSheetParser::parse(
+        "a.b#c.d {}",
+        StyleSheetType::Css
+    );
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
     let rule = &rules[0];
@@ -158,7 +173,10 @@ fn parse_single_composed_selector_no_property() {
 
 #[test]
 fn parse_multiple_composed_selector_no_property() {
-    let rules = StyleSheetParser::parse("a.b #c .d e#f .g.h i j.k#l {}");
+    let rules = StyleSheetParser::parse(
+        "a.b #c .d e#f .g.h i j.k#l {}",
+        StyleSheetType::Css
+    );
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
     let rule = &rules[0];
@@ -197,7 +215,10 @@ fn parse_multiple_composed_selector_no_property() {
 
 #[test]
 fn parse_single_token() {
-    let rules = StyleSheetParser::parse("a {b: c}");
+    let rules = StyleSheetParser::parse(
+        "a {b: c}",
+        StyleSheetType::Css
+    );
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
     let properties = &rules[0].properties;
@@ -222,16 +243,17 @@ fn parse_single_token() {
 fn parse_multiple_complex_properties() {
     let rules = StyleSheetParser::parse(
         r#"a {
-        b: c;
-        d: 0px;
-        e: #f; 
-        g: h i j; 
-        k-k: 100%;
-        l: 15.3px 3%;
-        m: 12.9;
-        n: "str";
-        o: p q #r #s "t" 1 45.67% 33px;
-    }"#,
+            b: c;
+            d: 0px;
+            e: #f; 
+            g: h i j; 
+            k-k: 100%;
+            l: 15.3px 3%;
+            m: 12.9;
+            n: "str";
+            o: p q #r #s "t" 1 45.67% 33px;
+        }"#,
+        StyleSheetType::Css
     );
 
     assert_eq!(rules.len(), 1, "Should have a single rule");
@@ -284,7 +306,10 @@ fn parse_multiple_complex_properties() {
 
 #[test]
 fn parse_multiple_rules() {
-    let rules = StyleSheetParser::parse(r#"a{a:a}a{a:a}a{a:a}a{a:a}"#);
+    let rules = StyleSheetParser::parse(
+        r#"a{a:a}a{a:a}a{a:a}a{a:a}"#,
+        StyleSheetType::Css
+    );
 
     assert_eq!(rules.len(), 4, "Should have 4 rules");
 

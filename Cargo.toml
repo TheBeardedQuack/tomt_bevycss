@@ -17,6 +17,7 @@ default = ["pseudo_class"]
 monitor_changes = []
 pseudo_class = ["monitor_changes"]
 pseudo_prop = ["pseudo_class"]
+sass = ["dep:grass"]
 
 [dependencies]
 bevy = { version = "0.11", default-features = false, features = [
@@ -27,6 +28,7 @@ bevy = { version = "0.11", default-features = false, features = [
 ] }
 smallvec = { version = "1.10", features = ["serde", "union", "const_generics"] }
 cssparser = "0.30.0"
+grass = { version = "0.13.1", optional = true }
 
 [dev-dependencies]
 bevy = { version = "0.11", features = [
