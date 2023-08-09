@@ -10,7 +10,9 @@ pub use entity_classes::QueryEntityClasses;
 pub mod entity_names;
 pub use entity_names::QueryEntityNames;
 
+#[cfg(feature = "pseudo_class")]
 pub mod entity_interaction;
+#[cfg(feature = "pseudo_class")]
 pub use entity_interaction::QueryEntityInteraction;
 
 pub mod ui_changes;

@@ -15,7 +15,7 @@ use bevy::{
         TypeUuid,
         TypePath,
     },
-    log::trace,
+    log::{trace, warn},
     utils::AHasher,
 };
 
@@ -34,15 +34,30 @@ pub struct StyleSheetAsset {
 
 impl StyleSheetAsset
 {
-    #[inline]
-    fn parse_as_sass(
+    fn get_parse_mode(
         path: &str
-    ) -> bool {
-        #[cfg(feature = "sass")]
-        { path.ends_with(".scss") }
-        
-        #[cfg(not(feature = "sass"))]
-        { false }
+    ) -> StyleSheetType {
+        use StyleSheetType::*;
+
+        match path.split('.').last()
+        {
+            Some(ext) => match ext
+            {
+                "css" => Css,
+
+                #[cfg(feature = "sass")]
+                "scss" => Sass,
+
+                _ => {
+                    warn!("Unrecognised extension for stylesheet `{path}`, will attempt to parse as plain CSS");
+                    Css
+                },
+            },
+            None => {
+                warn!("No file extension for stylesheet `{path}`, will attempt to parse as plain CSS");
+                Css
+            },
+        }
     }
 
     /// Parses a string with a valid CSS into a list of [`crate::stylesheet::StyleRule`]s.
@@ -59,16 +74,15 @@ impl StyleSheetAsset
         content.hash(&mut hasher);
         let hash = hasher.finish();
 
-        let mut parse_mode = StyleSheetType::default();
-        if Self::parse_as_sass(path)
-        {
-            parse_mode = StyleSheetType::Sass;
-        }
+        let rules = StyleSheetParser::parse(
+            content,
+            Self::get_parse_mode(path)
+        );
 
         Self {
             path: path.to_string(),
             hash,
-            rules: StyleSheetParser::parse(content, parse_mode)
+            rules
         }
     }
 
