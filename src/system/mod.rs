@@ -19,7 +19,7 @@ use bevy::{
     prelude::{
         error, debug, trace,
         Assets, AssetEvent, Component, Deref, DerefMut,
-        Entity, EventReader, Interaction, Mut,
+        Entity, EventReader, Mut,
         Query, Children, Parent, ResMut, Resource, World,
     },
 };
@@ -267,6 +267,8 @@ fn get_entities_with_pseudo_class(
     query: &PseudoClassParam,
     filter: Option<SmallVec<[Entity; 8]>>,
 ) -> SmallVec<[Entity; 8]> {
+    use bevy::prelude::Interaction;
+
     let mut result: SmallVec<[Entity; 8]> = Default::default();
 
     for (entity, action) in query.interaction.iter()
@@ -351,7 +353,6 @@ fn get_entities_with_component(
 /// `root` - The top-level [Entity] which contains the stylesheet, passed in to provide early stop when root hit
 /// `parent` - First [Parent] component to start search with (appears last in returned list)
 /// `query_parent` - Bevy [Query] paramter to perform recursive searching
-#[cfg(feature = "monitor_changes")]
 fn get_parents_recursively(
     root: Entity,
     parent: &Parent,

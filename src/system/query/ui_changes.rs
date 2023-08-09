@@ -1,11 +1,10 @@
 use crate::prelude::StyleSheet;
-use bevy::prelude::{
-    Entity, Children,
-    Query, Or, Changed,
-};
 
-#[cfg(feature = "monitor_changes")]
-use bevy::ui::Interaction;
+use bevy::prelude::{
+    Changed,
+    Entity,
+    Query,
+};
 
 pub type QueryUiChanges<'w, 's> = Query<
     'w, 's,
@@ -14,9 +13,51 @@ pub type QueryUiChanges<'w, 's> = Query<
 >;
 
 pub type WorldQuery = Entity;
+pub use monitor_changes::ReadOnlyWorldQuery;
 
 #[cfg(not(feature = "monitor_changes"))]
-pub type ReadOnlyWorldQuery = Changed<StyleSheet>;
+mod monitor_changes
+{
+    use super::*;
+
+    pub type ReadOnlyWorldQuery = Changed<StyleSheet>;
+}
 
 #[cfg(feature = "monitor_changes")]
-type ReadOnlyWorldQuery = Or<(Changed<StyleSheet>, Changed<Children>, Changed<Interaction>)>;
+mod monitor_changes
+{
+    pub use pseudo_class::ReadOnlyWorldQuery;
+
+    use super::*;
+    use crate::prelude::Class;
+    use bevy::prelude::{
+        Children,
+        Or,
+    };
+
+    #[cfg(not(feature = "pseudo_class"))]
+    mod pseudo_class
+    {
+        use super::*;
+
+        pub type ReadOnlyWorldQuery = Or<(
+            Changed<StyleSheet>,
+            Changed<Children>,
+            Changed<Class>,
+        )>;
+    }
+
+    #[cfg(feature = "pseudo_class")]
+    mod pseudo_class
+    {
+        use super::*;
+        use bevy::prelude::Interaction;
+
+        pub type ReadOnlyWorldQuery = Or<(
+            Changed<StyleSheet>,
+            Changed<Children>,
+            Changed<Class>,
+            Changed<Interaction>,
+        )>;
+    }
+}
