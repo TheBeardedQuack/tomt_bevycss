@@ -120,10 +120,7 @@ impl<'me, 'w, 's> StyleTree
             Some(node) => {
                 self.resolve(&node.sheet_handle)
             },
-            None => {
-                warn!("No root style-node found");
-                vec![]
-            }
+            None => vec![],
         }
     }
 }

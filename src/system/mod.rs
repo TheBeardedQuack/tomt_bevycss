@@ -114,23 +114,31 @@ pub(crate) fn prepare_state(
             debug!("Applying style {}", style_sheet.path());
             for rule in style_sheet.iter()
             {
-                let entities =
+                let mut entities =
                     select_entities(*root_entity, updated_entity, &rule.selector, world, &params, registry);
 
                 trace!(
-                    "Applying rule ({}) on {} entities",
+                    "Applying rule '{}' on {} entities {entities:?}",
                     rule.selector.to_string(),
                     entities.len()
                 );
 
-                state
+                let existing_state = state
                     .entry(sheet_handle.clone())
                     .or_default()
-                    .insert(rule.selector.clone(), entities);
+                    .entry(rule.selector.clone())
+                    .or_default();
+
+                entities = entities.into_iter().filter(|e| !existing_state.contains(e)).collect();
+                existing_state.append(&mut entities);
             }
         }
     }
     
+    if state.len() > 0
+    {
+        trace!("PreProcess result: {state:?}");
+    }
     state.build(assets)
 }
 

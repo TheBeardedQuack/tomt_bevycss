@@ -1,9 +1,13 @@
 use crate::prelude::StyleSheet;
 
 use bevy::prelude::{
-    Changed,
+    Added,
+    Changed, 
     Entity,
+    Node,
+    Or,
     Query,
+    With,
 };
 
 pub type QueryUiChanges<'w, 's> = Query<
@@ -20,7 +24,7 @@ mod monitor_changes
 {
     use super::*;
 
-    pub type ReadOnlyWorldQuery = Changed<StyleSheet>;
+    pub type ReadOnlyWorldQuery = (Or<(Added<StyleSheet>, Changed<StyleSheet>)>, With<Node>);
 }
 
 #[cfg(feature = "monitor_changes")]
@@ -32,7 +36,7 @@ mod monitor_changes
     use crate::prelude::Class;
     use bevy::prelude::{
         Children,
-        Or,
+        Parent,
     };
 
     #[cfg(not(feature = "pseudo_class"))]
@@ -40,11 +44,15 @@ mod monitor_changes
     {
         use super::*;
 
-        pub type ReadOnlyWorldQuery = Or<(
-            Changed<StyleSheet>,
-            Changed<Children>,
-            Changed<Class>,
-        )>;
+        pub type ReadOnlyWorldQuery = (
+            Or<(
+                Added<StyleSheet>, Changed<StyleSheet>,
+                Added<Parent>, Changed<Parent>,
+                Added<Children>, Changed<Children>,
+                Added<Class>, Changed<Class>,
+            )>,
+            With<Node>
+        );
     }
 
     #[cfg(feature = "pseudo_class")]
@@ -53,11 +61,15 @@ mod monitor_changes
         use super::*;
         use bevy::prelude::Interaction;
 
-        pub type ReadOnlyWorldQuery = Or<(
-            Changed<StyleSheet>,
-            Changed<Children>,
-            Changed<Class>,
-            Changed<Interaction>,
-        )>;
+        pub type ReadOnlyWorldQuery = (
+            Or<(
+                Added<StyleSheet>, Changed<StyleSheet>,
+                Added<Parent>, Changed<Parent>,
+                Added<Children>, Changed<Children>,
+                Added<Class>, Changed<Class>,
+                Added<Interaction>, Changed<Interaction>,
+            )>,
+            With<Node>
+        );
     }
 }
