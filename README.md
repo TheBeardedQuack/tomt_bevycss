@@ -104,6 +104,14 @@ This crate marks the first public release from both Tome of Many Things.
         </ul></li>
     </ul></td>
 </tr>
+<tr>
+    <td>0.5.1</td>
+    <td><ul>
+        <li>Fixed<ul>
+            <li>Fixed a bug causing some UI items to not have styling applied until they were updated individually (applying many styles at once caused overwrites)</li>
+        </ul></li>
+    </ul></td>
+</tr>
 </table>
 
 ### Future Goals
