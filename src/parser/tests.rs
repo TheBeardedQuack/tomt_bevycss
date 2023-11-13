@@ -1,9 +1,6 @@
 use super::*;
 
-use crate::{
-    selector::SelectorElement,
-    property::PropertyToken,
-};
+use crate::{property::PropertyToken, selector::SelectorElement};
 
 #[test]
 fn parse_empty() {

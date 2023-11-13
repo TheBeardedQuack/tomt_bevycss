@@ -1,41 +1,26 @@
 use crate::{
     prelude::BevyCssError,
-    property::{
-        Property,
-        PropertyValues,
-    },
+    property::{Property, PropertyValues},
 };
 use bevy::{
     ecs::query::QueryItem,
-    prelude::{
-        AssetServer,
-        Commands, 
-        Text,
-        Node,
-        With,
-    },
+    prelude::{AssetServer, Commands, Node, Text, With},
 };
 
 /// Apply a custom `text-content` which updates [`TextSection::value`](`TextSection`) of all sections on matched [`Text`] components
 #[derive(Default)]
 pub struct TextContentProperty;
 
-impl Property for TextContentProperty
-{
+impl Property for TextContentProperty {
     type Cache = String;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
-    fn name()
-    -> &'static str
-    {
+    fn name() -> &'static str {
         "text-content"
     }
 
-    fn parse<'a>(
-        values: &PropertyValues
-    ) -> Result<Self::Cache, BevyCssError>
-    {
+    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
         if let Some(content) = values.string() {
             Ok(content)
         } else {

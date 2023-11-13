@@ -1,12 +1,11 @@
-use std::{
-    hash::{Hash, Hasher},
-    cmp::Ordering,
-    sync::Mutex,
-};
 use bevy::utils::AHasher;
 use cssparser::CowRcStr;
 use smallvec::{smallvec, SmallVec};
-
+use std::{
+    cmp::Ordering,
+    hash::{Hash, Hasher},
+    sync::Mutex,
+};
 
 static RULE_COUNTER: Mutex<usize> = Mutex::new(0);
 
@@ -14,11 +13,10 @@ static RULE_COUNTER: Mutex<usize> = Mutex::new(0);
 /// A single selector can have multiple elements, for instance a selector of `button.enabled`
 /// Would generated two elements, one for `button` and another for `.enabled`.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash)]
-pub enum SelectorElement
-{
+pub enum SelectorElement {
     /// A name selector element, like `#score_window`. On CSS used on web, this is as known as id.
     Name(String),
-    
+
     /// A component selector element, like `window` or `button`
     Component(String),
 
@@ -48,9 +46,7 @@ pub struct Selector {
 
 impl Selector {
     /// Creates a new selector for the given elements.
-    pub fn new(
-        elements: SmallVec<[SelectorElement; 8]>
-    ) -> Self {
+    pub fn new(elements: SmallVec<[SelectorElement; 8]>) -> Self {
         let hasher = AHasher::default();
 
         let hasher = elements.iter().fold(hasher, |mut hasher, el| {
@@ -63,24 +59,24 @@ impl Selector {
         Self {
             elements,
             hash,
-            load_order: RULE_COUNTER.lock()
-                .map(|mut lock| { *lock +=1; *lock })
-                .unwrap_or_default(),            
+            load_order: RULE_COUNTER
+                .lock()
+                .map(|mut lock| {
+                    *lock += 1;
+                    *lock
+                })
+                .unwrap_or_default(),
         }
     }
 
     /// Builds a selector tree for this selector.
     /// Each node in the tree is composed of many elements, also each node is parent of the next one.
-    pub fn get_parent_tree(
-        &self
-    ) -> SmallVec<[SmallVec<[&SelectorElement; 8]>; 8]> {
+    pub fn get_parent_tree(&self) -> SmallVec<[SmallVec<[&SelectorElement; 8]>; 8]> {
         let mut tree = SmallVec::new();
         let mut current_level = SmallVec::new();
 
-        for element in &self.elements
-        {
-            match element
-            {
+        for element in &self.elements {
+            match element {
                 SelectorElement::Child => {
                     tree.push(current_level);
                     current_level = SmallVec::new();
@@ -94,18 +90,12 @@ impl Selector {
     }
 }
 
-impl std::fmt::Display for Selector
-{
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>
-    ) -> std::fmt::Result {
+impl std::fmt::Display for Selector {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut result = String::new();
 
-        for element in &self.elements
-        {
-            match element
-            {
+        for element in &self.elements {
+            match element {
                 SelectorElement::Name(n) => {
                     result.push('#');
                     result.push_str(n);
@@ -137,66 +127,44 @@ impl std::fmt::Display for Selector
     }
 }
 
-impl PartialEq for Selector
-{
-    fn eq(
-        &self,
-        other: &Self
-    ) -> bool {
+impl PartialEq for Selector {
+    fn eq(&self, other: &Self) -> bool {
         self.hash == other.hash
     }
 }
 
-impl Eq for Selector { }
+impl Eq for Selector {}
 
-impl PartialOrd for Selector
-{
-    fn partial_cmp(
-        &self,
-        other: &Self
-    ) -> Option<Ordering> {
-        match self.elements.len().partial_cmp(&other.elements.len())
-        {
+impl PartialOrd for Selector {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        match self.elements.len().partial_cmp(&other.elements.len()) {
             Some(Ordering::Equal) => self.load_order.partial_cmp(&other.load_order),
             not_eq => not_eq,
         }
     }
 }
 
-impl Ord for Selector
-{
-    fn cmp(
-        &self,
-        other: &Self
-    ) -> std::cmp::Ordering {
-        match self.elements.len().cmp(&other.elements.len())
-        {
+impl Ord for Selector {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        match self.elements.len().cmp(&other.elements.len()) {
             Ordering::Equal => self.load_order.cmp(&other.load_order),
             not_eq => not_eq,
         }
     }
 }
 
-impl Hash for Selector
-{
-    fn hash<H: Hasher>(
-        &self,
-        state: &mut H
-    ) {
+impl Hash for Selector {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         self.hash.hash(state);
     }
 }
 
-impl<'i> From<Vec<CowRcStr<'i>>> for Selector
-{
-    fn from(
-        input: Vec<CowRcStr<'i>>
-    ) -> Self {
+impl<'i> From<Vec<CowRcStr<'i>>> for Selector {
+    fn from(input: Vec<CowRcStr<'i>>) -> Self {
         let mut elements = smallvec![];
         let mut next_is_class = false;
 
-        for value in input.into_iter().filter(|v| !v.is_empty())
-        {
+        for value in input.into_iter().filter(|v| !v.is_empty()) {
             if value.as_ref() == "." {
                 next_is_class = true;
                 continue;

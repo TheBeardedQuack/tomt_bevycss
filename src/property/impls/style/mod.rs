@@ -33,11 +33,29 @@ impl_style_single_value!("flex-basis", FlexBasisProperty, Val, val, max_height);
 impl_style_single_value!("flex-grow", FlexGrowProperty, f32, f32, flex_grow);
 impl_style_single_value!("flex-shrink", FlexShrinkProperty, f32, f32, flex_shrink);
 
-impl_style_single_value!("aspect-ratio", AspectRatioProperty, Option<f32>, option_f32, aspect_ratio);
+impl_style_single_value!(
+    "aspect-ratio",
+    AspectRatioProperty,
+    Option<f32>,
+    option_f32,
+    aspect_ratio
+);
 
 // OverflowAxis type property fields (special case)
-impl_style_single_value!("overflow-x", OverflowXProperty, OverflowAxis, overflow, overflow.x);
-impl_style_single_value!("overflow-y", OverflowYProperty, OverflowAxis, overflow, overflow.y);
+impl_style_single_value!(
+    "overflow-x",
+    OverflowXProperty,
+    OverflowAxis,
+    overflow,
+    overflow.x
+);
+impl_style_single_value!(
+    "overflow-y",
+    OverflowYProperty,
+    OverflowAxis,
+    overflow,
+    overflow.y
+);
 
 impl_style_enum!(
     Display,            // Bevy enum

@@ -1,43 +1,27 @@
 use crate::{
     prelude::BevyCssError,
-    property::{
-        Property,
-        PropertyValues,
-    },
+    property::{Property, PropertyValues},
 };
 use bevy::{
     ecs::query::QueryItem,
-    prelude::{
-        AssetServer,
-        Commands, 
-        Text,
-        TextAlignment,
-        Node,
-        With,
-    },
+    prelude::{AssetServer, Commands, Node, Text, TextAlignment, With},
 };
 
 /// Applies the `text-align` property on [`Text::horizontal`](`TextAlignment`) components.
 #[derive(Default)]
 pub struct TextAlignProperty;
 
-impl Property for TextAlignProperty
-{
+impl Property for TextAlignProperty {
     // Using Option since Cache must impl Default, which  doesn't
     type Cache = Option<TextAlignment>;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
-    fn name()
-    -> &'static str
-    {
+    fn name() -> &'static str {
         "text-align"
     }
 
-    fn parse<'a>(
-        values: &PropertyValues
-    ) -> Result<Self::Cache, BevyCssError>
-    {
+    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
         if let Some(ident) = values.identifier() {
             match ident {
                 "left" => return Ok(Some(TextAlignment::Left)),

@@ -1,33 +1,21 @@
-use super::{
-    smallvec, SmallVec,
-    format_error,
-    PropertyParser
-};
+use super::{format_error, smallvec, PropertyParser, SmallVec};
 use crate::{
     prelude::BevyCssError,
-    selector::{
-        Selector,
-        SelectorElement,
-    },
+    selector::{Selector, SelectorElement},
     stylesheet::StyleRule,
 };
 
-use cssparser::{
-    DeclarationListParser,
-    AtRuleParser, RuleListParser,
-    Parser, ParserInput, ParseError,
-    QualifiedRuleParser,
-    ToCss,
-};
 use bevy::log::error;
+use cssparser::{
+    AtRuleParser, DeclarationListParser, ParseError, Parser, ParserInput, QualifiedRuleParser,
+    RuleListParser, ToCss,
+};
 
 /// Parses a `css` string using [`RuleListParser`].
 pub(crate) struct StyleSheetParser;
 
 impl StyleSheetParser {
-    pub(crate) fn parse(
-        content: &str
-    ) -> SmallVec<[StyleRule; 8]> {
+    pub(crate) fn parse(content: &str) -> SmallVec<[StyleRule; 8]> {
         let mut input = ParserInput::new(content);
         let mut parser = Parser::new(&mut input);
 
@@ -60,7 +48,8 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
 
         #[derive(Debug, Default, Clone)]
         enum DelimType {
-            #[default] None,
+            #[default]
+            None,
             Class,
             #[cfg(feature = "pseudo_class")]
             PseudoClass,
@@ -79,21 +68,23 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                         DelimType::None => {
                             prev_delim = DelimType::None;
                             SelectorElement::Component(v.to_string())
-                        },
+                        }
                         DelimType::Class => {
                             prev_delim = DelimType::None;
                             SelectorElement::Class(v.to_string())
-                        },
+                        }
                         #[cfg(feature = "pseudo_class")]
                         DelimType::PseudoClass => {
                             prev_delim = DelimType::None;
                             SelectorElement::PseudoClass(v.to_string())
-                        },
+                        }
                         #[cfg(feature = "pseudo_prop")]
                         DelimType::PseudoProp => {
                             let err_str = format!(":{v}");
-                            return Err(input.new_custom_error(BevyCssError::UnexpectedToken(err_str)));
-                        },
+                            return Err(
+                                input.new_custom_error(BevyCssError::UnexpectedToken(err_str))
+                            );
+                        }
                     });
                 }
                 IDHash(v) => {
@@ -109,10 +100,12 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                         ('.', DelimType::None) => DelimType::Class,
                         _ => {
                             let err_str = token.to_css_string();
-                            return Err(input.new_custom_error(BevyCssError::UnexpectedToken(err_str)));
+                            return Err(
+                                input.new_custom_error(BevyCssError::UnexpectedToken(err_str))
+                            );
                         }
                     };
-                },
+                }
                 #[cfg(feature = "pseudo_class")]
                 Colon => {
                     prev_delim = match prev_delim {
@@ -121,8 +114,10 @@ impl<'i> QualifiedRuleParser<'i> for StyleSheetParser {
                         DelimType::PseudoClass => DelimType::PseudoProp,
                         _ => {
                             let err_str = token.to_css_string();
-                            return Err(input.new_custom_error(BevyCssError::UnexpectedToken(err_str)));
-                        },
+                            return Err(
+                                input.new_custom_error(BevyCssError::UnexpectedToken(err_str))
+                            );
+                        }
                     };
                 }
                 _ => {

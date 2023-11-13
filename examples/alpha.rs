@@ -3,24 +3,18 @@ use tomt_bevycss::prelude::*;
 
 fn main() {
     let mut app = App::new();
-    app.add_plugins((
-            DefaultPlugins,
-            BevyCssPlugin::default()
-        ))
+    app.add_plugins((DefaultPlugins, BevyCssPlugin::default()))
         .add_systems(Startup, setup);
 
     app.register_property::<AlphaProperty>();
     app.run();
 }
 
-fn setup(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>
-) {
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
 
     commands
-        .spawn( NodeBundle {
+        .spawn(NodeBundle {
             style: Style {
                 width: Val::Percent(100.0),
                 height: Val::Percent(100.0),
@@ -30,22 +24,19 @@ fn setup(
             background_color: Color::NONE.into(),
             ..default()
         })
-        .insert( StyleSheet::new(asset_server.load("sheets/alpha.css")) )
-        .with_children(
-            |parent|
-            {
-                // bevy logo (image)
-                parent.spawn(ImageBundle {
-                    style: Style {
-                        width: Val::Auto,
-                        height: Val::Auto,
-                        ..default()
-                    },
-                    image: asset_server.load("branding/bevy_logo_dark_big.png").into(),
+        .insert(StyleSheet::new(asset_server.load("sheets/alpha.css")))
+        .with_children(|parent| {
+            // bevy logo (image)
+            parent.spawn(ImageBundle {
+                style: Style {
+                    width: Val::Auto,
+                    height: Val::Auto,
                     ..default()
-                });
-            }
-        );
+                },
+                image: asset_server.load("branding/bevy_logo_dark_big.png").into(),
+                ..default()
+            });
+        });
 }
 
 #[derive(Default)]

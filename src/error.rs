@@ -26,10 +26,10 @@ impl Display for BevyCssError {
             }
             BevyCssError::UnsupportedProperty(p) => {
                 write!(f, "Unsupported property: {}", p)
-            },
+            }
             BevyCssError::InvalidPropertyValue(p) => {
                 write!(f, "Invalid property value: {}", p)
-            },
+            }
             BevyCssError::InvalidSelector => {
                 write!(f, "Invalid selector")
             }

@@ -1,9 +1,5 @@
 use crate::prelude::StyleSheetAsset;
-use bevy::prelude::{
-    Component,
-    Reflect, ReflectComponent,
-    Handle,
-};
+use bevy::prelude::{Component, Handle, Reflect, ReflectComponent};
 
 /// Applies a [`StyleSheetAsset`] on the entity which has this component.
 ///

@@ -22,9 +22,7 @@ pub enum PropertyToken {
 impl<'i> TryFrom<Token<'i>> for PropertyToken {
     type Error = ();
 
-    fn try_from(
-        token: Token<'i>
-    ) -> Result<Self, Self::Error> {
+    fn try_from(token: Token<'i>) -> Result<Self, Self::Error> {
         match token {
             Token::Ident(val) => Ok(Self::Identifier(val.to_string())),
             Token::Hash(val) => Ok(Self::Hash(val.to_string())),

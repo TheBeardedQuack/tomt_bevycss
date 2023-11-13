@@ -3,21 +3,16 @@ use std::marker::PhantomData;
 use bevy::prelude::*;
 use tomt_bevycss::prelude::*;
 
-#[derive(Debug, Copy, Clone, Default)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(States)]
-pub enum GameState
-{
+#[derive(Debug, Copy, Clone, Default, PartialEq, Eq, Hash, States)]
+pub enum GameState {
     #[default]
     MainMenu,
     InGame,
     PauseMenu,
 }
 
-#[derive(Debug, Copy, Clone, Default)]
-#[derive(Resource, Reflect)]
-enum MainMenuSelection
-{
+#[derive(Debug, Copy, Clone, Default, Resource, Reflect)]
+enum MainMenuSelection {
     #[default]
     None,
     NewGame,
@@ -25,38 +20,31 @@ enum MainMenuSelection
     Options,
     ExitGame,
 }
-impl std::fmt::Display for MainMenuSelection
-{
-    fn fmt(
-        &self,
-        f: &mut std::fmt::Formatter<'_>
-    ) -> std::fmt::Result{
-        write!(f, "{}", match *self
-        {
-            Self::None => "NONE",
-            Self::NewGame => "New Game",
-            Self::HighScores => "High Scores",
-            Self::Options => "Options",
-            Self::ExitGame => "Exit Game",
-        })
+impl std::fmt::Display for MainMenuSelection {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match *self {
+                Self::None => "NONE",
+                Self::NewGame => "New Game",
+                Self::HighScores => "High Scores",
+                Self::Options => "Options",
+                Self::ExitGame => "Exit Game",
+            }
+        )
     }
 }
 
-#[derive(Debug, Clone, Default)]
-#[derive(PartialEq, Eq)]
-#[derive(Component)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Component)]
 pub struct SpawnedBy<T>(PhantomData<T>);
 
 const CLASS_MAIN_MENU: &str = "main-menu";
 
-fn main()
-{
+fn main() {
     let mut app = App::new();
 
-    app.add_plugins((
-            DefaultPlugins,
-            BevyCssPlugin::default()
-        ))
+    app.add_plugins((DefaultPlugins, BevyCssPlugin::default()))
         .register_type::<Class>()
         .register_type::<StyleSheet>();
 
@@ -70,20 +58,16 @@ fn main()
     app.run();
 }
 
-fn spawn_camera(
-    mut commands: Commands
-) {
+fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }
 
-fn enter_main_menu(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>
-) {
+fn enter_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.init_resource::<MainMenuSelection>();
 
     // UI root entity (CSS attached here)
-    commands.spawn((
+    commands
+        .spawn((
             Name::new("root_ui"),
             SpawnedBy::<MainMenuSelection>::default(),
             StyleSheet::new(asset_server.load("sheets/menu.css")),
@@ -97,11 +81,9 @@ fn enter_main_menu(
                 ..default()
             },
         ))
-        .with_children(|parent|
-        {
-            parent.spawn(
-                NodeBundle
-                {
+        .with_children(|parent| {
+            parent
+                .spawn(NodeBundle {
                     style: Style {
                         flex_direction: FlexDirection::Column,
                         align_items: AlignItems::Center,
@@ -109,13 +91,15 @@ fn enter_main_menu(
                     },
                     ..default()
                 })
-                .with_children(|parent|
-                {
+                .with_children(|parent| {
                     let mut spawn_btn = |action: MainMenuSelection| {
-                        parent.spawn(ButtonBundle::default())
-                            .with_children(|parent|
-                            {
-                                parent.spawn(TextBundle::from_section(action.to_string(), TextStyle::default()));
+                        parent
+                            .spawn(ButtonBundle::default())
+                            .with_children(|parent| {
+                                parent.spawn(TextBundle::from_section(
+                                    action.to_string(),
+                                    TextStyle::default(),
+                                ));
                             });
                     };
 
@@ -129,15 +113,11 @@ fn enter_main_menu(
 
 fn exit_main_menu(
     mut commands: Commands,
-    query: Query<
-        Entity,
-        With<SpawnedBy<MainMenuSelection>>
-    >
+    query: Query<Entity, With<SpawnedBy<MainMenuSelection>>>,
 ) {
     commands.remove_resource::<MainMenuSelection>();
 
-    for entity in query.iter()
-    {
+    for entity in query.iter() {
         commands.entity(entity).despawn_recursive();
     }
 }

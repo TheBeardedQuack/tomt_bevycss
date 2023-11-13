@@ -1,5 +1,5 @@
-use bevy::asset::AsyncReadExt;
 use super::StyleSheetAsset;
+use bevy::asset::AsyncReadExt;
 use bevy::utils::thiserror;
 use bevy::{
     asset::{io::Reader, AssetLoader, LoadContext},
@@ -18,7 +18,7 @@ pub(crate) enum StyleSheetLoaderError {
     #[error("Could not load file: {0}")]
     Io(#[from] std::io::Error),
     #[error("Could not parse file: {0}")]
-    Parsing(#[from] std::str::Utf8Error)
+    Parsing(#[from] std::str::Utf8Error),
 }
 
 impl AssetLoader for StyleSheetLoader {
@@ -35,10 +35,8 @@ impl AssetLoader for StyleSheetLoader {
             let mut bytes = Vec::new();
             reader.read_to_end(&mut bytes).await?;
             let content = std::str::from_utf8(&bytes)?;
-            let stylesheet = StyleSheetAsset::parse(
-                load_context.path().to_str().unwrap_or_default(),
-                content
-            );
+            let stylesheet =
+                StyleSheetAsset::parse(load_context.path().to_str().unwrap_or_default(), content);
             Ok(stylesheet)
         })
     }
@@ -47,28 +45,3 @@ impl AssetLoader for StyleSheetLoader {
         &["css"]
     }
 }
-
-// impl AssetLoader for StyleSheetLoader {
-//     fn load<'a>(
-//         &'a self,
-//         reader: &'a mut Reader,
-//         _settings: &'a Self::Settings,
-//         load_context: &'a mut LoadContext,
-//     ) -> bevy::utils::BoxedFuture<'a, Result<(), bevy::asset::Error>> {
-//         Box::pin(async move {
-//             let mut bytes = Vec::new();
-//             reader.read_to_end(&mut bytes).await?;
-//             let content = std::str::from_utf8(&*bytes)?;
-//             let stylesheet = StyleSheetAsset::parse(
-//                 load_context.path().to_str().unwrap_or_default(),
-//                 content
-//             );
-//             load_context.set_default_asset(LoadedAsset::new(stylesheet));
-//             Ok(())
-//         })
-//     }
-//
-//     fn extensions(&self) -> &[&str] {
-//         &["css"]
-//     }
-// }

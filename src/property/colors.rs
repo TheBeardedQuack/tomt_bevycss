@@ -1,18 +1,12 @@
-use bevy::prelude::{
-    error,
-    Color,
-};
+use bevy::log::error;
+use bevy::prelude::Color;
 
-pub(super) fn parse_hex_color(
-    hex_str: &str
-) -> Option<Color> {
-    match hex_str.len()
-    {
+pub(super) fn parse_hex_color(hex_str: &str) -> Option<Color> {
+    match hex_str.len() {
         3 => parse_hex_color(&format!("{hex_str}f")),
         4 => {
             let mut str = String::new();
-            for c in hex_str.chars()
-            {
+            for c in hex_str.chars() {
                 str.push(c);
                 str.push(c);
             }
@@ -20,14 +14,13 @@ pub(super) fn parse_hex_color(
         }
         6 => parse_hex_color(&format!("{hex_str}ff")),
         8 => u32::from_str_radix(hex_str, 16)
-            .map(|num| 
-            {
+            .map(|num| {
                 const DIV: f32 = u8::MAX as f32;
                 Color::rgba(
                     (num >> 24) as u8 as f32 / DIV,
                     (num >> 16) as u8 as f32 / DIV,
-                    (num >>  8) as u8 as f32 / DIV,
-                    num as u8 as f32 / DIV
+                    (num >> 8) as u8 as f32 / DIV,
+                    num as u8 as f32 / DIV,
                 )
             })
             .ok(),
@@ -37,7 +30,7 @@ pub(super) fn parse_hex_color(
                 hex_str.len()
             );
             None
-        },
+        }
     }
 }
 
@@ -46,9 +39,7 @@ pub(super) fn parse_hex_color(
 /// Parses a named color, like "silver" or "azure" into a [`Color`]
 ///
 /// Accepts any [valid CSS named-colors](https://developer.mozilla.org/en-US/docs/Web/CSS/named-color).
-pub(super) fn parse_named_color(
-    name: &str
-) -> Option<Color> {
+pub(super) fn parse_named_color(name: &str) -> Option<Color> {
     match name {
         // CSS Level 1 values
         "black" => Some(Color::rgba(0.0000, 0.0000, 0.0000, 1.0000)),

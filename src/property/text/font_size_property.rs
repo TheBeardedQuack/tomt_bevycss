@@ -1,41 +1,26 @@
 use crate::{
     prelude::BevyCssError,
-    property::{
-        Property,
-        PropertyValues,
-    },
+    property::{Property, PropertyValues},
 };
 use bevy::{
     ecs::query::QueryItem,
-    prelude::{
-        AssetServer,
-        Commands, 
-        Text,
-        Node,
-        With,
-    },
+    prelude::{AssetServer, Commands, Node, Text, With},
 };
 
 /// Applies the `font-size` property on [`TextStyle::font_size`](`TextStyle`) property of all sections on matched [`Text`] components.
 #[derive(Default)]
 pub struct FontSizeProperty;
 
-impl Property for FontSizeProperty
-{
+impl Property for FontSizeProperty {
     type Cache = f32;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
-    fn name()
-    -> &'static str
-    {
+    fn name() -> &'static str {
         "font-size"
     }
 
-    fn parse<'a>(
-        values: &PropertyValues
-    ) -> Result<Self::Cache, BevyCssError>
-    {
+    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
         if let Some(size) = values.f32() {
             Ok(size)
         } else {

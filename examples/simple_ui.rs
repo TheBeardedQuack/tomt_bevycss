@@ -1,12 +1,9 @@
 use bevy::prelude::*;
-use tomt_bevycss::prelude::{Class, BevyCssPlugin, StyleSheet};
+use tomt_bevycss::prelude::{BevyCssPlugin, Class, StyleSheet};
 
 fn main() {
     App::new()
-        .add_plugins((
-            DefaultPlugins,
-            BevyCssPlugin::default(),
-        ))
+        .add_plugins((DefaultPlugins, BevyCssPlugin::default()))
         .add_systems(Startup, setup)
         .run();
 }
@@ -122,7 +119,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                                 align_self: AlignSelf::Center,
                                 width: Val::Percent(100.0),
                                 height: Val::Percent(50.0),
-                                overflow: Overflow{
+                                overflow: Overflow {
                                     x: OverflowAxis::Clip,
                                     y: OverflowAxis::Clip,
                                 },

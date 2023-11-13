@@ -1,12 +1,7 @@
+mod style_rule;
 mod style_sheet_asset;
 mod style_sheet_loader;
-mod style_rule;
 
-pub use {
-    style_sheet_asset::StyleSheetAsset,
-    style_rule::StyleRule,
-};
+pub use {style_rule::StyleRule, style_sheet_asset::StyleSheetAsset};
 
-pub(crate) use {
-    style_sheet_loader::StyleSheetLoader,
-};
+pub(crate) use style_sheet_loader::StyleSheetLoader;

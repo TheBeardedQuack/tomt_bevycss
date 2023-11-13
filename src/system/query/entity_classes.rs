@@ -1,13 +1,7 @@
 use crate::prelude::Class;
-use bevy::prelude::{
-    Query, Entity
-};
+use bevy::prelude::{Entity, Query};
 
-pub type QueryEntityClasses<'w, 's> = Query<
-    'w, 's,
-    WorldQuery,
-    ReadOnlyWorldQuery,
->;
+pub type QueryEntityClasses<'w, 's> = Query<'w, 's, WorldQuery, ReadOnlyWorldQuery>;
 
 pub type WorldQuery = (Entity, &'static Class);
 pub type ReadOnlyWorldQuery = ();

@@ -1,10 +1,6 @@
 use super::MatchSelectorElement;
+use bevy::prelude::{Component, Deref, Reflect, ReflectComponent};
 use std::borrow::Cow;
-use bevy::prelude::{
-    Component,
-    Deref,
-    Reflect, ReflectComponent,
-};
 
 /// Sets the entities class to be matched by selectors in on`css`.
 ///
@@ -40,10 +36,7 @@ impl Class {
 }
 
 impl MatchSelectorElement for Class {
-    fn matches(
-        &self,
-        element: &str
-    ) -> bool {
+    fn matches(&self, element: &str) -> bool {
         self.matches(element)
     }
 }

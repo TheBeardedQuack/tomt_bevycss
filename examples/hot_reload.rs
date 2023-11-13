@@ -1,11 +1,6 @@
 use bevy::prelude::*;
 use bevy_editor_pls::prelude::*;
-use tomt_bevycss::prelude::{
-    BevyCssPlugin,
-    StyleSheet,
-    Class,
-};
-
+use tomt_bevycss::prelude::{BevyCssPlugin, Class, StyleSheet};
 
 fn main() {
     // Whenever an StyleSheet is loaded, it'll be applied automatically
@@ -13,8 +8,8 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             EditorPlugin::default(),
-            BevyCssPlugin::with_hot_reload(), )
-        )
+            BevyCssPlugin::with_hot_reload(),
+        ))
         .add_systems(Startup, setup)
         .run();
 }
@@ -77,10 +72,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                                             color: Color::WHITE,
                                         },
                                     )
-                                        .with_style(Style {
-                                            margin: UiRect::all(Val::Px(5.0)),
-                                            ..default()
-                                        }),
+                                    .with_style(Style {
+                                        margin: UiRect::all(Val::Px(5.0)),
+                                        ..default()
+                                    }),
                                 )
                                 .insert(Name::new("left-text"));
                         });
@@ -111,15 +106,15 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                                     color: Color::WHITE,
                                 },
                             )
-                                .with_style(Style {
-                                    height: Val::Px(25.),
-                                    margin: UiRect {
-                                        left: Val::Auto,
-                                        right: Val::Auto,
-                                        ..default()
-                                    },
+                            .with_style(Style {
+                                height: Val::Px(25.),
+                                margin: UiRect {
+                                    left: Val::Auto,
+                                    right: Val::Auto,
                                     ..default()
-                                }),
+                                },
+                                ..default()
+                            }),
                         )
                         .insert(Name::new("right-bg"));
                     // List with hidden overflow
@@ -167,16 +162,16 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                                                         color: Color::WHITE,
                                                     },
                                                 )
-                                                    .with_style(Style {
-                                                        flex_shrink: 0.,
-                                                        height: Val::Px(20.),
-                                                        margin: UiRect {
-                                                            left: Val::Auto,
-                                                            right: Val::Auto,
-                                                            ..default()
-                                                        },
+                                                .with_style(Style {
+                                                    flex_shrink: 0.,
+                                                    height: Val::Px(20.),
+                                                    margin: UiRect {
+                                                        left: Val::Auto,
+                                                        right: Val::Auto,
                                                         ..default()
-                                                    }),
+                                                    },
+                                                    ..default()
+                                                }),
                                             )
                                             .insert(Class::new("big-text"))
                                             .insert(Name::new(format!("right-item-{}", i)));

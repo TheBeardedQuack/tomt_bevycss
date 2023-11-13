@@ -1,15 +1,7 @@
-use super::{
-    smallvec,
-    parse_values,
-};
-use crate::{
-    prelude::BevyCssError,
-    property::PropertyValues,
-};
+use super::{parse_values, smallvec};
+use crate::{prelude::BevyCssError, property::PropertyValues};
 
-use cssparser::{
-    AtRuleParser, DeclarationParser, Parser, ParseError,
-};
+use cssparser::{AtRuleParser, DeclarationParser, ParseError, Parser};
 
 pub struct PropertyParser;
 

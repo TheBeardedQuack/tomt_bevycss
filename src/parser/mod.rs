@@ -6,16 +6,10 @@ use property_parser::PropertyParser;
 
 use crate::prelude::BevyCssError;
 
-use cssparser::{
-    ParseError, Parser,
-    ToCss, Token,
-};
+use cssparser::{ParseError, Parser, ToCss, Token};
 use smallvec::{smallvec, SmallVec};
 
-
-fn format_error(
-    error: ParseError<BevyCssError>
-) -> String {
+fn format_error(error: ParseError<BevyCssError>) -> String {
     let error_description = match error.kind {
         cssparser::ParseErrorKind::Basic(b) => match b {
             cssparser::BasicParseErrorKind::UnexpectedToken(token) => {
