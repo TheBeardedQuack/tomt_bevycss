@@ -3,7 +3,7 @@ use crate::prelude::StyleSheetAsset;
 
 use bevy::{
     prelude::{
-        error, warn, debug, trace,
+        error, debug, trace,
         Deref, DerefMut,
         Handle, Entity,
     },

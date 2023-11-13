@@ -111,8 +111,8 @@ impl Plugin for BevyCssPlugin
 
         // Resources
         let prepared_state = PrepareParams::new(&mut app.world);
-        app.add_asset::<StyleSheetAsset>()
-            .init_asset_loader::<StyleSheetLoader>()
+        app.init_asset_loader::<StyleSheetLoader>()
+            .init_asset::<StyleSheetAsset>()
             .init_resource::<StyleSheetState>()
             .init_resource::<ComponentFilterRegistry>()
             .insert_resource(prepared_state);

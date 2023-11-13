@@ -1,9 +1,6 @@
-use std::time::Duration;
-
 use bevy::{
     prelude::*,
-    ui::FocusPolicy,
-    asset::ChangeWatcher
+    ui::FocusPolicy
 };
 use tomt_bevycss::prelude::*;
 
@@ -15,10 +12,7 @@ fn main() {
     App::new()
         // Whenever an StyleSheet is loaded, it'll be applied automatically
         .add_plugins((
-            DefaultPlugins.set(AssetPlugin {
-                watch_for_changes: ChangeWatcher::with_delay(Duration::from_millis(100)),
-                ..Default::default()
-            }),
+            DefaultPlugins,
             BevyCssPlugin::with_hot_reload(),
         ))
         .add_systems(Startup, setup)
