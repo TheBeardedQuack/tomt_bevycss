@@ -1,8 +1,9 @@
 use crate::prelude::StyleSheetAsset;
+
 use bevy::prelude::{
     Component,
-    Reflect, ReflectComponent,
     Handle,
+    Reflect, ReflectComponent,
 };
 
 /// Applies a [`StyleSheetAsset`] on the entity which has this component.
@@ -20,40 +21,58 @@ use bevy::prelude::{
 /// fn setup(asset_server: Res<AssetServer>, mut commands: Commands) {
 ///     commands.spawn(StyleSheet::new(asset_server.load("sheets/fancy.css")));
 /// }
-///
 /// ```
 ///
-#[derive(Component, Debug, Reflect, Clone, Default)]
+#[derive(Clone, Debug, Default)]
+#[derive(Component, Reflect)]
 #[reflect(Component)]
-pub struct StyleSheet {
+pub struct StyleSheet
+{
     sheet: Handle<StyleSheetAsset>,
 }
 
-impl StyleSheet {
+impl StyleSheet
+{
     /// Creates a new [`StyleSheet`] from the given asset.
-    pub fn new(handle: Handle<StyleSheetAsset>) -> Self {
-        Self { sheet: handle }
+    pub fn new(
+        handle: Handle<StyleSheetAsset>
+    ) -> Self {
+        Self{
+            sheet: handle
+        }
     }
 
     /// Reapplies the style sheet on entity and all children.
-    pub fn refresh(&mut self) {
+    pub fn refresh(
+        &mut self
+    ) {
         // Just to trigger DerefMut
     }
 
     /// Internal [`StyleSheetAsset`] handle
-    pub fn handle(&self) -> &Handle<StyleSheetAsset> {
+    pub fn handle(
+        &self
+    ) -> &Handle<StyleSheetAsset> {
         &self.sheet
     }
 
     /// Change the internal [`StyleSheetAsset`] handle.
     /// This will automatically trigger the systems to reapply the style sheet.
-    pub fn set(&mut self, handle: Handle<StyleSheetAsset>) {
+    pub fn set(
+        &mut self,
+        handle: Handle<StyleSheetAsset>
+    ) {
         self.sheet = handle;
     }
 }
 
-impl PartialEq for StyleSheet {
-    fn eq(&self, other: &Self) -> bool {
+impl PartialEq
+for StyleSheet
+{
+    fn eq(
+        &self,
+        other: &Self
+    ) -> bool {
         self.sheet == other.sheet
     }
 }

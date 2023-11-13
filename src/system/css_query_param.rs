@@ -3,8 +3,8 @@ use super::query;
 use crate::prelude::StyleSheetAsset;
 
 use bevy::{
-    prelude::*,
     ecs::system::SystemParam,
+    prelude::*,
 };
 
 #[derive(SystemParam)]
@@ -17,7 +17,7 @@ pub(crate) struct CssQueryParam<'w, 's>
     pub classes: query::QueryEntityClasses<'w, 's>,
     pub parent: query::QueryEntityParent<'w, 's>,
     pub children: query::QueryEntityChildren<'w, 's>,
-    
+
     #[cfg(feature = "pseudo_class")]
     pub pseudo_classes: PseudoClassParam<'w, 's>,
 }

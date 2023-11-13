@@ -1,11 +1,13 @@
-use smallvec::SmallVec;
 use bevy::{
-    prelude::{
-        Entity, Component, World, 
-        Query, With,
-    },
     ecs::system::SystemState,
+    prelude::{
+        Component,
+        Entity,
+        Query,
+        With, World,
+    },
 };
+use smallvec::SmallVec;
 
 pub(crate) trait ComponentFilter
 {
@@ -15,7 +17,8 @@ pub(crate) trait ComponentFilter
     ) -> SmallVec<[Entity; 8]>;
 }
 
-impl<'w, 's, T: Component> ComponentFilter for SystemState<Query<'w, 's, Entity, With<T>>>
+impl<'w, 's, T: Component> ComponentFilter
+for SystemState<Query<'w, 's, Entity, With<T>>>
 {
     fn filter(
         &mut self,

@@ -1,18 +1,15 @@
 use crate::{
     prelude::BevyCssError,
-    property::{
-        Property,
-        PropertyValues,
-    },
+    property::{Property, PropertyValues},
 };
+
 use bevy::{
     ecs::query::QueryItem,
     prelude::{
         AssetServer,
-        Commands, 
-        Text,
-        TextAlignment,
+        Commands,
         Node,
+        Text, TextAlignment,
         With,
     },
 };
@@ -21,32 +18,30 @@ use bevy::{
 #[derive(Default)]
 pub struct TextAlignProperty;
 
-impl Property for TextAlignProperty
+impl Property
+for TextAlignProperty
 {
     // Using Option since Cache must impl Default, which  doesn't
     type Cache = Option<TextAlignment>;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
-    fn name()
-    -> &'static str
-    {
+    fn name(
+        // no args
+    ) -> &'static str {
         "text-align"
     }
 
     fn parse<'a>(
         values: &PropertyValues
-    ) -> Result<Self::Cache, BevyCssError>
-    {
-        if let Some(ident) = values.identifier() {
-            match ident {
-                "left" => return Ok(Some(TextAlignment::Left)),
-                "center" => return Ok(Some(TextAlignment::Center)),
-                "right" => return Ok(Some(TextAlignment::Right)),
-                _ => (),
-            }
+    ) -> Result<Self::Cache, BevyCssError> {
+        match values.identifier()
+        {
+            Some("left") => Ok(Some(TextAlignment::Left)),
+            Some("center") => Ok(Some(TextAlignment::Center)),
+            Some("right") => Ok(Some(TextAlignment::Right)),
+            _ => Err(BevyCssError::InvalidPropertyValue(Self::name().to_string())),
         }
-        Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
     }
 
     fn apply<'w>(

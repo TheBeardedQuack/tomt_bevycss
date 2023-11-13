@@ -1,17 +1,15 @@
 use crate::{
     prelude::BevyCssError,
-    property::{
-        Property,
-        PropertyValues,
-    },
+    property::{Property, PropertyValues},
 };
+
 use bevy::{
     ecs::query::QueryItem,
     prelude::{
         AssetServer,
-        Commands, 
-        Text,
+        Commands,
         Node,
+        Text,
         With,
     },
 };
@@ -20,26 +18,26 @@ use bevy::{
 #[derive(Default)]
 pub struct TextContentProperty;
 
-impl Property for TextContentProperty
+impl Property
+for TextContentProperty
 {
     type Cache = String;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
-    fn name()
-    -> &'static str
-    {
+    fn name(
+        // no args
+    ) -> &'static str {
         "text-content"
     }
 
     fn parse<'a>(
         values: &PropertyValues
-    ) -> Result<Self::Cache, BevyCssError>
-    {
-        if let Some(content) = values.string() {
-            Ok(content)
-        } else {
-            Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
+    ) -> Result<Self::Cache, BevyCssError> {
+        match values.string()
+        {
+            Some(content) => Ok(content),
+            None => Err(BevyCssError::InvalidPropertyValue(Self::name().to_string())),
         }
     }
 
@@ -49,10 +47,10 @@ impl Property for TextContentProperty
         _asset_server: &AssetServer,
         _commands: &mut Commands,
     ) {
-        components
-            .sections
-            .iter_mut()
-            // TODO: Maybe change this so each line break is a new section
-            .for_each(|section| section.value = cache.clone());
+        // TODO: Maybe change this so each line break is a new section
+        for section in components.sections.iter_mut()
+        {
+            section.value = cache.clone()
+        }
     }
 }

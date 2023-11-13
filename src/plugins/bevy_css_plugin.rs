@@ -3,11 +3,6 @@ use crate::{
         Class,
         StyleSheet,
     },
-    system::{
-        self,
-        ComponentFilterRegistry,
-        PrepareParams,
-    },
     property::{
         self,
         StyleSheetState,
@@ -16,8 +11,12 @@ use crate::{
         StyleSheetAsset,
         StyleSheetLoader,
     },
-    RegisterProperty,
+    system::{
+        self,
+        ComponentFilterRegistry, PrepareParams,
+    },
     RegisterComponentSelector,
+    RegisterProperty,
 };
 
 use bevy::prelude::*;
@@ -32,7 +31,9 @@ pub struct BevyCssPlugin
 
 impl BevyCssPlugin
 {
-    pub fn with_hot_reload() -> BevyCssPlugin {
+    pub fn with_hot_reload(
+        // no args
+    ) -> BevyCssPlugin {
         BevyCssPlugin { hot_reload: true }
     }
 
@@ -52,7 +53,7 @@ impl BevyCssPlugin
         app: &mut bevy::prelude::App
     ) {
         use property::impls::style::*;
-    
+
         app.register_property::<DisplayProperty>();
         app.register_property::<PositionTypeProperty>();
         app.register_property::<DirectionProperty>();
@@ -64,7 +65,7 @@ impl BevyCssPlugin
         app.register_property::<JustifyContentProperty>();
         app.register_property::<OverflowXProperty>();
         app.register_property::<OverflowYProperty>();
-    
+
         app.register_property::<LeftProperty>();
         app.register_property::<RightProperty>();
         app.register_property::<TopProperty>();
@@ -79,11 +80,11 @@ impl BevyCssPlugin
         app.register_property::<FlexGrowProperty>();
         app.register_property::<FlexShrinkProperty>();
         app.register_property::<AspectRatioProperty>();
-    
+
         app.register_property::<MarginProperty>();
         app.register_property::<PaddingProperty>();
         app.register_property::<BorderProperty>();
-    
+
         {
             use property::text::*;
 
@@ -93,13 +94,14 @@ impl BevyCssPlugin
             app.register_property::<TextAlignProperty>();
             app.register_property::<TextContentProperty>();
         }
-        
+
         use property::impls::BackgroundColorProperty;
         app.register_property::<BackgroundColorProperty>();
     }
 }
 
-impl Plugin for BevyCssPlugin
+impl Plugin
+for BevyCssPlugin
 {
     fn build(
         &self,
@@ -119,9 +121,11 @@ impl Plugin for BevyCssPlugin
 
         // Schedules
         use system::sets::*;
-        app.configure_set(PreUpdate, BevyCssSet::Prepare)
-            .configure_set(PreUpdate, BevyCssSet::Apply.after(BevyCssSet::Prepare))
-            .configure_set(PostUpdate, BevyCssSet::Cleanup);
+        app.configure_sets(PreUpdate, (
+                BevyCssSet::Prepare,
+                BevyCssSet::Apply.after(BevyCssSet::Prepare)
+            ))
+            .configure_sets(PostUpdate, BevyCssSet::Cleanup);
 
         // Systems
         app.add_systems(PreUpdate, system::prepare.in_set(BevyCssSet::Prepare))
@@ -129,7 +133,7 @@ impl Plugin for BevyCssPlugin
 
         if self.hot_reload
         {
-            app.configure_set(PostUpdate, BevyCssHotReload)
+            app.configure_sets(PostUpdate, BevyCssHotReload)
                 .add_systems(PostUpdate, system::hot_reload_style_sheets.in_set(BevyCssHotReload));
         }
 

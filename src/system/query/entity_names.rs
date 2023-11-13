@@ -1,5 +1,7 @@
 use bevy::prelude::{
-    Query, Entity, Name
+    Entity,
+    Name,
+    Query,
 };
 
 pub type QueryEntityNames<'w, 's> = Query<

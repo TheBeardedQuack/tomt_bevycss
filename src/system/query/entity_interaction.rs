@@ -1,6 +1,7 @@
 use bevy::{
     prelude::{
-        Query, Entity
+        Entity,
+        Query,
     },
     ui::Interaction,
 };

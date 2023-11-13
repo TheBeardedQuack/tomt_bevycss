@@ -1,6 +1,9 @@
 use bevy::prelude::{
-    Query, Entity, Parent, Node,
-    With
+    Entity,
+    Node,
+    Parent,
+    Query,
+    With,
 };
 
 pub type QueryEntityParent<'w, 's> = Query<

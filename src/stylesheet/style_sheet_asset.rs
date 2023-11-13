@@ -5,17 +5,14 @@ use crate::{
     selector::Selector,
 };
 
-use std::hash::{Hash, Hasher};
-use smallvec::SmallVec;
 use bevy::{
-    reflect::{
-        TypeUuid,
-        TypePath,
-    },
     log::trace,
     prelude::*,
+    reflect::{TypePath, TypeUuid},
     utils::AHasher,
 };
+use smallvec::SmallVec;
+use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
 #[derive(Asset, TypePath, TypeUuid)]
@@ -25,7 +22,8 @@ use bevy::{
 /// _Note_: This asset only store intermediate data, like rules and properties.
 /// The parsing to final ECS component values is done by a internal `exclusive_system` and is
 /// cached on [`Local`](bevy::prelude::Local) resources, which isn't possible to get outside the system.
-pub struct StyleSheetAsset {
+pub struct StyleSheetAsset
+{
     path: String,
     hash: u64,
     rules: SmallVec<[StyleRule; 8]>,
@@ -47,10 +45,10 @@ impl StyleSheetAsset
         content.hash(&mut hasher);
         let hash = hasher.finish();
 
-        Self {
+        Self{
             path: path.to_string(),
             hash,
-            rules: StyleSheetParser::parse(content)
+            rules: StyleSheetParser::parse(content),
         }
     }
 
@@ -61,10 +59,9 @@ impl StyleSheetAsset
     ) -> Option<Vec<String>> {
         self.rules.iter()
             .find(|&rule| rule.selector == *selector)
-            .map(|rule|
-                rule.properties.iter()
-                    .map(|(prop, _val)| prop.clone())
-                    .collect::<Vec<String>>()
+            .map(|rule| rule.properties.iter()
+                .map(|(prop, _val)| prop.clone())
+                .collect::<Vec<String>>()
             )
     }
 
@@ -74,8 +71,7 @@ impl StyleSheetAsset
         selector: &Selector,
         name: &str
     ) -> Option<&PropertyValues> {
-        self.rules
-            .iter()
+        self.rules.iter()
             .find(|&rule| &rule.selector == selector)
             .and_then(|rule| rule.properties.get(name))
     }

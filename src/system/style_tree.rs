@@ -12,7 +12,7 @@ use bevy::{
 };
 
 #[derive(Clone)]
-pub(super)struct StyleTreeNode
+pub(super) struct StyleTreeNode
 {
     pub entity: Entity,
     pub sheet_handle: Handle<StyleSheetAsset>,
@@ -39,15 +39,14 @@ impl StyleTree
                 let iter = std::iter::once((style.entity, style.sheet_handle.clone()));
                 match &style.parent
                 {
-                    Some(parent) => {
-                        self.resolve(parent)
-                            .into_iter()
-                            .chain(iter)
-                            .collect()
-                    },
+                    Some(parent) => self.resolve(parent)
+                        .into_iter()
+                        .chain(iter)
+                        .collect(),
+
                     None => iter.collect(),
                 }
-            },
+            }
             None => vec![],
         }
     }
@@ -68,9 +67,9 @@ impl<'me, 'w, 's> StyleTree
             Err(err) => {
                 error!("Query on entity {entity_idx} failed, {err}");
                 return None;
-            },
+            }
         };
-        
+
         match (sheet, parent)
         {
             (Some(style), _p) => {
@@ -83,26 +82,31 @@ impl<'me, 'w, 's> StyleTree
                 else
                 {
                     trace!("Creating entry in tree for entity {entity_idx}");
-                    let parent = match parent {
+                    let parent = match parent
+                    {
                         Some(p) => self.get_or_find_root(p.get(), query),
                         None => {
                             debug!("Entity {entity_idx} has no parent UI node, terminating search");
                             None
-                        },
-                    }.map(|p| p.sheet_handle);
-    
+                        }
+                    }
+                    .map(|p| p.sheet_handle);
+
                     self.insert_unique_unchecked(
                         style.handle().clone(),
-                        StyleTreeNode {
+                        StyleTreeNode
+                        {
                             entity,
                             sheet_handle: style.handle().clone(),
-                            parent
-                        }
+                            parent,
+                        },
                     ).1
                 };
                 Some(result.clone())
-            },
+            }
+
             (None, Some(parent)) => self.get_or_find_root(parent.get(), query),
+
             (None, None) => {
                 debug!("Entity {entity_idx} has no UI parent, or attached stylesheet");
                 None
@@ -118,9 +122,7 @@ impl<'me, 'w, 's> StyleTree
         let root_node = self.get_or_find_root(entity, query);
         match root_node
         {
-            Some(node) => {
-                self.resolve(&node.sheet_handle)
-            },
+            Some(node) => self.resolve(&node.sheet_handle),
             None => vec![],
         }
     }

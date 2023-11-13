@@ -1,7 +1,7 @@
 use bevy::ecs::schedule::SystemSet;
 
 /// System sets  used by `tomt_bevycss` systems
-#[derive(Debug, Copy, Clone)]
+#[derive(Clone, Copy, Debug)]
 #[derive(PartialEq, Eq, Hash)]
 #[derive(SystemSet)]
 pub enum BevyCssSet {

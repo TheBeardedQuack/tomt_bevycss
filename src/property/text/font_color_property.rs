@@ -1,47 +1,43 @@
 use crate::{
     prelude::BevyCssError,
-    property::{
-        Property,
-        PropertyValues
-    },
+    property::{Property, PropertyValues},
 };
 use bevy::{
     ecs::query::QueryItem,
     prelude::{
         AssetServer,
         Color,
-        Commands, 
-        Text,
+        Commands,
         Node,
+        Text,
         With,
     },
 };
-
 
 /// Applies the `color` property on [`TextStyle::color`](`TextStyle`) field of all sections on matched [`Text`] components.
 #[derive(Default)]
 pub struct FontColorProperty;
 
-impl Property for FontColorProperty
+impl Property
+for FontColorProperty
 {
     type Cache = Color;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
-    fn name()
-    -> &'static str
-    {
+    fn name(
+        // no args
+    ) -> &'static str {
         "color"
     }
 
     fn parse<'a>(
         values: &PropertyValues
-    ) -> Result<Self::Cache, BevyCssError>
-    {
-        if let Some(color) = values.color() {
-            Ok(color)
-        } else {
-            Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
+    ) -> Result<Self::Cache, BevyCssError> {
+        match values.color()
+        {
+            Some(color) => Ok(color),
+            None => Err(BevyCssError::InvalidPropertyValue(Self::name().to_string())),
         }
     }
 
@@ -51,9 +47,9 @@ impl Property for FontColorProperty
         _asset_server: &AssetServer,
         _commands: &mut Commands,
     ) {
-        components
-            .sections
-            .iter_mut()
-            .for_each(|section| section.style.color = *cache);
+        for section in components.sections.iter_mut()
+        {
+            section.style.color = *cache;
+        }
     }
 }

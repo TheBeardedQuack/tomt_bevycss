@@ -3,35 +3,42 @@ use super::{
     PropertyToken,
 };
 
-use smallvec::SmallVec;
 use bevy::{
     prelude::{
-        Color, Deref,
+        Color,
+        Deref
     },
-    ui::{UiRect, Val, OverflowAxis},
+    ui::{
+        OverflowAxis,
+        UiRect,
+        Val,
+    },
 };
+use smallvec::SmallVec;
 
 /// A list of [`PropertyToken`] which was parsed from a single property.
-#[derive(Debug, Default, Clone, Deref)]
-pub struct PropertyValues(pub(crate) SmallVec<[PropertyToken; 8]>);
+#[derive(Clone, Debug, Default)]
+#[derive(Deref)]
+pub struct PropertyValues(
+    pub(crate) SmallVec<[PropertyToken; 8]>
+);
 
-impl PropertyValues {
+impl PropertyValues
+{
     /// Tries to parses the current values as a single [`String`].
     pub fn string(
         &self
     ) -> Option<String> {
-        self.0.iter().find_map(
-            |token| match token {
-                PropertyToken::String(id) => {
-                    if id.is_empty() {
-                        None
-                    } else {
-                        Some(id.clone())
-                    }
-                }
-                _ => None,
-            }
-        )
+        self.0.iter()
+        .find_map(|token| match token
+        {
+            PropertyToken::String(id) => match id.is_empty()
+            {
+                true => None,
+                false => Some(id.clone()),
+            },
+            _ => None,
+        })
     }
 
     /// Tries to parses the current values as a single [`Color`].
@@ -72,7 +79,7 @@ impl PropertyValues {
                     "hidden" | "clip" => Some(OverflowAxis::Clip),
                     _ => None,
                 },
-                _ => None
+                _ => None,
             }
         }
         else
@@ -85,19 +92,16 @@ impl PropertyValues {
     pub fn identifier(
         &self
     ) -> Option<&str> {
-        self.0.iter().find_map(
-            |token| match token
+        self.0.iter()
+            .find_map(|token| match token
             {
-                PropertyToken::Identifier(id) => {
-                    if id.is_empty() {
-                        None
-                    } else {
-                        Some(id.as_str())
-                    }
+                PropertyToken::Identifier(id) => match id.is_empty()
+                {
+                    true => None,
+                    false => Some(id.as_str()),
                 }
                 _ => None,
-            }
-        )
+            })
     }
 
     /// Tries to parses the current values as a single [`Val`].
@@ -107,15 +111,14 @@ impl PropertyValues {
     pub fn val(
         &self
     ) -> Option<Val> {
-        self.0.iter().find_map(
-            |token| match token
+        self.0.iter()
+            .find_map(|token| match token
             {
                 PropertyToken::Percentage(val) => Some(Val::Percent(*val)),
                 PropertyToken::Dimension(val) => Some(Val::Px(*val)),
                 PropertyToken::Identifier(val) if val == "auto" => Some(Val::Auto),
                 _ => None,
-            }
-        )
+            })
     }
 
     /// Tries to parses the current values as a single [`f32`].
@@ -125,15 +128,14 @@ impl PropertyValues {
     pub fn f32(
         &self
     ) -> Option<f32> {
-        self.0.iter().find_map(
-            |token| match token
+        self.0.iter()
+            .find_map(|token| match token
             {
                 PropertyToken::Percentage(val)
                 | PropertyToken::Dimension(val)
                 | PropertyToken::Number(val) => Some(*val),
                 _ => None,
-            }
-        )
+            })
     }
 
     /// Tries to parses the current values as a single [`Option<f32>`].
@@ -148,23 +150,21 @@ impl PropertyValues {
     pub fn option_f32(
         &self
     ) -> Option<Option<f32>> {
-        self.0.iter().find_map(
-            |token| match token
+        self.0.iter()
+            .find_map(|token| match token
             {
                 PropertyToken::Percentage(val)
                 | PropertyToken::Dimension(val)
-                | PropertyToken::Number(val) => {
-                    Some(Some(*val))
+                | PropertyToken::Number(val) => Some(Some(*val)),
+
+                PropertyToken::Identifier(ident) => match ident.as_str()
+                {
+                    "none" => Some(None),
+                    _ => None,
                 },
-                PropertyToken::Identifier(ident) => {
-                    match ident.as_str() {
-                        "none" => Some(None),
-                        _ => None,
-                    }
-                },
+
                 _ => None,
-            }
-        )
+            })
     }
 
     /// Tries to parses the current values as a single [`Option<UiRect<Val>>`].
@@ -182,32 +182,28 @@ impl PropertyValues {
         }
         else
         {
-            self.0
-                .iter()
-                .fold(
-                    (None, 0),
-                    |
-                        (rect, idx),
-                        token
-                    | {
-                        let val = match token {
-                            PropertyToken::Percentage(val) => Val::Percent(*val),
-                            PropertyToken::Dimension(val) => Val::Px(*val),
-                            PropertyToken::Identifier(val) if val == "auto" => Val::Auto,
-                            _ => return (rect, idx),
-                        };
-                        let mut rect: UiRect = rect.unwrap_or_default();
+            self.0.iter()
+                .fold((None, 0), |(rect, idx), token|
+                {
+                    let val = match token
+                    {
+                        PropertyToken::Percentage(val) => Val::Percent(*val),
+                        PropertyToken::Dimension(val) => Val::Px(*val),
+                        PropertyToken::Identifier(val) if val == "auto" => Val::Auto,
+                        _ => return (rect, idx),
+                    };
+                    let mut rect: UiRect = rect.unwrap_or_default();
 
-                        match idx {
-                            0 => rect.top = val,
-                            1 => rect.right = val,
-                            2 => rect.bottom = val,
-                            3 => rect.left = val,
-                            _ => (),
-                        }
-                        (Some(rect), idx + 1)
+                    match idx
+                    {
+                        0 => rect.top = val,
+                        1 => rect.right = val,
+                        2 => rect.bottom = val,
+                        3 => rect.left = val,
+                        _ => (),
                     }
-                ).0
+                    (Some(rect), idx + 1)
+                }).0
         }
     }
 }

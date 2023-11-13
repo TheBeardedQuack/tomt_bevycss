@@ -1,6 +1,6 @@
-use bevy::prelude::{
-    error,
-    Color,
+use bevy::{
+    log::error,
+    prelude::Color,
 };
 
 pub(super) fn parse_hex_color(
@@ -9,6 +9,7 @@ pub(super) fn parse_hex_color(
     match hex_str.len()
     {
         3 => parse_hex_color(&format!("{hex_str}f")),
+
         4 => {
             let mut str = String::new();
             for c in hex_str.chars()
@@ -18,9 +19,11 @@ pub(super) fn parse_hex_color(
             }
             parse_hex_color(&str)
         }
+
         6 => parse_hex_color(&format!("{hex_str}ff")),
+        
         8 => u32::from_str_radix(hex_str, 16)
-            .map(|num| 
+            .map(|num|
             {
                 const DIV: f32 = u8::MAX as f32;
                 Color::rgba(
@@ -31,13 +34,14 @@ pub(super) fn parse_hex_color(
                 )
             })
             .ok(),
+
         _ => {
             error!(
                 "Invalid length of characters `{}` provided to `parse_hex_color()`",
                 hex_str.len()
             );
             None
-        },
+        }
     }
 }
 
@@ -49,7 +53,8 @@ pub(super) fn parse_hex_color(
 pub(super) fn parse_named_color(
     name: &str
 ) -> Option<Color> {
-    match name {
+    match name
+    {
         // CSS Level 1 values
         "black" => Some(Color::rgba(0.0000, 0.0000, 0.0000, 1.0000)),
         "silver" => Some(Color::rgba(0.7529, 0.7529, 0.7529, 1.0000)),

@@ -1,6 +1,6 @@
 use super::{
-    smallvec,
     parse_values,
+    smallvec,
 };
 use crate::{
     prelude::BevyCssError,
@@ -8,14 +8,17 @@ use crate::{
 };
 
 use cssparser::{
-    AtRuleParser, DeclarationParser, Parser, ParseError,
+    AtRuleParser,
+    DeclarationParser,
+    Parser, ParseError,
 };
 
 pub struct PropertyParser;
 
-impl<'i> DeclarationParser<'i> for PropertyParser {
+impl<'i> DeclarationParser<'i>
+for PropertyParser
+{
     type Declaration = (String, PropertyValues);
-
     type Error = BevyCssError;
 
     fn parse_value<'t>(
@@ -24,8 +27,10 @@ impl<'i> DeclarationParser<'i> for PropertyParser {
         parser: &mut Parser<'i, 't>,
     ) -> Result<Self::Declaration, ParseError<'i, BevyCssError>> {
         let mut tokens = smallvec![];
-        for token in parse_values(parser)? {
-            match token.try_into() {
+        for token in parse_values(parser)?
+        {
+            match token.try_into()
+            {
                 Ok(t) => tokens.push(t),
                 Err(_) => continue,
             }
@@ -35,7 +40,9 @@ impl<'i> DeclarationParser<'i> for PropertyParser {
     }
 }
 
-impl<'i> AtRuleParser<'i> for PropertyParser {
+impl<'i> AtRuleParser<'i>
+for PropertyParser
+{
     type Prelude = ();
     type AtRule = (String, PropertyValues);
     type Error = BevyCssError;

@@ -1,17 +1,14 @@
 use crate::{
     prelude::BevyCssError,
-    property::{
-        Property,
-        PropertyValues,
-    },
+    property::{Property, PropertyValues},
 };
 use bevy::{
     ecs::query::QueryItem,
     prelude::{
         AssetServer,
-        Commands, 
-        Text,
+        Commands,
         Node,
+        Text,
         With,
     },
 };
@@ -20,26 +17,26 @@ use bevy::{
 #[derive(Default)]
 pub struct FontProperty;
 
-impl Property for FontProperty
+impl Property
+for FontProperty
 {
     type Cache = String;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
-    fn name()
-    -> &'static str
-    {
+    fn name(
+        // no args
+    ) -> &'static str {
         "font"
     }
 
     fn parse<'a>(
         values: &PropertyValues
-    ) -> Result<Self::Cache, BevyCssError>
-    {
-        if let Some(path) = values.string() {
-            Ok(path)
-        } else {
-            Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
+    ) -> Result<Self::Cache, BevyCssError> {
+        match values.string()
+        {
+            Some(path) => Ok(path),
+            None => Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
         }
     }
 
@@ -49,9 +46,9 @@ impl Property for FontProperty
         asset_server: &AssetServer,
         _commands: &mut Commands,
     ) {
-        components
-            .sections
-            .iter_mut()
-            .for_each(|section| section.style.font = asset_server.load(cache));
+        for section in components.sections.iter_mut()
+        {
+            section.style.font = asset_server.load(cache);
+        }
     }
 }

@@ -1,6 +1,6 @@
 use bevy::ecs::schedule::SystemSet;
 
-#[derive(Debug, Clone)]
-#[derive(Hash, PartialEq, Eq)]
+#[derive(Clone, Debug)]
+#[derive(PartialEq, Eq, Hash)]
 #[derive(SystemSet)]
 pub struct BevyCssHotReload;

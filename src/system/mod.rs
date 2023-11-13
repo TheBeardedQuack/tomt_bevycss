@@ -15,40 +15,40 @@ pub mod sets;
 mod style_tree;
 use style_tree::StyleTree;
 
-use bevy::{
-    ecs::system::SystemState,
-    prelude::{
-        error, debug, trace,
-        Assets, AssetEvent, Component, Deref, DerefMut,
-        Entity, EventReader, Mut,
-        Query, Children, Parent, ResMut, Resource, World,
-    },
-};
-use smallvec::{
-    smallvec,
-    SmallVec,
-};
-
 use crate::{
     component::{
         MatchSelectorElement,
-        StyleSheet
+        StyleSheet,
     },
-    property::{
-        StyleSheetState,
-        StyleSheetStateBuilder,
-    },
-    selector::{
-        Selector,
-        SelectorElement
-    },
+    property::{StyleSheetState, StyleSheetStateBuilder},
+    selector::{Selector, SelectorElement},
     stylesheet::StyleSheetAsset,
 };
 
-#[derive(Deref, DerefMut, Resource)]
-pub(crate) struct PrepareParams(SystemState<CssQueryParam<'static, 'static>>);
+use bevy::{
+    ecs::system::SystemState,
+    log::{error, debug, trace},
+    prelude::{
+        AssetEvent, Assets,
+        Children, Component,
+        Deref, DerefMut,
+        Entity, EventReader,
+        Mut,
+        Parent,
+        Query,
+        ResMut, Resource,
+        World,
+    },
+};
+use smallvec::{smallvec, SmallVec};
 
-impl PrepareParams {
+#[derive(Deref, DerefMut, Resource)]
+pub(crate) struct PrepareParams(
+    SystemState<CssQueryParam<'static, 'static>>
+);
+
+impl PrepareParams
+{
     pub fn new(
         world: &mut World
     ) -> Self {
@@ -58,21 +58,18 @@ impl PrepareParams {
 
 /// Exclusive system which selects all entities and prepare the internal state used by [`Property`](crate::Property) systems.
 pub(crate) fn prepare(
-    world: &mut World,
+    world: &mut World
 ) {
-    world.resource_scope(|
-        world,
-        mut params: Mut<PrepareParams>
-    | {
-        world.resource_scope(|
-            world,
-            mut registry: Mut<ComponentFilterRegistry>
-        | {
+    world.resource_scope(|world, mut params: Mut<PrepareParams>|
+    {
+        world.resource_scope(|world, mut registry: Mut<ComponentFilterRegistry>|
+        {
             let assets = world.resource::<Assets<StyleSheetAsset>>();
             let css_query = params.get(world);
             let state = prepare_state(world, assets, css_query, &mut registry);
 
-            if !state.is_empty() {
+            if !state.is_empty()
+            {
                 let mut state_res = world
                     .get_resource_mut::<StyleSheetState>()
                     .expect("Should be added by plugin");
@@ -88,7 +85,7 @@ pub(crate) fn prepare_state(
     world: &World,
     assets: &Assets<StyleSheetAsset>,
     params: CssQueryParam,
-    registry: &mut ComponentFilterRegistry,
+    registry: &mut ComponentFilterRegistry
 ) -> StyleSheetState {
     let mut state = StyleSheetStateBuilder::default();
     let mut style_tree: StyleTree = Default::default();
@@ -111,12 +108,18 @@ pub(crate) fn prepare_state(
                     continue;
                 }
             };
-            
+
             debug!("Applying style {}", style_sheet.path());
             for rule in style_sheet.iter()
             {
-                let mut entities =
-                    select_entities(*root_entity, updated_entity, &rule.selector, world, &params, registry);
+                let mut entities = select_entities(
+                    *root_entity,
+                    updated_entity,
+                    &rule.selector,
+                    world,
+                    &params,
+                    registry,
+                );
 
                 trace!(
                     "Applying rule '{}' on {} entities {entities:?}",
@@ -124,18 +127,19 @@ pub(crate) fn prepare_state(
                     entities.len()
                 );
 
-                let existing_state = state
-                    .entry(sheet_handle.clone())
+                let existing_state = state.entry(sheet_handle.clone())
                     .or_default()
                     .entry(rule.selector.clone())
                     .or_default();
 
-                entities = entities.into_iter().filter(|e| !existing_state.contains(e)).collect();
+                entities = entities.into_iter()
+                    .filter(|e| !existing_state.contains(e))
+                    .collect();
                 existing_state.append(&mut entities);
             }
         }
     }
-    
+
     if state.len() > 0
     {
         trace!("PreProcess result: {state:?}");
@@ -149,26 +153,19 @@ fn build_entity_filter(
     css_query: &CssQueryParam
 ) -> Option<SmallVec<[Entity; 8]>> {
     css_query.ui_nodes.get(updated_node)
-        .map(|(
-            _entity,
-            parent,
-            children,
-            _stylesheet
-        )| {
+        .map(|(_entity, parent, children, _stylesheet)|
+        {
             // Add parents recursively
-            parent.map_or_else(
-                    SmallVec::default,
-                    |parent| get_parents_recursively(root, parent, &css_query.parent)
+            parent.map_or_else(SmallVec::default, |parent| 
+                    get_parents_recursively(root, parent, &css_query.parent)
                 )
                 .into_iter()
                 // Add the entity that triggered the change
                 .chain(std::iter::once(updated_node))
                 // Add children recursively
-                .chain(children.map_or_else(
-                        SmallVec::default,
-                        |children| get_children_recursively(children, &css_query.children)
-                    )
-                )
+                .chain(children.map_or_else(SmallVec::default, |children|
+                    get_children_recursively(children, &css_query.children)
+                ))
                 .collect()
         })
         .ok()
@@ -183,7 +180,7 @@ fn select_entities(
     selector: &Selector,
     world: &World,
     css_query: &CssQueryParam,
-    registry: &mut ComponentFilterRegistry,
+    registry: &mut ComponentFilterRegistry
 ) -> SmallVec<[Entity; 8]> {
     let mut parent_tree = selector.get_parent_tree();
 
@@ -193,20 +190,26 @@ fn select_entities(
     }
 
     let mut filter = build_entity_filter(root_node, updated_node, css_query);
-    loop {
+    loop
+    {
         // TODO: Rework this to use a index to avoid recreating parent_tree every time the systems runs.
         // This is has little to no impact on performance, since this system doesn't runs often.
         let node = parent_tree.remove(0);
         let entities = select_entities_node(node, world, css_query, registry, filter.clone());
 
-        if parent_tree.is_empty() {
+        if parent_tree.is_empty()
+        {
             break entities;
-        } else {
-            let children = entities
-                .into_iter()
+        }
+        else
+        {
+            let children = entities.into_iter()
                 .filter_map(|e| css_query.children.get(e).ok())
-                .flat_map(|(_e, ch)| get_children_recursively(ch, &css_query.children))
+                .flat_map(|(_e, ch)|
+                    get_children_recursively(ch, &css_query.children)
+                )
                 .collect();
+
             filter = Some(children);
         }
     }
@@ -219,46 +222,47 @@ fn select_entities_node(
     world: &World,
     css_query: &CssQueryParam,
     registry: &mut ComponentFilterRegistry,
-    filter: Option<SmallVec<[Entity; 8]>>,
+    filter: Option<SmallVec<[Entity; 8]>>
 ) -> SmallVec<[Entity; 8]> {
     let fold_fn = |
         filter: Option<SmallVec<[Entity; 8]>>,
         element: &SelectorElement
     | -> Option<SmallVec<[Entity; 8]>> {
-        let result = match element 
+        let result = match element
         {
-            SelectorElement::Name(name) =>
-            {
-                get_entities_with(name.as_str(), &css_query.names, filter)
-            },
+            SelectorElement::Name(name) => get_entities_with(
+                name.as_str(),
+                &css_query.names,
+                filter
+            ),
 
-            SelectorElement::Class(class) =>
-            {
-                get_entities_with(class.as_str(), &css_query.classes, filter)
-            },
+            SelectorElement::Class(class) => get_entities_with(
+                class.as_str(),
+                &css_query.classes,
+                filter
+            ),
 
             #[cfg(feature = "pseudo_class")]
-            SelectorElement::PseudoClass(class) =>
-            {
-                get_entities_with_pseudo_class(class.as_str(), &css_query.pseudo_classes, filter)
-            },
+            SelectorElement::PseudoClass(class) => get_entities_with_pseudo_class(
+                class.as_str(),
+                &css_query.pseudo_classes,
+                filter
+            ),
 
             #[cfg(feature = "pseudo_prop")]
-            SelectorElement::PseudoProp(_prop) =>
-            {
-                todo!("Implement PseudoProperty selection")
-            },
+            SelectorElement::PseudoProp(_prop) => todo!(
+                "Implement PseudoProperty selection"
+            ),
 
-            SelectorElement::Component(component) =>
-            {
-                get_entities_with_component(component.as_str(), world, registry, filter)
-            },
+            SelectorElement::Component(component) => get_entities_with_component(
+                component.as_str(),
+                world,
+                registry,
+                filter
+            ),
 
             // All child elements are filtered by [`get_parent_tree`](Selector::get_parent_tree)
-            SelectorElement::Child =>
-            {
-                unreachable!()
-            },
+            SelectorElement::Child => unreachable!(),
         };
 
         Some(result)
@@ -273,12 +277,11 @@ fn select_entities_node(
 fn get_entities_with_pseudo_class(
     name: &str,
     query: &PseudoClassParam,
-    filter: Option<SmallVec<[Entity; 8]>>,
+    filter: Option<SmallVec<[Entity; 8]>>
 ) -> SmallVec<[Entity; 8]> {
     use bevy::prelude::Interaction;
 
-    let mut result: SmallVec<[Entity; 8]> = Default::default();
-
+    let mut buffer: SmallVec<[Entity; 8]> = Default::default();
     for (entity, action) in query.interaction.iter()
     {
         match (name, *action)
@@ -288,26 +291,24 @@ fn get_entities_with_pseudo_class(
             _ => continue,
         };
 
-        if let Some(f) = &filter
+        match &filter
         {
-            if !f.contains(&entity)
-            {
+            Some(f) if !f.contains(&entity) => {
                 trace!("Entity {entity:?} discarded by filter");
                 continue;
             }
+            _ => buffer.push(entity),
         }
-
-        result.push(entity);
     }
 
-    result
+    buffer
 }
 
 /// Utility function to filter any entities by using a component with implements [`MatchSelectorElement`]
 fn get_entities_with<T>(
     name: &str,
     query: &Query<(Entity, &'static T)>,
-    filter: Option<SmallVec<[Entity; 8]>>,
+    filter: Option<SmallVec<[Entity; 8]>>
 ) -> SmallVec<[Entity; 8]>
 where
     T: Component + MatchSelectorElement,
@@ -318,7 +319,7 @@ where
             true => Some(e),
             false => None,
         })
-        .filter(|e| match filter
+        .filter(|e| match &filter
         {
             Some(filter) => filter.contains(e),
             None => true,
@@ -333,27 +334,25 @@ fn get_entities_with_component(
     name: &str,
     world: &World,
     components: &mut ComponentFilterRegistry,
-    filter: Option<SmallVec<[Entity; 8]>>,
+    filter: Option<SmallVec<[Entity; 8]>>
 ) -> SmallVec<[Entity; 8]> {
-    if let Some(query) = components.0.get_mut(name)
+    match components.0.get_mut(name)
     {
-        if let Some(filter) = filter
-        {
-            query
-                .filter(world)
-                .into_iter()
-                .filter(|e| filter.contains(e))
-                .collect()
+        Some(query) => {
+            let mut buffer = query.filter(world);
+            if let Some(filter) = &filter
+            {
+                buffer = buffer.into_iter()
+                    .filter(|e| filter.contains(e))
+                    .collect();
+            }
+
+            buffer
         }
-        else
-        {
-            query.filter(world)
+        None => {
+            error!("Unregistered component selector {}", name);
+            SmallVec::new()
         }
-    }
-    else
-    {
-        error!("Unregistered component selector {}", name);
-        SmallVec::new()
     }
 }
 
@@ -393,9 +392,10 @@ fn get_children_recursively(
         .iter()
         .flat_map(|&e|
             std::iter::once(e).chain(
-                query_childs
-                    .get(e)
-                    .map_or(SmallVec::new(), |(_c, gc)| get_children_recursively(gc, query_childs)),
+                query_childs.get(e)
+                    .map_or(SmallVec::new(), |(_c, gc)|
+                        get_children_recursively(gc, query_childs)
+                    )
             )
         )
         .collect()
@@ -410,8 +410,7 @@ pub(crate) fn hot_reload_style_sheets(
     {
         if let AssetEvent::Modified { id } = evt
         {
-            q_sheets
-                .iter_mut()
+            q_sheets.iter_mut()
                 .filter(|sheet| &sheet.handle().id() == id)
                 .for_each(|mut sheet|
                 {

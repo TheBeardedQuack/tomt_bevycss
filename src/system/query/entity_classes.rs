@@ -1,6 +1,7 @@
 use crate::prelude::Class;
 use bevy::prelude::{
-    Query, Entity
+    Entity,
+    Query,
 };
 
 pub type QueryEntityClasses<'w, 's> = Query<

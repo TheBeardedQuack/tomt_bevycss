@@ -1,45 +1,51 @@
-mod cached_properties;
 mod cache_state;
+pub use cache_state::*;
+
+mod cached_properties;
+pub use cached_properties::*;
+
 mod colors;
+
 mod property_meta;
+pub use property_meta::*;
+
 mod property_token;
+pub use property_token::*;
+
 mod property_values;
+pub use property_values::*;
+
 mod selected_entities;
+pub use selected_entities::*;
+
 mod stylesheet_state;
+pub use stylesheet_state::*;
 
 pub(crate) mod impls;
 /// Impls for `bevy_text` [`Text`] component
 pub(crate) mod text;
 
-pub use {
-    cached_properties::*,
-    cache_state::*,
-
-    property_meta::*,
-    property_token::*,
-    property_values::*,
-
-    selected_entities::*,
-
-    stylesheet_state::*,
-};
 
 use crate::prelude::{
     BevyCssError,
     StyleSheetAsset,
 };
-use std::any::Any;
+
 use bevy::{
     ecs::query::{
         QueryItem,
-        ReadOnlyWorldQuery, WorldQuery,
+        ReadOnlyWorldQuery,
+        WorldQuery,
     },
     prelude::{
         Assets, AssetServer,
-        Commands, Local, Query, Res,
+        Commands,
+        Local,
+        Query,
+        Res,
     },
 };
-
+use std::any::Any;
 
 /// Determines how a property should interact and modify the [ecs world](`bevy::prelude::World`).
 ///
@@ -79,8 +85,9 @@ pub trait Property:
     /// Indicates which property name should matched for. Must match the same property name as on `css` file.
     ///
     /// For compliance, use always `lower-case` and `kebab-case` names.
-    fn name()
-    -> &'static str;
+    fn name(
+        // no args
+    ) -> &'static str;
 
     /// Parses the [`PropertyValues`] into the [`Cache`](Property::Cache) value to be reused across multiple entities.
     ///

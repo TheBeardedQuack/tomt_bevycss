@@ -1,12 +1,16 @@
 use super::SelectedEntities;
 use crate::{
-    stylesheet::StyleSheetAsset,
     selector::Selector,
+    stylesheet::StyleSheetAsset,
 };
+
 use bevy::{
     prelude::{
-        Entity, Handle, Assets,
-        Deref, DerefMut, Resource,
+        Assets,
+        Deref, DerefMut,
+        Entity,
+        Handle,
+        Resource,
     },
     utils::HashMap,
 };
@@ -56,7 +60,7 @@ impl StyleSheetStateBuilder
             if let Some(sheet) = assets.get(handle)
             {
                 // Invert list of entities for each selector, into a list of selectors for each entity
-                let mut inverted: HashMap::<Entity, Vec<Selector>> = HashMap::new();
+                let mut inverted = HashMap::<Entity, Vec<Selector>>::new();
                 for (selector, entities) in selected.iter()
                 {
                     for entity in entities.iter()
@@ -66,20 +70,22 @@ impl StyleSheetStateBuilder
                             .push(selector.clone());
                     }
                 }
-                
+
                 // "Pre-apply" the selectors to get a list of properties without duplicates
                 for (entity, mut selectors) in inverted
                 {
-                    let style = result.entry(entity)
-                        .or_default();
-                    
+                    let style = result.entry(entity).or_default();
+
                     selectors.sort();
                     for selector in selectors.iter()
                     {
-                        for prop in sheet.get_property_names(selector)
-                            .unwrap_or_default()
+                        for prop in sheet.get_property_names(selector).unwrap_or_default()
                         {
-                            style.insert(prop, StyleSource{styleheet: handle.clone(), selector: selector.clone()});
+                            style.insert(prop, StyleSource
+                                {
+                                    styleheet: handle.clone(),
+                                    selector: selector.clone(),
+                                });
                         }
                     }
                 }

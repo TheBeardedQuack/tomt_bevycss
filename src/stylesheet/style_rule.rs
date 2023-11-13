@@ -3,8 +3,8 @@ use crate::{
     selector::Selector,
 };
 
-use std::fmt;
 use bevy::utils::HashMap;
+use std::fmt;
 
 /// Represents a single rule inside a style sheet with a [`Selector`] which determines which entities
 /// should be applied the [`PropertyValues`].
@@ -12,9 +12,11 @@ use bevy::utils::HashMap;
 /// Note that this struct holds intermediate data, the final value is parsed by [`Property`](crate::Property) on
 /// the first time it's [`system`](crate::Property::apply_system) is invoked.
 #[derive(Debug, Clone)]
-pub struct StyleRule {
+pub struct StyleRule
+{
     /// Selector used to match entities to apply properties.
     pub selector: Selector,
+
     /// Properties values to be applied on selected entities.
     pub properties: HashMap<String, PropertyValues>,
 }
@@ -24,19 +26,20 @@ impl StyleRule
     pub fn new(
         selector: Selector
     ) -> Self {
-        Self {
+        Self{
             selector,
-            properties: Default::default()
+            properties: Default::default(),
         }
     }
 }
 
-impl fmt::Display for StyleRule
+impl fmt::Display
+for StyleRule
 {
     fn fmt(
         &self,
-        f: &mut fmt::Formatter<'_>
+        formatter: &mut fmt::Formatter<'_>
     ) -> fmt::Result {
-        write!(f, "{}", self.selector)
+        write!(formatter, "{}", self.selector)
     }
 }

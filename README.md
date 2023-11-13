@@ -112,6 +112,15 @@ This crate marks the first public release from both Tome of Many Things.
         </ul></li>
     </ul></td>
 </tr>
+<tr>
+    <td>0.6.0</td>
+    <td><ul>
+        <li>Dependencies<ul>
+            <li>bevy - Updated to 0.12</li>
+            <li>bevy_editor_pls - Restored and updated to 0.6</li>
+        </ul></li>
+    </ul></td>
+</tr>
 </table>
 
 ### Future Goals
@@ -186,13 +195,14 @@ See [Custom Properties][27] (docs/custom-properties.md) for more information.
 
 
 # Bevy support table
-| bevy  | tomt_bevycss |
-| :---: | :----------: |
-|  0.8  |     0.1      |
-|  0.9  |     0.2      |
-|  0.10 |     0.3      |
-|  0.10 |    0.4.x     |
-|  0.11 |    0.5.x     |
+| bevy | tomt_bevycss |
+|:----:|:------------:|
+| 0.8  |     0.1      |
+| 0.9  |     0.2      |
+| 0.10 |     0.3      |
+| 0.10 |    0.4.x     |
+| 0.11 |    0.5.x     |
+| 0.12 |    0.6.x     |
 
 
 # Contributing

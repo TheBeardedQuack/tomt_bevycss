@@ -1,12 +1,13 @@
 use super::*;
-
 use crate::{
-    selector::SelectorElement,
     property::PropertyToken,
+    selector::SelectorElement,
 };
 
 #[test]
-fn parse_empty() {
+fn parse_empty(
+    // no args
+) {
     assert!(
         StyleSheetParser::parse("").is_empty(),
         "Should return an empty list of rules"
@@ -34,7 +35,9 @@ fn parse_empty() {
 }
 
 #[test]
-fn parse_single_name_selector_no_property() {
+fn parse_single_name_selector_no_property(
+    // no args
+) {
     let rules = StyleSheetParser::parse("#id {}");
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
@@ -45,7 +48,8 @@ fn parse_single_name_selector_no_property() {
     let node = &tree[0];
     assert_eq!(tree.len(), 1, "Should have a single selector");
 
-    match node[0] {
+    match node[0]
+    {
         SelectorElement::Name(name) => assert_eq!(name, "id"),
         _ => panic!("Should have a name selector"),
     }
@@ -54,7 +58,9 @@ fn parse_single_name_selector_no_property() {
 }
 
 #[test]
-fn parse_single_class_selector_no_property() {
+fn parse_single_class_selector_no_property(
+    // no args
+) {
     let rules = StyleSheetParser::parse(".class {}");
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
@@ -65,7 +71,8 @@ fn parse_single_class_selector_no_property() {
     let node = &tree[0];
     assert_eq!(tree.len(), 1, "Should have a single selector");
 
-    match node[0] {
+    match node[0]
+    {
         SelectorElement::Class(name) => assert_eq!(name, "class"),
         _ => panic!("Should have a class selector"),
     }
@@ -74,7 +81,9 @@ fn parse_single_class_selector_no_property() {
 }
 
 #[test]
-fn parse_single_component_selector_no_property() {
+fn parse_single_component_selector_no_property(
+    // no args
+) {
     let rules = StyleSheetParser::parse("button {}");
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
@@ -85,7 +94,8 @@ fn parse_single_component_selector_no_property() {
     let node = &tree[0];
     assert_eq!(tree.len(), 1, "Should have a single selector");
 
-    match node[0] {
+    match node[0]
+    {
         SelectorElement::Component(name) => assert_eq!(name, "button"),
         _ => panic!("Should have a class selector"),
     }
@@ -94,7 +104,9 @@ fn parse_single_component_selector_no_property() {
 }
 
 #[test]
-fn parse_single_complex_class_selector_no_property() {
+fn parse_single_complex_class_selector_no_property(
+    // no args
+) {
     let rules = StyleSheetParser::parse(".a.b.c.d.e.f.g {}");
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
@@ -116,10 +128,10 @@ fn parse_single_complex_class_selector_no_property() {
         Class("g".to_string()),
     ];
 
-    expected
-        .into_iter()
+    expected.into_iter()
         .zip(node)
-        .for_each(|(expected, element)| {
+        .for_each(|(expected, element)|
+        {
             assert_eq!(expected, **element);
         });
 
@@ -127,7 +139,9 @@ fn parse_single_complex_class_selector_no_property() {
 }
 
 #[test]
-fn parse_single_composed_selector_no_property() {
+fn parse_single_composed_selector_no_property(
+    // no args
+) {
     let rules = StyleSheetParser::parse("a.b#c.d {}");
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
@@ -146,10 +160,10 @@ fn parse_single_composed_selector_no_property() {
         Class("d".to_string()),
     ];
 
-    expected
-        .into_iter()
+    expected.into_iter()
         .zip(node)
-        .for_each(|(expected, element)| {
+        .for_each(|(expected, element)|
+        {
             assert_eq!(expected, **element);
         });
 
@@ -157,7 +171,9 @@ fn parse_single_composed_selector_no_property() {
 }
 
 #[test]
-fn parse_multiple_composed_selector_no_property() {
+fn parse_multiple_composed_selector_no_property(
+    // no args
+) {
     let rules = StyleSheetParser::parse("a.b #c .d e#f .g.h i j.k#l {}");
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
@@ -180,14 +196,15 @@ fn parse_multiple_composed_selector_no_property() {
         ],
     ];
 
-    expected
-        .into_iter()
+    expected.into_iter()
         .zip(tree)
-        .for_each(|(node_expected, node)| {
+        .for_each(|(node_expected, node)|
+        {
             node_expected
                 .into_iter()
                 .zip(node)
-                .for_each(|(expected, element)| {
+                .for_each(|(expected, element)|
+                {
                     assert_eq!(expected, *element);
                 });
         });
@@ -196,7 +213,9 @@ fn parse_multiple_composed_selector_no_property() {
 }
 
 #[test]
-fn parse_single_token() {
+fn parse_single_token(
+    // no args
+) {
     let rules = StyleSheetParser::parse("a {b: c}");
     assert_eq!(rules.len(), 1, "Should have a single rule");
 
@@ -209,17 +228,19 @@ fn parse_single_token() {
     );
 
     let values = properties.get(&"b".to_string()).unwrap();
-
     assert_eq!(values.len(), 1, "Should have a single property value");
 
-    match &values[0] {
+    match &values[0]
+    {
         PropertyToken::Identifier(ident) => assert_eq!(ident, "c"),
         _ => panic!("Should have a property value of type identifier token"),
     }
 }
 
 #[test]
-fn parse_multiple_complex_properties() {
+fn parse_multiple_complex_properties(
+    // no args
+) {
     let rules = StyleSheetParser::parse(
         r#"a {
         b: c;
@@ -271,32 +292,36 @@ fn parse_multiple_complex_properties() {
     ];
 
     assert_eq!(properties.len(), expected.len(), "{:?}", properties);
-    expected.into_iter().for_each(|(name, values)| {
-        assert!(properties.contains_key(name));
-        values
-            .iter()
-            .zip(properties.get(name).unwrap().iter())
-            .for_each(|(expected, token)| {
-                assert_eq!(token, expected);
-            })
-    });
+    expected.into_iter()
+        .for_each(|(name, values)|
+        {
+            assert!(properties.contains_key(name));
+            values.iter()
+                .zip(properties.get(name).unwrap().iter())
+                .for_each(|(expected, token)|
+                {
+                    assert_eq!(token, expected);
+                })
+        });
 }
 
 #[test]
-fn parse_multiple_rules() {
+fn parse_multiple_rules(
+    // no args
+) {
     let rules = StyleSheetParser::parse(r#"a{a:a}a{a:a}a{a:a}a{a:a}"#);
 
     assert_eq!(rules.len(), 4, "Should have 4 rules");
 
-    for rule in rules {
-        match rule.selector.get_parent_tree()[0][0] {
+    for rule in rules
+    {
+        match rule.selector.get_parent_tree()[0][0]
+        {
             SelectorElement::Component(a) => assert_eq!(a, "a"),
             _ => panic!("Should have only a single component \"a\""),
         }
 
-        match rule
-            .properties
-            .get(&"a".to_string())
+        match rule.properties.get(&"a".to_string())
             .expect("Should have a single property named \"a\"")
             .iter()
             .next()

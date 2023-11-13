@@ -2,7 +2,7 @@ use crate::prelude::StyleSheet;
 
 use bevy::prelude::{
     Added,
-    Changed, 
+    Changed,
     Entity,
     Node,
     Or,
@@ -46,10 +46,10 @@ mod monitor_changes
 
         pub type ReadOnlyWorldQuery = (
             Or<(
-                Added<StyleSheet>, Changed<StyleSheet>,
-                Added<Parent>, Changed<Parent>,
-                Added<Children>, Changed<Children>,
-                Added<Class>, Changed<Class>,
+                Added<StyleSheet>,  Changed<StyleSheet>,
+                Added<Parent>,      Changed<Parent>,
+                Added<Children>,    Changed<Children>,
+                Added<Class>,       Changed<Class>,
             )>,
             With<Node>
         );
@@ -63,10 +63,10 @@ mod monitor_changes
 
         pub type ReadOnlyWorldQuery = (
             Or<(
-                Added<StyleSheet>, Changed<StyleSheet>,
-                Added<Parent>, Changed<Parent>,
-                Added<Children>, Changed<Children>,
-                Added<Class>, Changed<Class>,
+                Added<StyleSheet>,  Changed<StyleSheet>,
+                Added<Parent>,      Changed<Parent>,
+                Added<Children>,    Changed<Children>,
+                Added<Class>,       Changed<Class>,
                 Added<Interaction>, Changed<Interaction>,
             )>,
             With<Node>

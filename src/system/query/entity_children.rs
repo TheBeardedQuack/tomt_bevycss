@@ -1,12 +1,15 @@
 use bevy::prelude::{
-    Query, Entity, Children, Node,
+    Children,
+    Entity,
+    Node,
+    Query,
     With,
 };
 
 pub type QueryEntityChildren<'w, 's> = Query<
     'w, 's,
     WorldQuery,
-    ReadOnlyWorldQuery,
+    ReadOnlyWorldQuery
 >;
 
 pub type WorldQuery = (Entity, &'static Children);

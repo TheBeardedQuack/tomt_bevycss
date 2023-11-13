@@ -12,6 +12,7 @@ use bevy::{
         BoxedFuture,
     },
 };
+use thiserror::Error;
 
 #[derive(Default)]
 pub(crate) struct StyleSheetLoader;
@@ -25,10 +26,12 @@ pub(crate) enum StyleSheetLoaderError
     Io(#[from] std::io::Error),
 
     #[error("Could not parse file: {0}")]
-    Parsing(#[from] std::str::Utf8Error)
+    Parsing(#[from] std::str::Utf8Error),
 }
 
-impl AssetLoader for StyleSheetLoader {
+impl AssetLoader
+for StyleSheetLoader
+{
     type Asset = StyleSheetAsset;
     type Settings = ();
     type Error = StyleSheetLoaderError;
@@ -52,7 +55,9 @@ impl AssetLoader for StyleSheetLoader {
         })
     }
 
-    fn extensions(&self) -> &[&str] {
+    fn extensions(
+        &self
+    ) -> &[&str] {
         &["css"]
     }
 }

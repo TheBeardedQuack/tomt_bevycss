@@ -1,6 +1,8 @@
 use crate::prelude::StyleSheet;
 use bevy::prelude::{
-    Entity, Children, Parent,
+    Children,
+    Entity,
+    Parent,
     Query,
 };
 

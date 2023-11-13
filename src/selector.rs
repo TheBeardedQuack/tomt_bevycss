@@ -1,24 +1,26 @@
-use std::{
-    hash::{Hash, Hasher},
-    cmp::Ordering,
-    sync::Mutex,
-};
 use bevy::utils::AHasher;
 use cssparser::CowRcStr;
 use smallvec::{smallvec, SmallVec};
-
+use std::{
+    cmp::Ordering,
+    hash::{Hash, Hasher},
+    sync::Mutex,
+};
 
 static RULE_COUNTER: Mutex<usize> = Mutex::new(0);
 
 /// Represents a selector element on a style sheet rule.
 /// A single selector can have multiple elements, for instance a selector of `button.enabled`
 /// Would generated two elements, one for `button` and another for `.enabled`.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash)]
+#[derive(Clone, Debug)]
+#[derive(PartialEq, Eq)]
+#[derive(PartialOrd, Ord)]
+#[derive(Hash)]
 pub enum SelectorElement
 {
     /// A name selector element, like `#score_window`. On CSS used on web, this is as known as id.
     Name(String),
-    
+
     /// A component selector element, like `window` or `button`
     Component(String),
 
@@ -38,34 +40,41 @@ pub enum SelectorElement
 }
 
 /// A selector parsed from a `css` rule. Each selector has a internal hash used to differentiate between many rules in the same sheet.
-#[derive(Debug, Default, Clone)]
-pub struct Selector {
+#[derive(Clone, Debug, Default)]
+pub struct Selector
+{
     hash: u64,
     elements: SmallVec<[SelectorElement; 8]>,
     /// Rule loading order from parser
     load_order: usize,
 }
 
-impl Selector {
+impl Selector
+{
     /// Creates a new selector for the given elements.
     pub fn new(
         elements: SmallVec<[SelectorElement; 8]>
     ) -> Self {
         let hasher = AHasher::default();
 
-        let hasher = elements.iter().fold(hasher, |mut hasher, el| {
+        let hasher = elements.iter().fold(hasher, |mut hasher, el|
+        {
             el.hash(&mut hasher);
             hasher
         });
 
         let hash = hasher.finish();
-
-        Self {
+        Self{
             elements,
             hash,
-            load_order: RULE_COUNTER.lock()
-                .map(|mut lock| { *lock +=1; *lock })
-                .unwrap_or_default(),            
+            load_order: RULE_COUNTER
+                .lock()
+                .map(|mut lock|
+                {
+                    *lock += 1;
+                    *lock
+                })
+                .unwrap_or_default(),
         }
     }
 
@@ -94,50 +103,57 @@ impl Selector {
     }
 }
 
-impl std::fmt::Display for Selector
+impl std::fmt::Display
+for Selector
 {
     fn fmt(
         &self,
-        f: &mut std::fmt::Formatter<'_>
+        formatter: &mut std::fmt::Formatter<'_>
     ) -> std::fmt::Result {
-        let mut result = String::new();
+        let mut buffer = String::new();
 
         for element in &self.elements
         {
             match element
             {
                 SelectorElement::Name(n) => {
-                    result.push('#');
-                    result.push_str(n);
+                    buffer.push('#');
+                    buffer.push_str(n);
                 }
+
                 SelectorElement::Component(c) => {
-                    result.push_str(c);
+                    buffer.push_str(c);
                 }
+
                 SelectorElement::Class(c) => {
-                    result.push('.');
-                    result.push_str(c);
+                    buffer.push('.');
+                    buffer.push_str(c);
                 }
+
                 #[cfg(feature = "pseudo_class")]
                 SelectorElement::PseudoClass(c) => {
-                    result.push(':');
-                    result.push_str(c);
+                    buffer.push(':');
+                    buffer.push_str(c);
                 }
+
                 #[cfg(feature = "pseudo_prop")]
                 SelectorElement::PseudoProp(p) => {
-                    result.push_str("::");
-                    result.push_str(p);
+                    buffer.push_str("::");
+                    buffer.push_str(p);
                 }
+
                 SelectorElement::Child => {
-                    result.push(' ');
+                    buffer.push(' ');
                 }
             }
         }
 
-        write!(f, "{}", result)
+        write!(formatter, "{}", buffer)
     }
 }
 
-impl PartialEq for Selector
+impl PartialEq
+for Selector
 {
     fn eq(
         &self,
@@ -147,9 +163,14 @@ impl PartialEq for Selector
     }
 }
 
-impl Eq for Selector { }
+impl Eq
+for Selector
+{
+    // nothing to do
+}
 
-impl PartialOrd for Selector
+impl PartialOrd
+for Selector
 {
     fn partial_cmp(
         &self,
@@ -163,7 +184,8 @@ impl PartialOrd for Selector
     }
 }
 
-impl Ord for Selector
+impl Ord
+for Selector
 {
     fn cmp(
         &self,
@@ -177,7 +199,8 @@ impl Ord for Selector
     }
 }
 
-impl Hash for Selector
+impl Hash
+for Selector
 {
     fn hash<H: Hasher>(
         &self,
@@ -187,7 +210,8 @@ impl Hash for Selector
     }
 }
 
-impl<'i> From<Vec<CowRcStr<'i>>> for Selector
+impl<'i> From<Vec<CowRcStr<'i>>>
+for Selector
 {
     fn from(
         input: Vec<CowRcStr<'i>>
@@ -195,18 +219,25 @@ impl<'i> From<Vec<CowRcStr<'i>>> for Selector
         let mut elements = smallvec![];
         let mut next_is_class = false;
 
-        for value in input.into_iter().filter(|v| !v.is_empty())
+        for value in input.into_iter()
+            .filter(|v| !v.is_empty())
         {
-            if value.as_ref() == "." {
+            if value.as_ref() == "."
+            {
                 next_is_class = true;
                 continue;
             }
 
-            if let Some(value) = value.strip_prefix('#') {
+            if let Some(value) = value.strip_prefix('#')
+            {
                 elements.push(SelectorElement::Name(value.to_string()));
-            } else if next_is_class {
+            }
+            else if next_is_class
+            {
                 elements.push(SelectorElement::Class(value.to_string()))
-            } else {
+            }
+            else
+            {
                 elements.push(SelectorElement::Component(value.to_string()))
             }
 
