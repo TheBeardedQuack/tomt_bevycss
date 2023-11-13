@@ -1,18 +1,14 @@
-use std::time::Duration;
-use bevy::{prelude::*, asset::ChangeWatcher};
-use tomt_bevycss::prelude::{Class, BevyCssPlugin, StyleSheet};
+use bevy::prelude::*;
+use tomt_bevycss::prelude::{
+    BevyCssPlugin,
+    Class,
+    StyleSheet,
+};
 
 fn main() {
     App::new()
-        .add_plugins((
-            DefaultPlugins.set(
-                AssetPlugin {
-                    watch_for_changes: ChangeWatcher::with_delay(Duration::from_millis(100)),
-                    ..Default::default()
-                }
-            ),
-            BevyCssPlugin::default(),
-        ))
+        .add_plugins(DefaultPlugins)
+        .add_plugins(BevyCssPlugin::default())
         .add_systems(Startup, setup)
         .run();
 }

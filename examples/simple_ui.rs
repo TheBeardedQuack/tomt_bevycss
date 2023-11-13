@@ -1,5 +1,9 @@
 use bevy::prelude::*;
-use tomt_bevycss::prelude::{Class, BevyCssPlugin, StyleSheet};
+use tomt_bevycss::prelude::{
+    BevyCssPlugin,
+    Class,
+    StyleSheet,
+};
 
 fn main() {
     App::new()

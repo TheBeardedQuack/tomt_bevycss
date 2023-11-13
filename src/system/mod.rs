@@ -1,4 +1,5 @@
 mod component_filter;
+
 pub(crate) use component_filter::*;
 
 mod component_filter_registry;
@@ -167,7 +168,6 @@ fn build_entity_filter(
                         SmallVec::default,
                         |children| get_children_recursively(children, &css_query.children)
                     )
-                    .into_iter()
                 )
                 .collect()
         })
@@ -312,16 +312,17 @@ fn get_entities_with<T>(
 where
     T: Component + MatchSelectorElement,
 {
-    query
-        .iter()
-        .filter_map(|(e, rhs)| 
-            if rhs.matches(name) { Some(e) }
-            else { None }
-        )
-        .filter(|e|
-            if let Some(filter) = &filter { filter.contains(e) }
-            else { true }
-        )
+    query.iter()
+        .filter_map(|(e, rhs)| match rhs.matches(name)
+        {
+            true => Some(e),
+            false => None,
+        })
+        .filter(|e| match filter
+        {
+            Some(filter) => filter.contains(e),
+            None => true,
+        })
         .collect()
 }
 
@@ -405,13 +406,13 @@ pub(crate) fn hot_reload_style_sheets(
     mut assets_events: EventReader<AssetEvent<StyleSheetAsset>>,
     mut q_sheets: Query<&mut StyleSheet>,
 ) {
-    for evt in assets_events.iter()
+    for evt in assets_events.read()
     {
-        if let AssetEvent::Modified { handle } = evt
+        if let AssetEvent::Modified { id } = evt
         {
             q_sheets
                 .iter_mut()
-                .filter(|sheet| sheet.handle() == handle)
+                .filter(|sheet| &sheet.handle().id() == id)
                 .for_each(|mut sheet|
                 {
                     debug!("Refreshing sheet {:?}", sheet);

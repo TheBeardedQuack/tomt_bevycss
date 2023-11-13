@@ -13,10 +13,12 @@ use bevy::{
         TypePath,
     },
     log::trace,
+    prelude::*,
     utils::AHasher,
 };
 
-#[derive(Debug, TypePath, TypeUuid)]
+#[derive(Debug)]
+#[derive(Asset, TypePath, TypeUuid)]
 #[uuid = "14b98dd6-5425-4692-a561-5e6ae9180554"]
 /// A cascading style sheet (`css`) asset file.
 ///

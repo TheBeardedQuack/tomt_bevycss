@@ -1,4 +1,7 @@
-use bevy::{ecs::query::QueryItem, prelude::*};
+use bevy::{
+    ecs::query::QueryItem,
+    prelude::*,
+};
 use tomt_bevycss::prelude::*;
 
 fn main() {

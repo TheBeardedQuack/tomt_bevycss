@@ -1,26 +1,19 @@
-use std::time::Duration;
-
 use bevy::{
     prelude::*,
     ui::FocusPolicy,
-    asset::ChangeWatcher
 };
 use tomt_bevycss::prelude::*;
 
-#[derive(Component, Debug, Default, Reflect)]
+#[derive(Debug, Default)]
+#[derive(Component, Reflect)]
 #[reflect(Component)]
 struct Title;
 
 fn main() {
     App::new()
         // Whenever an StyleSheet is loaded, it'll be applied automatically
-        .add_plugins((
-            DefaultPlugins.set(AssetPlugin {
-                watch_for_changes: ChangeWatcher::with_delay(Duration::from_millis(100)),
-                ..Default::default()
-            }),
-            BevyCssPlugin::with_hot_reload(),
-        ))
+        .add_plugins(DefaultPlugins)
+        .add_plugins(BevyCssPlugin::with_hot_reload())
         .add_systems(Startup, setup)
         .add_systems(Update, change_theme)
         .register_component_selector::<Title>("title")

@@ -118,7 +118,7 @@ fn parse_single_complex_class_selector_no_property() {
 
     expected
         .into_iter()
-        .zip(node.into_iter())
+        .zip(node)
         .for_each(|(expected, element)| {
             assert_eq!(expected, **element);
         });
@@ -148,7 +148,7 @@ fn parse_single_composed_selector_no_property() {
 
     expected
         .into_iter()
-        .zip(node.into_iter())
+        .zip(node)
         .for_each(|(expected, element)| {
             assert_eq!(expected, **element);
         });
@@ -182,7 +182,7 @@ fn parse_multiple_composed_selector_no_property() {
 
     expected
         .into_iter()
-        .zip(tree.into_iter())
+        .zip(tree)
         .for_each(|(node_expected, node)| {
             node_expected
                 .into_iter()
@@ -231,7 +231,7 @@ fn parse_multiple_complex_properties() {
         m: 12.9;
         n: "str";
         o: p q #r #s "t" 1 45.67% 33px;
-    }"#,
+        }"#,
     );
 
     assert_eq!(rules.len(), 1, "Should have a single rule");

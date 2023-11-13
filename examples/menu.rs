@@ -1,9 +1,8 @@
-use std::marker::PhantomData;
-
 use bevy::prelude::*;
+use std::marker::PhantomData;
 use tomt_bevycss::prelude::*;
 
-#[derive(Debug, Copy, Clone, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 #[derive(PartialEq, Eq, Hash)]
 #[derive(States)]
 pub enum GameState
@@ -14,7 +13,7 @@ pub enum GameState
     PauseMenu,
 }
 
-#[derive(Debug, Copy, Clone, Default)]
+#[derive(Clond, Copy, Debug, Default)]
 #[derive(Resource, Reflect)]
 enum MainMenuSelection
 {

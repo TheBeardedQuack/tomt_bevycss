@@ -2,10 +2,11 @@ use super::query;
 use crate::prelude::StyleSheetAsset;
 
 use bevy::{
+    log::{error, debug, trace},
     prelude::{
-        error, warn, debug, trace,
         Deref, DerefMut,
-        Handle, Entity,
+        Entity,
+        Handle,
     },
     utils::HashMap
 };
