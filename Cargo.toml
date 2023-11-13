@@ -36,15 +36,15 @@ bevy = { version = "0.12", features = [
     "bevy_render",
     "file_watcher",
 ] }
-#bevy_editor_pls = "0.4.0"
+bevy_editor_pls = "0.6.0"
 
 [[example]]
 name = "simple_ui"
 path = "examples/simple_ui.rs"
 
-#[[example]]
-#name = "hot_reload"
-#path = "examples/hot_reload.rs"
+[[example]]
+name = "hot_reload"
+path = "examples/hot_reload.rs"
 
 [[example]]
 name = "stress_test"

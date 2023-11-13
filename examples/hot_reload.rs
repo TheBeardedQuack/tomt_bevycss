@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-
+use bevy_editor_pls::prelude::*;
 use tomt_bevycss::prelude::{
     BevyCssPlugin,
     StyleSheet,
@@ -10,11 +10,11 @@ use tomt_bevycss::prelude::{
 fn main() {
     // Whenever an StyleSheet is loaded, it'll be applied automatically
     App::new()
-        .add_plugins(
-            DefaultPlugins.set(
-            // EditorPlugin::default(),
-            BevyCssPlugin::with_hot_reload(),
-        ))
+        .add_plugins((
+            DefaultPlugins,
+            EditorPlugin::default(),
+            BevyCssPlugin::with_hot_reload(), )
+        )
         .add_systems(Startup, setup)
         .run();
 }
@@ -77,10 +77,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                                             color: Color::WHITE,
                                         },
                                     )
-                                    .with_style(Style {
-                                        margin: UiRect::all(Val::Px(5.0)),
-                                        ..default()
-                                    }),
+                                        .with_style(Style {
+                                            margin: UiRect::all(Val::Px(5.0)),
+                                            ..default()
+                                        }),
                                 )
                                 .insert(Name::new("left-text"));
                         });
@@ -111,15 +111,15 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                                     color: Color::WHITE,
                                 },
                             )
-                            .with_style(Style {
-                                height: Val::Px(25.),
-                                margin: UiRect {
-                                    left: Val::Auto,
-                                    right: Val::Auto,
+                                .with_style(Style {
+                                    height: Val::Px(25.),
+                                    margin: UiRect {
+                                        left: Val::Auto,
+                                        right: Val::Auto,
+                                        ..default()
+                                    },
                                     ..default()
-                                },
-                                ..default()
-                            }),
+                                }),
                         )
                         .insert(Name::new("right-bg"));
                     // List with hidden overflow
@@ -130,7 +130,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                                 align_self: AlignSelf::Center,
                                 width: Val::Percent(100.0),
                                 height: Val::Percent(50.0),
-                                overflow: Overflow{
+                                overflow: Overflow {
                                     x: OverflowAxis::Clip,
                                     y: OverflowAxis::Clip,
                                 },
@@ -167,16 +167,16 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                                                         color: Color::WHITE,
                                                     },
                                                 )
-                                                .with_style(Style {
-                                                    flex_shrink: 0.,
-                                                    height: Val::Px(20.),
-                                                    margin: UiRect {
-                                                        left: Val::Auto,
-                                                        right: Val::Auto,
+                                                    .with_style(Style {
+                                                        flex_shrink: 0.,
+                                                        height: Val::Px(20.),
+                                                        margin: UiRect {
+                                                            left: Val::Auto,
+                                                            right: Val::Auto,
+                                                            ..default()
+                                                        },
                                                         ..default()
-                                                    },
-                                                    ..default()
-                                                }),
+                                                    }),
                                             )
                                             .insert(Class::new("big-text"))
                                             .insert(Name::new(format!("right-item-{}", i)));
