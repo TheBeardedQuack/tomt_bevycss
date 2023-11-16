@@ -8,6 +8,7 @@ exclude = [".github/"]
 keywords = ["css", "bevy", "style", "theme", "ui"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
+resolver = "2"
 repository = "https://github.com/TheBeardedQuack/tomt_bevycss.git"
 documentation = "https://docs.rs/tomt_bevycss"
 homepage = "https://crates.io/crates/tomt_bevycss"
@@ -29,6 +30,9 @@ smallvec = { version = "1.11", features = ["serde", "union", "const_generics"] }
 cssparser = "0.30.0"
 
 [dev-dependencies]
+bevy_editor_pls = "0.6.0"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 bevy = { version = "0.12", features = [
     "bevy_ui",
     "bevy_asset",
@@ -36,7 +40,6 @@ bevy = { version = "0.12", features = [
     "bevy_render",
     "file_watcher",
 ] }
-bevy_editor_pls = "0.6.0"
 
 [[example]]
 name = "simple_ui"
