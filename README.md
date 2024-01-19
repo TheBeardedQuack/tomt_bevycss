@@ -219,6 +219,13 @@ TOMT_BevyCSS is dual-licensed under either:
 This means you can select the license you prefer!
 This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are [very good reasons][55] to include both.
 
+# Special Thanks
+
+I'd like to say a quick thank you to those who've contributed with development of this crate.
+
+- [Leinnan](https://github.com/Leinnan) - Bevy 0.12 Support
+- [cntheat](https://github.com/cndheat) - Beta testing and feedback for each version, with an actual game
+
 <!-- Icons -->
 [1]: https://img.shields.io/badge/license-MIT%2FApache-blue.svg
 [2]: https://docs.rs/tomt_bevycss/badge.svg
