@@ -30,7 +30,7 @@ smallvec = { version = "1.11", features = ["serde", "union", "const_generics"] }
 cssparser = "0.30.0"
 
 [dev-dependencies]
-bevy_editor_pls = "0.6.0"
+bevy_editor_pls = "0.7.0"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 bevy = { version = "0.12", features = [
