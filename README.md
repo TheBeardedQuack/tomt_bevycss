@@ -117,9 +117,15 @@ This crate marks the first public release from both Tome of Many Things.
     <td><ul>
         <li>Dependencies<ul>
             <li>bevy - Updated to 0.12</li>
-            <li>bevy_editor_pls - Restored and updated to 0.6</li>
+            <li>bevy_editor_pls - Restored and updated to 0.7</li>
         </ul></li>
     </ul></td>
+    <td>0.6.1</td>
+    <td><ul>
+        <li>Documentation<ul>
+            <li>Fixed some errors in latest readme</li>
+        </ul></li>
+    </ul>
 </tr>
 </table>
 

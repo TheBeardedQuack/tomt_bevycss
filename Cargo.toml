@@ -1,10 +1,10 @@
 [package]
 name = "tomt_bevycss"
-version = "0.6.0"
+version = "0.6.1"
 edition = "2021"
 authors = ["TheBeardedQuack", "Tome of Many Things"]
 categories = ["game-development", "gui", "web-programming"]
-description = "Expansion and fixes based on bevy_ecss. Allows for using a slightly wider subset of CSS to interact with Bevy ECS. Now on Bevy 0.11!"
+description = "Expansion and fixes based on bevy_ecss. Allows for using a slightly wider subset of CSS to interact with Bevy ECS. Now on Bevy 0.12!"
 exclude = [".github/"]
 keywords = ["css", "bevy", "style", "theme", "ui"]
 license = "MIT OR Apache-2.0"
