@@ -143,7 +143,11 @@ To use TOMT_BevyCSS just add a `StyleSheet` with a loaded `css` file to any enti
 use bevy::prelude::*;
 use tomt_bevycss::prelude::*;
 
-fn setup_awesome_ui(root: Entity, mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup_awesome_ui(
+    root: Entity,
+    mut commands: Commands,
+    asset_server: Res<AssetServer>
+) {
     commands
         .entity(root)
         .insert(StyleSheet::new(asset_server.load("sheets/awesome.css")));
@@ -167,7 +171,7 @@ TOMT_BevyCSS supports custom component selectors so you're not limited to compon
 Should you need a core bevy component available as a selector that is not currently supported, this feature can also be used to roll your own support.
 Should you decide to roll your own selector for any bevy built-in componenets, pull requests will be appreciated.
 
-```ignore
+```rust ignore
 app.register_component_selector::<MyComponent>("selectorname");
 ```
 
@@ -179,7 +183,7 @@ TOMT_BevyCSS supports custom property setters.
 
 This with the above custom component select should enable you to use the CSS system for more than just styling if you so desired.
 
-```ignore
+```rust ignore
 #[derive(Default)]
 pub(crate) struct MyProperty;
 
