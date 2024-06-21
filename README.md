@@ -120,19 +120,34 @@ This crate marks the first public release from both Tome of Many Things.
             <li>bevy_editor_pls - Restored and updated to 0.7</li>
         </ul></li>
     </ul></td>
+</tr>
+<tr>
     <td>0.6.1</td>
     <td><ul>
         <li>Documentation<ul>
             <li>Fixed some errors in latest readme</li>
         </ul></li>
-    </ul>
+    </ul></td>
+</tr>
+<tr>
+    <td>0.6.2</td>
+    <td><ul>
+        <li>Dependencies<ul>
+            <li>bevy - Updated to 0.12.1</li>
+            <li>cssparser - Updated to 0.33.0</li>
+            <li>smallvec - Updated to 0.13.2</li>
+        </ul></li>
+        <li>Features<ul>
+            <li>Partial support for color functions (need to investigate further)</li>
+        </ul></li>
+    </ul></td>
 </tr>
 </table>
 
 ### Future Goals
 - Update crate dependencies
-- Backport fixes into BevyECSS
-- Higher level language support (LESS / SCSS / SASS)
+- ~~Backport fixes into BevyECSS~~ Original crate maintainer has pushed their own fixes
+- Higher level language support (LESS, SCSS/SASS)
 - Add CSS color functions
 
 # Getting Started (Usage)

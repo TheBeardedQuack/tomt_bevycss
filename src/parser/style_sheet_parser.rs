@@ -11,10 +11,9 @@ use crate::{
 use bevy::log::error;
 use cssparser::{
     AtRuleParser,
-    DeclarationListParser,
     ParseError, Parser, ParserInput,
     QualifiedRuleParser,
-    RuleListParser,
+    RuleBodyParser,
     ToCss,
 };
 use smallvec::{smallvec, SmallVec};
@@ -30,7 +29,7 @@ impl StyleSheetParser
         let mut input = ParserInput::new(content);
         let mut parser = Parser::new(&mut input);
 
-        RuleListParser::new_for_stylesheet(&mut parser, StyleSheetParser)
+        cssparser::StyleSheetParser::new(&mut parser, &mut StyleSheetParser)
             .filter_map(|result| match result
             {
                 Ok(rule) => Some(rule),
@@ -169,7 +168,7 @@ for StyleSheetParser
     ) -> Result<Self::QualifiedRule, ParseError<'i, Self::Error>> {
         let mut rule = StyleRule::new(prelude);
 
-        for property in DeclarationListParser::new(input, PropertyParser)
+        for property in RuleBodyParser::new(input, &mut PropertyParser)
         {
             match property
             {

@@ -10,10 +10,20 @@ use crate::{
 use cssparser::{
     AtRuleParser,
     DeclarationParser,
-    Parser, ParseError,
+    ParseError, Parser,
+    QualifiedRuleParser,
+    RuleBodyItemParser
 };
 
 pub struct PropertyParser;
+
+impl<'i> AtRuleParser<'i>
+for PropertyParser
+{
+    type Prelude = ();
+    type AtRule = (String, PropertyValues);
+    type Error = BevyCssError;
+}
 
 impl<'i> DeclarationParser<'i>
 for PropertyParser
@@ -40,10 +50,21 @@ for PropertyParser
     }
 }
 
-impl<'i> AtRuleParser<'i>
+impl<'i> QualifiedRuleParser<'i>
 for PropertyParser
 {
     type Prelude = ();
-    type AtRule = (String, PropertyValues);
+    type QualifiedRule = (String, PropertyValues);
     type Error = BevyCssError;
+}
+
+impl<'i> RuleBodyItemParser<
+    'i,
+    (String, PropertyValues),
+    BevyCssError
+>
+for PropertyParser
+{
+    fn parse_declarations(&self) -> bool { true }
+    fn parse_qualified(&self) -> bool { false }
 }
