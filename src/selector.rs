@@ -4,10 +4,92 @@ use smallvec::{smallvec, SmallVec};
 use std::{
     cmp::Ordering,
     hash::{Hash, Hasher},
+    iter::Sum,
+    ops::{Add, AddAssign},
     sync::Mutex,
 };
 
 static RULE_COUNTER: Mutex<usize> = Mutex::new(0);
+
+#[derive(Clone, Copy, Debug, Default)]
+#[derive(PartialEq, Eq, Hash)]
+pub struct RuleWeight
+{
+    pub ids: u32,
+    pub classes: u32,
+    pub types: u32,
+}
+
+impl RuleWeight
+{
+    pub const ID: Self = Self { ids: 1, classes: 0, types: 0 };
+    pub const CLASS: Self = Self { ids: 0, classes: 1, types: 0 };
+    pub const TYPE: Self = Self { ids: 0, classes: 0, types: 1 };
+}
+
+impl Add
+for RuleWeight
+{
+    type Output = Self;
+
+    fn add(
+        self,
+        rhs: Self
+    ) -> Self::Output {
+        Self {
+            ids: self.ids + rhs.ids,
+            classes: self.classes + rhs.classes,
+            types: self.types + rhs.types,
+        }
+    }
+}
+
+impl AddAssign
+for RuleWeight
+{
+    fn add_assign(
+        &mut self,
+        rhs: Self
+    ) {
+        self.ids += rhs.ids;
+        self.classes += rhs.classes;
+        self.types += rhs.types;
+    }
+}
+
+impl Sum
+for RuleWeight
+{
+    fn sum<I: Iterator<Item = Self>>(
+        iter: I
+    ) -> Self {
+        iter.fold(Self::default(), Add::add)
+    }
+}
+
+impl Ord
+for RuleWeight
+{
+    fn cmp(
+        &self,
+        other: &Self
+    ) -> Ordering {
+        self.ids.cmp(&other.ids)
+            .then_with(|| self.classes.cmp(&other.classes))
+            .then_with(|| self.types.cmp(&other.types))
+    }
+}
+
+impl PartialOrd
+for RuleWeight
+{
+    fn partial_cmp(
+        &self,
+        other: &Self
+    ) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
 
 /// Represents a selector element on a style sheet rule.
 /// A single selector can have multiple elements, for instance a selector of `button.enabled`
@@ -39,6 +121,32 @@ pub enum SelectorElement
     Child,
 }
 
+impl SelectorElement
+{
+    pub fn rule_weight(
+        &self
+    ) -> RuleWeight {
+        match self
+        {
+            // Named elements (1-0-0)
+            SelectorElement::Name(_) => RuleWeight::ID,
+
+            // Class elements (0-1-0)
+            SelectorElement::Class(_) => RuleWeight::CLASS,
+            #[cfg(feature = "pseudo_class")]
+            SelectorElement::PseudoClass(_) => RuleWeight::CLASS,
+
+            // Type elements (0-0-1)
+            SelectorElement::Component(_) => RuleWeight::TYPE,
+            #[cfg(feature = "pseudo_prop")]
+            SelectorElement::PseudoProp(_) => RuleWeight::TYPE,
+
+            // Child elements (zero-weight)
+            SelectorElement::Child => RuleWeight::default(),
+        }
+    }
+}
+
 /// A selector parsed from a `css` rule. Each selector has a internal hash used to differentiate between many rules in the same sheet.
 #[derive(Clone, Debug, Default)]
 pub struct Selector
@@ -57,11 +165,12 @@ impl Selector
     ) -> Self {
         let hasher = AHasher::default();
 
-        let hasher = elements.iter().fold(hasher, |mut hasher, el|
-        {
-            el.hash(&mut hasher);
-            hasher
-        });
+        let hasher = elements.iter()
+            .fold(hasher, |mut hasher, el|
+            {
+                el.hash(&mut hasher);
+                hasher
+            });
 
         let hash = hasher.finish();
         Self{
@@ -100,6 +209,14 @@ impl Selector
         tree.push(current_level);
 
         tree
+    }
+
+    pub fn rule_weight(
+        &self
+    ) -> RuleWeight {
+        self.elements.iter()
+            .map(|rule| rule.rule_weight())
+            .sum()
     }
 }
 
@@ -187,10 +304,10 @@ for Selector
         &self,
         other: &Self
     ) -> std::cmp::Ordering {
-        match self.elements.len().cmp(&other.elements.len())
+        match self.rule_weight().cmp(&other.rule_weight())
         {
             Ordering::Equal => self.load_order.cmp(&other.load_order),
-            not_eq => not_eq,
+            not_eq => not_eq
         }
     }
 }
