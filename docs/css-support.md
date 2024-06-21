@@ -7,15 +7,16 @@ The goal of this fork however, is to develop additional CSS comforts like additi
 
 TOMT_BevyCSS provides the following component selectors:
 
-|      Selector      |      Component         |
-| :----------------: | :--------------------: |
-| `background-color` | [`BackgroundColor`][1] |
-|       `text`       | [`Text`][2]            |
-|      `button`      | [`Button`][3]          |
-|       `node`       | [`Node`][4]            |
-|      `style`       | [`Style`][5]           |
-|     `ui-image`     | [`UiImage`][6]         |
-|   `interaction`    | [`Interaction`][7]     |
+|      Selector         |      Component         |
+| :----------------:    | :--------------------: |
+| `background-color`    | [`BackgroundColor`][1] |
+| `border-color`        | [`BorderColor`][9]     |
+| `button`              | [`Button`][3]          |
+| `interaction`         | [`Interaction`][7]     |
+| `node`                | [`Node`][4]            |
+| `style`               | [`Style`][5]           |
+| `text`                | [`Text`][2]            |
+| `ui-image`            | [`UiImage`][6]         |
 
 This list will be expanded to match `bevy_ui` and other `bevy` core components.
 
@@ -114,7 +115,7 @@ Note that these are properties which are provived by TOMT_BevyCSS but you can al
 
 ### [`Text`][2] Properties
 
-|     Property     |        Values                                |                    Description                                                                  |
+|     Property     |    Values                                    |                    Description                                                                  |
 | :--------------: | :------------------------------------------: | :---------------------------------------------------------------------------------------------- |
 |     `color`      | [`named-colors`][103] \| [`hex_colors`][104] | Applies the property on [`style.color`][50]     for all [`sections`][51] of matched components. |
 |      `font`      | `"path/to/font.ttf"`                         | Applies the property on [`style.font`][50]      for all [`sections`][51] of matched components. |
@@ -124,9 +125,16 @@ Note that these are properties which are provived by TOMT_BevyCSS but you can al
 
 ### Component Properties
 
-|      Property      |           Values                             |             Description                                                   |
+|      Property      |  Values                                      |             Description                                                   |
 | :----------------: | :------------------------------------------: | :------------------------------------------------------------------------ |
 | `background-color` | [`named-colors`][103] \| [`hex_colors`][104] | Applies the property on [`BackgroundColor`][1] of all matched components. |
+|   `border-color`   | [`named-colors`][103] \| [`hex_colors`][104] | Applies the property on [`BorderColor`][9] of all matched components.     |
+
+### [`Image`][6] Properties
+
+|   Property   |    Values            | Description |
+| :----------: | :------------------: | :---------- |
+| `image-path` | "/path/to/image.png" | Applies the property on `image.texture` for all [`images`][6] of all matched components |
 
 
 [1]: https://docs.rs/bevy/latest/bevy/prelude/struct.BackgroundColor.html
@@ -137,6 +145,7 @@ Note that these are properties which are provived by TOMT_BevyCSS but you can al
 [6]: https://docs.rs/bevy/latest/bevy/prelude/struct.UiImage.html
 [7]: https://docs.rs/bevy/latest/bevy/prelude/enum.Interaction.html
 [8]: https://docs.rs/bevy/latest/bevy/core/struct.Name.html
+[9]: https://docs.rs/bevy/latest/bevy/prelude/struct.BorderColor.html
 
 [20]: https://docs.rs/bevy/latest/bevy/prelude/struct.Style.html#structfield.display
 [21]: https://docs.rs/bevy/latest/bevy/prelude/struct.Style.html#structfield.position_type

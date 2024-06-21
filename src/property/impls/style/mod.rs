@@ -1,10 +1,13 @@
 #[macro_use]
 mod macros;
 
-use super::*;
 use crate::{
     prelude::BevyCssError,
     property::{Property, PropertyValues},
+};
+use bevy::{
+    ecs::query::QueryItem,
+    prelude::*,
 };
 
 // Rect type property fields

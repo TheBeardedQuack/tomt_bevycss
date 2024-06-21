@@ -95,8 +95,13 @@ impl BevyCssPlugin
             app.register_property::<TextContentProperty>();
         }
 
-        use property::impls::BackgroundColorProperty;
-        app.register_property::<BackgroundColorProperty>();
+        {
+            use property::impls::*;
+
+            app.register_property::<BackgroundColorProperty>();
+            app.register_property::<BorderColorProperty>();
+            app.register_property::<ImagePathProperty>();
+        }
     }
 }
 

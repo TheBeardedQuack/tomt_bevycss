@@ -50,7 +50,7 @@ for TextContentProperty
         // TODO: Maybe change this so each line break is a new section
         for section in components.sections.iter_mut()
         {
-            section.value = cache.clone()
+            section.value.clone_from(cache);
         }
     }
 }

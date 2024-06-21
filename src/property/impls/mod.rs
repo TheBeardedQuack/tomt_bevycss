@@ -1,38 +1,11 @@
-use super::{Property, PropertyValues};
-use crate::prelude::BevyCssError;
-
 /// Impls for `bevy_ui` [`Style`] component
 pub mod style;
 
-use bevy::{ecs::query::QueryItem, prelude::*};
+mod background_color;
+pub use background_color::BackgroundColorProperty;
 
-/// Applies the `background-color` property on [`BackgroundColor`] component of matched entities.
-#[derive(Default)]
-pub(crate) struct BackgroundColorProperty;
+mod border_color;
+pub use border_color::BorderColorProperty;
 
-impl Property for BackgroundColorProperty {
-    type Cache = Color;
-    type Components = Entity;
-    type Filters = With<BackgroundColor>;
-
-    fn name() -> &'static str {
-        "background-color"
-    }
-
-    fn parse<'a>(values: &PropertyValues) -> Result<Self::Cache, BevyCssError> {
-        if let Some(color) = values.color() {
-            Ok(color)
-        } else {
-            Err(BevyCssError::InvalidPropertyValue(Self::name().to_string()))
-        }
-    }
-
-    fn apply<'w>(
-        cache: &Self::Cache,
-        components: QueryItem<Self::Components>,
-        _asset_server: &AssetServer,
-        commands: &mut Commands,
-    ) {
-        commands.entity(components).insert(BackgroundColor(*cache));
-    }
-}
+mod image_path;
+pub use image_path::ImagePathProperty;

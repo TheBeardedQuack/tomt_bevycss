@@ -3,7 +3,7 @@
 mod component;
 pub mod error;
 mod parser;
-pub mod plugins;
+pub mod plugin;
 pub mod property;
 mod selector;
 mod stylesheet;
@@ -27,7 +27,7 @@ pub mod prelude {
     pub use super::{
         component::{Class, StyleSheet},
         error::BevyCssError,
-        plugins::BevyCssPlugin,
+        plugin::BevyCssPlugin,
         property::{Property, PropertyValues},
         stylesheet::StyleSheetAsset,
         RegisterComponentSelector,

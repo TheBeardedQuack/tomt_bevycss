@@ -139,6 +139,10 @@ This crate marks the first public release from both Tome of Many Things.
         </ul></li>
         <li>Features<ul>
             <li>Partial support for color functions (need to investigate further)</li>
+            <li>Additional properties (bringing feature parity with bevy_ecss):<ul>
+                <li>`border-color`</li>
+                <li>`image-path`</li>
+            </ul></li>
         </ul></li>
     </ul></td>
 </tr>

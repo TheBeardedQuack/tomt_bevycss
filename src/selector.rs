@@ -176,11 +176,7 @@ for Selector
         &self,
         other: &Self
     ) -> Option<Ordering> {
-        match self.elements.len().partial_cmp(&other.elements.len())
-        {
-            Some(Ordering::Equal) => self.load_order.partial_cmp(&other.load_order),
-            not_eq => not_eq,
-        }
+        Some(self.cmp(other))
     }
 }
 
