@@ -30,7 +30,7 @@ impl_style_single_value!("min-height", MinHeightProperty, Val, val, min_height);
 impl_style_single_value!("max-width", MaxWidthProperty, Val, val, max_width);
 impl_style_single_value!("max-height", MaxHeightProperty, Val, val, max_height);
 
-impl_style_single_value!("flex-basis", FlexBasisProperty, Val, val, max_height);
+impl_style_single_value!("flex-basis", FlexBasisProperty, Val, val, flex_basis);
 
 // f32 (number) type property fields
 impl_style_single_value!("flex-grow", FlexGrowProperty, f32, f32, flex_grow);

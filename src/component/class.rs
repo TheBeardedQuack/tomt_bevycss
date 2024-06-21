@@ -38,11 +38,53 @@ impl Class
     }
 
     /// Checks if any of this class names matches the given class name
-    fn matches(
+    pub fn contains_class(
         &self,
         class: &str
     ) -> bool {
-        self.0.split_ascii_whitespace().any(|c| c == class)
+        self.0.split_ascii_whitespace()
+            .any(|c| c == class)
+    }
+
+    pub fn is_empty(
+        &self
+    ) -> bool {
+        self.0.is_empty()
+    }
+
+    pub fn add_class(
+        &mut self,
+        class: &str
+    ) -> &mut Self {
+        if !self.contains_class(class)
+        {
+            match self.is_empty()
+            {
+                true => self.0.to_mut().push_str(class),
+                false => {
+                    self.0.to_mut().push(' ');
+                    self.0.to_mut().push_str(class);
+                }
+            }
+        }
+
+        self
+    }
+
+    pub fn remove_class(
+        &mut self,
+        class: &str
+    ) -> &mut Self {
+        if self.contains_class(class)
+        {
+            self.0 = self.0.split_ascii_whitespace()
+                .filter(move |&c| c != class)
+                .collect::<Vec<_>>()
+                .join(" ")
+                .into();
+        }
+
+        self
     }
 }
 
@@ -53,6 +95,6 @@ for Class
         &self,
         element: &str
     ) -> bool {
-        self.matches(element)
+        self.contains_class(element)
     }
 }
