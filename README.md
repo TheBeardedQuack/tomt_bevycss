@@ -144,6 +144,9 @@ This crate marks the first public release from both Tome of Many Things.
                 <li>`image-path`</li>
             </ul></li>
         </ul></li>
+        <li>Fixes<ul>
+            <li>Improved rule ordering to better conform to the standard (algorithm)[https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity#selector_weight_categories] that browser typically use</li>
+        </ul></li>
     </ul></td>
 </tr>
 </table>
