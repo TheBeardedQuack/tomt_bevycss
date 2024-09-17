@@ -34,8 +34,7 @@ use crate::prelude::{
 use bevy::{
     ecs::query::{
         QueryItem,
-        ReadOnlyWorldQuery,
-        WorldQuery,
+        QueryFilter,
     },
     prelude::{
         Assets, AssetServer,
@@ -46,6 +45,7 @@ use bevy::{
     },
 };
 use std::any::Any;
+use bevy::ecs::query::QueryData;
 
 /// Determines how a property should interact and modify the [ecs world](`bevy::prelude::World`).
 ///
@@ -77,10 +77,10 @@ pub trait Property:
 {
     /// The cached value type to be applied by property.
     type Cache: Default + Any + Send + Sync;
-    /// Which components should be queried when applying the modification. Check [`WorldQuery`] for more.
-    type Components: WorldQuery;
-    /// Filters conditions to be applied when querying entities by this property. Check [`ReadOnlyWorldQuery`] for more.
-    type Filters: ReadOnlyWorldQuery;
+    /// Which components should be queried when applying the modification. Check [`QueryData`] for more.
+    type Components: QueryData;
+    /// Filters conditions to be applied when querying entities by this property. Check [`QueryFilter`] for more.
+    type Filters: QueryFilter;
 
     /// Indicates which property name should matched for. Must match the same property name as on `css` file.
     ///

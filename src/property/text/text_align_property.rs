@@ -9,12 +9,12 @@ use bevy::{
         AssetServer,
         Commands,
         Node,
-        Text, TextAlignment,
+        Text, JustifyText,
         With,
     },
 };
 
-/// Applies the `text-align` property on [`Text::horizontal`](`TextAlignment`) components.
+/// Applies the `text-align` property on [`Text::horizontal`](`JustifyText`) components.
 #[derive(Default)]
 pub struct TextAlignProperty;
 
@@ -22,7 +22,7 @@ impl Property
 for TextAlignProperty
 {
     // Using Option since Cache must impl Default, which  doesn't
-    type Cache = Option<TextAlignment>;
+    type Cache = Option<JustifyText>;
     type Components = &'static mut Text;
     type Filters = With<Node>;
 
@@ -37,9 +37,9 @@ for TextAlignProperty
     ) -> Result<Self::Cache, BevyCssError> {
         match values.identifier()
         {
-            Some("left") => Ok(Some(TextAlignment::Left)),
-            Some("center") => Ok(Some(TextAlignment::Center)),
-            Some("right") => Ok(Some(TextAlignment::Right)),
+            Some("left") => Ok(Some(JustifyText::Left)),
+            Some("center") => Ok(Some(JustifyText::Center)),
+            Some("right") => Ok(Some(JustifyText::Right)),
             _ => Err(BevyCssError::InvalidPropertyValue(Self::name().to_string())),
         }
     }
@@ -50,6 +50,6 @@ for TextAlignProperty
         _asset_server: &AssetServer,
         _commands: &mut Commands,
     ) {
-        components.alignment = cache.expect("Should always have a inner value");
+        components.justify = cache.expect("Should always have a inner value");
     }
 }
