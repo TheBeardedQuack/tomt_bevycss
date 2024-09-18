@@ -20,7 +20,7 @@ pseudo_class = ["monitor_changes"]
 pseudo_prop = ["pseudo_class"]
 
 [dependencies]
-bevy = { version = "0.13.2", default-features = false, features = [
+bevy = { version = "0.14.2", default-features = false, features = [
     "bevy_ui",
     "bevy_asset",
     "bevy_text",
@@ -28,12 +28,13 @@ bevy = { version = "0.13.2", default-features = false, features = [
 ] }
 smallvec = { version = "1.13.2", features = ["serde", "union", "const_generics"] }
 cssparser = "0.34.0"
+thiserror = "1.0.63"
 
 [dev-dependencies]
-bevy_editor_pls = "0.8.1"
+bevy_editor_pls = "0.9.0"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
-bevy = { version = "0.13.2", features = [
+bevy = { version = "0.14.2", features = [
     "bevy_ui",
     "bevy_asset",
     "bevy_text",

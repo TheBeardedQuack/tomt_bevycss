@@ -167,7 +167,7 @@ impl PropertyValues
             })
     }
 
-    /// Tries to parses the current values as a single [`Option<UiRect<Val>>`].
+    /// Tries to parses the current values as a single [`Option<UiRect>`].
     ///
     /// Optional values are handled by this function, so if only one value is present it is used as `top`, `right`, `bottom` and `left`,
     /// otherwise values are applied in the following order: `top`, `right`, `bottom` and `left`.

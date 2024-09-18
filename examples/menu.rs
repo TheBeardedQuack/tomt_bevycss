@@ -54,6 +54,7 @@ const CLASS_MAIN_MENU: &str = "main-menu";
 fn main(
     // no args
 ) {
+    // Whenever an StyleSheet is loaded, it'll be applied automatically
     let mut app = App::new();
 
     app.add_plugins(DefaultPlugins)

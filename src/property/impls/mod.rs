@@ -12,7 +12,10 @@ pub(crate) struct BackgroundColorProperty;
 
 impl Property for BackgroundColorProperty {
     type Cache = Color;
-    type Components = Entity;
+    type Components = (
+        Option<&'static mut BackgroundColor>,
+        Option<&'static mut UiImage>,
+    );
     type Filters = With<BackgroundColor>;
 
     fn name() -> &'static str {
@@ -29,10 +32,14 @@ impl Property for BackgroundColorProperty {
 
     fn apply<'w>(
         cache: &Self::Cache,
-        components: QueryItem<Self::Components>,
+        (bg, img): QueryItem<Self::Components>,
         _asset_server: &AssetServer,
-        commands: &mut Commands,
+        _commands: &mut Commands,
     ) {
-        commands.entity(components).insert(BackgroundColor(*cache));
+        if let Some(mut bg) = bg {
+            *bg = BackgroundColor(*cache);
+        } else if let Some(mut img) = img {
+            img.color = *cache;
+        }
     }
 }

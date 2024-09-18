@@ -112,7 +112,7 @@ for BevyCssPlugin
             .register_type::<StyleSheet>();
 
         // Resources
-        let prepared_state = PrepareParams::new(&mut app.world);
+        let prepared_state = PrepareParams::new(app.world_mut());
         app.init_asset_loader::<StyleSheetLoader>()
             .init_asset::<StyleSheetAsset>()
             .init_resource::<StyleSheetState>()
