@@ -5,13 +5,13 @@ use tomt_bevycss::prelude::{
     StyleSheet,
 };
 
+// Whenever an StyleSheet is loaded, it'll be applied automatically
 fn main(
     // no args
 ) {
-    // Whenever an StyleSheet is loaded, it'll be applied automatically
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(BevyCssPlugin::default())
+        .add_plugins(BevyCssPlugin)
         .add_systems(Startup, setup)
         .run();
 }

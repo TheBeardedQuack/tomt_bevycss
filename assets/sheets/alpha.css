@@ -2,12 +2,11 @@
     width: 100px;
     height: 100px;
     background-color: #0018ff;
-    alpha: 0.25;
+    alpha: 0.15;
 }
 
 .logo {
     width: 200px;
     height: 200px;
-    background-color: green;
     alpha: 0.5;
 }

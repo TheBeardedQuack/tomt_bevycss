@@ -21,6 +21,7 @@ use bevy::{
     ecs::system::SystemState,
     prelude::*,
 };
+use crate::plugins::DoEcss;
 
 /// use `tomt_bevycss::prelude::*;` to import common components, and plugins and utility functions.
 pub mod prelude {
@@ -118,6 +119,6 @@ for bevy::prelude::App
     where
         T: Property + 'static,
     {
-        self.add_systems(Update, T::apply_system.in_set(BevyCssSet::Apply))
+        self.add_systems(DoEcss, T::apply_system.in_set(BevyCssSet::Apply))
     }
 }

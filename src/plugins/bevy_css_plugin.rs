@@ -1,3 +1,6 @@
+use bevy::app::MainScheduleOrder;
+use bevy::asset::AssetEvents;
+use bevy::ecs::schedule::ScheduleLabel;
 use crate::{
     prelude::{
         Class,
@@ -23,20 +26,10 @@ use bevy::prelude::*;
 
 /// Plugin which add all types, assets, systems and internal resources needed by `tomt_bevycss`.
 /// You must add this plugin in order to use `tomt_bevycss`.
-#[derive(Default)]
-pub struct BevyCssPlugin
-{
-    hot_reload: bool,
-}
+pub struct BevyCssPlugin;
 
 impl BevyCssPlugin
 {
-    pub fn with_hot_reload(
-        // no args
-    ) -> BevyCssPlugin {
-        BevyCssPlugin { hot_reload: true }
-    }
-
     fn register_component_selector(
         app: &mut bevy::prelude::App
     ) {
@@ -100,6 +93,9 @@ impl BevyCssPlugin
     }
 }
 
+#[derive(ScheduleLabel, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub(crate) struct DoEcss;
+
 impl Plugin
 for BevyCssPlugin
 {
@@ -107,6 +103,11 @@ for BevyCssPlugin
         &self,
         app: &mut bevy::prelude::App
     ) {
+        app.init_schedule(DoEcss);
+        app.world_mut()
+            .resource_mut::<MainScheduleOrder>()
+            .insert_after(Update, DoEcss);
+
         // Type registration
         app.register_type::<Class>()
             .register_type::<StyleSheet>();
@@ -121,21 +122,22 @@ for BevyCssPlugin
 
         // Schedules
         use system::sets::*;
-        app.configure_sets(PreUpdate, (
+        app.configure_sets(
+            DoEcss,
+            (
                 BevyCssSet::Prepare,
-                BevyCssSet::Apply.after(BevyCssSet::Prepare)
-            ))
-            .configure_sets(PostUpdate, BevyCssSet::Cleanup);
+                BevyCssSet::Apply,
+                BevyCssSet::Cleanup
+            )
+            .chain()
+        );
 
         // Systems
-        app.add_systems(PreUpdate, system::prepare.in_set(BevyCssSet::Prepare))
-            .add_systems(PostUpdate, system::clear_state.in_set(BevyCssSet::Cleanup));
+        app.add_systems(DoEcss, system::prepare.in_set(BevyCssSet::Prepare))
+            .add_systems(DoEcss, system::clear_state.in_set(BevyCssSet::Cleanup));
 
-        if self.hot_reload
-        {
-            app.configure_sets(PostUpdate, BevyCssHotReload)
-                .add_systems(PostUpdate, system::hot_reload_style_sheets.in_set(BevyCssHotReload));
-        }
+        // Hot reload
+        app.add_systems(First, system::hot_reload_style_sheets.in_set(AssetEvents));
 
         // CSS registrations
         Self::register_component_selector(app);

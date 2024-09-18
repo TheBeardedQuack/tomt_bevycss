@@ -38,7 +38,9 @@ impl Property for BackgroundColorProperty {
     ) {
         if let Some(mut bg) = bg {
             *bg = BackgroundColor(*cache);
-        } else if let Some(mut img) = img {
+        }
+
+        if let Some(mut img) = img {
             img.color = *cache;
         }
     }

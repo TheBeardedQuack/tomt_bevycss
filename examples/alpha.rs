@@ -4,13 +4,13 @@ use bevy::{
 };
 use tomt_bevycss::prelude::*;
 
+// Whenever a StyleSheet is loaded, it'll be applied automatically
 fn main(
     // no args
 ) {
-    // Whenever an StyleSheet is loaded, it'll be applied automatically
     let mut app = App::new();
     app.add_plugins(DefaultPlugins)
-        .add_plugins(BevyCssPlugin::with_hot_reload())
+        .add_plugins(BevyCssPlugin)
         .add_systems(Startup, setup);
 
     app.register_property::<AlphaProperty>();
@@ -99,10 +99,10 @@ for AlphaProperty
         _asset_server: &AssetServer,
         _commands: &mut Commands,
     ) {
-        if let Some(mut bg) = bg {
-            bg.0.set_alpha(*cache);
-        } else if let Some(mut img) = img {
+        if let Some(mut img) = img {
             img.color.set_alpha(*cache);
+        } else if let Some(mut bg) = bg {
+            bg.0.set_alpha(*cache);
         }
     }
 }

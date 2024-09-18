@@ -9,14 +9,13 @@ use tomt_bevycss::prelude::*;
 #[reflect(Component)]
 struct Title;
 
+// Whenever an StyleSheet is loaded, it'll be applied automatically
 fn main(
     // no args
 ) {
-    // Whenever an StyleSheet is loaded, it'll be applied automatically
     App::new()
         .add_plugins(DefaultPlugins)
-        // Whenever an StyleSheet is loaded, it'll be applied automatically
-        .add_plugins(BevyCssPlugin::with_hot_reload())
+        .add_plugins(BevyCssPlugin)
         .add_systems(Startup, setup)
         .add_systems(Update, change_theme)
         .register_component_selector::<Title>("title")
