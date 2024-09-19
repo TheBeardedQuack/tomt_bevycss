@@ -8,15 +8,14 @@ use crate::{
 use bevy::{
     log::trace,
     prelude::*,
-    reflect::{TypePath, TypeUuid},
+    reflect::{TypePath},
     utils::AHasher,
 };
 use smallvec::SmallVec;
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
-#[derive(Asset, TypePath, TypeUuid)]
-#[uuid = "14b98dd6-5425-4692-a561-5e6ae9180554"]
+#[derive(Asset, TypePath)]
 /// A cascading style sheet (`css`) asset file.
 ///
 /// _Note_: This asset only store intermediate data, like rules and properties.

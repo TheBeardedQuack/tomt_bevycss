@@ -14,6 +14,7 @@ use bevy::{
         Val,
     },
 };
+use bevy::prelude::BorderRadius;
 use smallvec::SmallVec;
 
 /// A list of [`PropertyToken`] which was parsed from a single property.
@@ -167,7 +168,7 @@ impl PropertyValues
             })
     }
 
-    /// Tries to parses the current values as a single [`Option<UiRect<Val>>`].
+    /// Tries to parses the current values as a single [`Option<UiRect>`].
     ///
     /// Optional values are handled by this function, so if only one value is present it is used as `top`, `right`, `bottom` and `left`,
     /// otherwise values are applied in the following order: `top`, `right`, `bottom` and `left`.
@@ -203,6 +204,45 @@ impl PropertyValues
                         _ => (),
                     }
                     (Some(rect), idx + 1)
+                }).0
+        }
+    }
+
+    /// Tries to parses the current values as a single [`Option<BorderRadius>`].
+    pub fn border_radius(
+        &self
+    ) -> Option<BorderRadius> {
+        if self.0.len() == 1
+        {
+            self.val().map(BorderRadius::all)
+        }
+        else
+        {
+            self.0.iter()
+                .fold((None, 0), |(border_radius, idx), token|
+                {
+                        let val = match token
+                        {
+                            PropertyToken::Percentage(val) => Val::Percent(*val),
+                            PropertyToken::Dimension(val) => Val::Px(*val),
+                            PropertyToken::Number(num) if *num == 0.0 => Val::Px(0.0),
+                            PropertyToken::Identifier(val) if val == "auto" => Val::Auto,
+                            _ => return (border_radius, idx),
+                        };
+                        let mut border_radius: BorderRadius = border_radius.unwrap_or_default();
+
+                        match idx
+                        {
+                            0 => border_radius = BorderRadius::all(val),
+                            1 => {
+                                border_radius.top_right = val;
+                                border_radius.bottom_left = val;
+                            }
+                            2 => border_radius.bottom_right = val,
+                            3 => border_radius.bottom_left = val,
+                            _ => (),
+                        }
+                        (Some(border_radius), idx + 1)
                 }).0
         }
     }

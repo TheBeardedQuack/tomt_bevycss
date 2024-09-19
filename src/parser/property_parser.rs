@@ -7,11 +7,7 @@ use crate::{
     property::PropertyValues,
 };
 
-use cssparser::{
-    AtRuleParser,
-    DeclarationParser,
-    Parser, ParseError,
-};
+use cssparser::{AtRuleParser, DeclarationParser, Parser, ParseError, RuleBodyItemParser, QualifiedRuleParser};
 
 pub struct PropertyParser;
 
@@ -40,10 +36,28 @@ for PropertyParser
     }
 }
 
+impl<'i> RuleBodyItemParser<'i, (String, PropertyValues), BevyCssError> for PropertyParser {
+    fn parse_declarations(&self) -> bool
+    {
+        true
+    }
+
+    fn parse_qualified(&self) -> bool
+    {
+        false
+    }
+}
+
 impl<'i> AtRuleParser<'i>
 for PropertyParser
 {
     type Prelude = ();
     type AtRule = (String, PropertyValues);
+    type Error = BevyCssError;
+}
+
+impl<'i> QualifiedRuleParser<'i> for PropertyParser {
+    type Prelude = ();
+    type QualifiedRule = (String, PropertyValues);
     type Error = BevyCssError;
 }

@@ -1,7 +1,7 @@
 text {
     color: black;
     font-size: 16.0;
-    font: "fonts/FiraSans-Bold.ttf"
+    font: "fonts/FiraSans-Bold.ttf";
 }
 
 .main-menu {
@@ -18,6 +18,14 @@ text {
     background-color: grey;
     size: 300px, 50px;
     margin: 10px;
+    border-width: 2.5px;
+    border-radius: 10px;
+    border-color: grey;
+    padding: 0px 10px 0px 10px;
+}
+
+.main-menu button:hover {
+    border-color: cyan;
 }
 
 button:hover text {

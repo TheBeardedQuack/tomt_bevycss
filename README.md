@@ -127,6 +127,32 @@ This crate marks the first public release from both Tome of Many Things.
         </ul></li>
     </ul>
 </tr>
+<tr>
+    <td>0.7.0</td>
+    <td><ul>
+        <li>Dependencies<ul>
+            <li>bevy - Updated to 0.13.2</li>
+            <li>bevy_editor_pls - Updated to 0.8.1</li>
+            <li>smallvec - Updated to 1.13.2</li>
+            <li>cssparser - Updated to 0.34.0</li>
+        </ul></li>
+    </ul></td>
+</tr>
+<tr>
+    <td>0.8.0</td>
+    <td><ul>
+        <li>Features<ul>
+            <li>Support for `border-radius` and `border-color` properties</li>
+            <li>Renamed `border` to `border-width`</li>
+            <li>Hot reload no longer requires `BevyCssPlugin::with_hot_reload()`. It is now automatically active when the Bevy feature `file_watcher` is enabled.</li>
+        </ul></li>
+        <li>Dependencies<ul>
+            <li>bevy - Updated to 0.14.0</li>
+            <li>bevy_editor_pls - Updated to 0.9.0</li>
+            <li>thiserror - Added (1.0.63)</li>
+        </ul></li>
+    </ul></td>
+</tr>
 </table>
 
 ### Future Goals
@@ -213,7 +239,8 @@ See [Custom Properties][27] (docs/custom-properties.md) for more information.
 | 0.10 |    0.4.x     |
 | 0.11 |    0.5.x     |
 | 0.12 |    0.6.x     |
-
+| 0.13 |    0.7.x     |
+| 0.14 |    0.8.x     |
 
 # Contributing
 

@@ -10,7 +10,7 @@ use crate::{
 // Rect type property fields
 impl_style_rect!("margin", MarginProperty, margin);
 impl_style_rect!("padding", PaddingProperty, padding);
-impl_style_rect!("border", BorderProperty, border);
+impl_style_rect!("border-width", BorderWidthProperty, border);
 
 // Val (number) type property fields
 impl_style_single_value!("left", LeftProperty, Val, val, left);

@@ -21,6 +21,7 @@ use bevy::{
     ecs::system::SystemState,
     prelude::*,
 };
+use crate::plugins::DoEcss;
 
 /// use `tomt_bevycss::prelude::*;` to import common components, and plugins and utility functions.
 pub mod prelude {
@@ -82,10 +83,10 @@ for bevy::prelude::App
     where
         T: Component,
     {
-        let system_state = SystemState::<Query<Entity, With<T>>>::new(&mut self.world);
+        let system_state = SystemState::<Query<Entity, With<T>>>::new(self.world_mut());
         let boxed_state = Box::new(system_state);
 
-        self.world
+        self.world_mut()
             .get_resource_or_insert_with::<ComponentFilterRegistry>(|| {
                 ComponentFilterRegistry(Default::default())
             })
@@ -118,6 +119,6 @@ for bevy::prelude::App
     where
         T: Property + 'static,
     {
-        self.add_systems(Update, T::apply_system.in_set(BevyCssSet::Apply))
+        self.add_systems(DoEcss, T::apply_system.in_set(BevyCssSet::Apply))
     }
 }

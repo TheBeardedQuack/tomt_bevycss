@@ -1,10 +1,10 @@
 [package]
 name = "tomt_bevycss"
-version = "0.6.1"
+version = "0.8.0"
 edition = "2021"
 authors = ["TheBeardedQuack", "Tome of Many Things"]
 categories = ["game-development", "gui", "web-programming"]
-description = "Expansion and fixes based on bevy_ecss. Allows for using a slightly wider subset of CSS to interact with Bevy ECS. Now on Bevy 0.12!"
+description = "Expansion and fixes based on bevy_ecss. Allows for using a slightly wider subset of CSS to interact with Bevy ECS. Now on Bevy 0.13!"
 exclude = [".github/"]
 keywords = ["css", "bevy", "style", "theme", "ui"]
 license = "MIT OR Apache-2.0"
@@ -20,20 +20,21 @@ pseudo_class = ["monitor_changes"]
 pseudo_prop = ["pseudo_class"]
 
 [dependencies]
-bevy = { version = "0.12", default-features = false, features = [
+bevy = { version = "0.14.0", default-features = false, features = [
     "bevy_ui",
     "bevy_asset",
     "bevy_text",
     "bevy_render",
 ] }
-smallvec = { version = "1.11", features = ["serde", "union", "const_generics"] }
-cssparser = "0.30.0"
+smallvec = { version = "1.13.2", features = ["serde", "union", "const_generics"] }
+cssparser = "0.34.0"
+thiserror = "1.0.63"
 
 [dev-dependencies]
-bevy_editor_pls = "0.7.0"
+bevy_editor_pls = "0.9.0"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
-bevy = { version = "0.12", features = [
+bevy = { version = "0.14.0", features = [
     "bevy_ui",
     "bevy_asset",
     "bevy_text",
@@ -44,10 +45,6 @@ bevy = { version = "0.12", features = [
 [[example]]
 name = "simple_ui"
 path = "examples/simple_ui.rs"
-
-[[example]]
-name = "hot_reload"
-path = "examples/hot_reload.rs"
 
 [[example]]
 name = "stress_test"
