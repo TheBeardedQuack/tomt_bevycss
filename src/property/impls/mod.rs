@@ -102,7 +102,7 @@ impl Property for BorderColorProperty {
         cache: &Self::Cache,
         mut component: QueryItem<Self::Components>,
         _asset_server: &AssetServer,
-        commands: &mut Commands,
+        _commands: &mut Commands,
     ) {
         component.0 = *cache;
     }
