@@ -76,8 +76,7 @@ impl BevyCssPlugin
 
         app.register_property::<MarginProperty>();
         app.register_property::<PaddingProperty>();
-        app.register_property::<BorderProperty>();
-
+        app.register_property::<BorderWidthProperty>();
         {
             use property::text::*;
 
@@ -90,6 +89,12 @@ impl BevyCssPlugin
 
         use property::impls::BackgroundColorProperty;
         app.register_property::<BackgroundColorProperty>();
+
+        use crate::property::impls::BorderRadiusProperty;
+        app.register_property::<BorderRadiusProperty>();
+
+        use crate::property::impls::BorderColorProperty;
+        app.register_property::<BorderColorProperty>();
     }
 }
 
