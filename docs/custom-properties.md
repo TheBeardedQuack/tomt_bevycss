@@ -19,9 +19,14 @@ impl Property for AlphaProperty {
     // This is the cached value to be used when applying the property value.
     // It is evaluated only on the first time and futures runs are cached for performance reasons.
     type Cache = f32;
+    
     // Which components the property needs when applying the cached value.
     // It is the same as using bevy_ecs Query<C, F>.
-    type Components = &'static mut BackgroundColor;
+    type Components = (
+        Option<&'static mut BackgroundColor>,
+        Option<&'static mut UiImage>,
+    );
+    
     // If this property can be set only when there is another property, it's possible to filter here.
     // It's not recommended to use only With<> and Without<>.
     type Filters = ();
@@ -43,11 +48,15 @@ impl Property for AlphaProperty {
     // This function will be called for every entity matched on every rule selector.
     fn apply<'w>(
         cache: &Self::Cache,
-        mut components: QueryItem<Self::Components>,
+        (bg, img): QueryItem<Self::Components>,
         _asset_server: &AssetServer,
         _commands: &mut Commands,
     ) {
-        components.0.set_a(*cache);
+        if let Some(mut img) = img {
+            img.color.set_alpha(*cache);
+        } else if let Some(mut bg) = bg {
+            bg.0.set_alpha(*cache);
+        }
     }
 }
 ```
