@@ -37,11 +37,13 @@ for PropertyParser
 }
 
 impl<'i> RuleBodyItemParser<'i, (String, PropertyValues), BevyCssError> for PropertyParser {
-    fn parse_declarations(&self) -> bool {
+    fn parse_declarations(&self) -> bool
+    {
         true
     }
 
-    fn parse_qualified(&self) -> bool {
+    fn parse_qualified(&self) -> bool
+    {
         false
     }
 }
