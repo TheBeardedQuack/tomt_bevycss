@@ -63,7 +63,7 @@ fn main(
 
     app.add_systems(Startup, spawn_camera);
 
-    app.add_state::<GameState>()
+    app.init_state::<GameState>()
         .register_type::<MainMenuSelection>()
         .add_systems(OnEnter(GameState::MainMenu), enter_main_menu)
         .add_systems(OnExit(GameState::MainMenu), exit_main_menu);
