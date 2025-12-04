@@ -1,6 +1,6 @@
 [package]
 name = "tomt_bevycss"
-version = "0.7.0"
+version = "0.7.1"
 edition = "2021"
 authors = ["TheBeardedQuack", "Tome of Many Things"]
 categories = ["game-development", "gui", "web-programming"]

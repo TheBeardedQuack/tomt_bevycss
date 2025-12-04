@@ -47,31 +47,31 @@ use bevy::{
 use std::any::Any;
 use bevy::ecs::query::QueryData;
 
-/// Determines how a property should interact and modify the [ecs world](`bevy::prelude::World`).
+/// Determines how a property should interact and modify the ecs [World](`bevy::prelude::World`).
 ///
 /// Each implementation of this trait should be registered with [`RegisterProperty`](crate::RegisterProperty) trait, where
-/// will be converted into a `system` and run whenever a matched, specified by [`name()`](`Property::name()`) property is found.
+/// will be converted into a `system` and run whenever a matched, specified by [`name()`](`Property::name`) property is found.
 ///
 /// These are the associated types that must by specified by implementors:
 /// - [`Cache`](Property::Cache) is a cached value to be applied by this trait.
-/// On the first time the `system` runs it'll call [`parse`](`Property::parse`) and cache the value.
-/// Subsequential runs will only fetch the cached value.
+///   On the first time the `system` runs it'll call [`parse`](`Property::parse`) and cache the value.
+///   Subsequential runs will only fetch the cached value.
 /// - [`Components`](Property::Components) is which components will be send to [`apply`](`Property::apply`) function whenever a
-/// valid cache exists and a matching property was found on any sheet rule. Check [`WorldQuery`] for more.
+///   valid cache exists and a matching property was found on any sheet rule. Check [`WorldQuery`](bevy::ecs::query::WorldQuery) for more.
 /// - [`Filters`](Property::Filters) is used to filter which entities will be applied the property modification.
-/// Entities are first filtered by [`selectors`](`crate::selector::Selector`), but it can be useful to also ensure some behavior for safety reasons,
-/// like only inserting [`TextAlignment`](bevy::prelude::TextAlignment) if the entity also has a [`Text`](bevy::prelude::Text) component.
-///  Check [`WorldQuery`] for more.
+///   Entities are first filtered by [`selectors`](`crate::selector::Selector`), but it can be useful to also ensure some behavior for safety reasons,
+///   like only inserting [`TextAlign`](bevy::a11y::accesskit::TextAlign) if the entity also has a [`Text`](bevy::prelude::Text) component.
+///   Check [`WorldQuery`](bevy::ecs::query::WorldQuery) for more.
 ///
 /// These are tree functions required to be implemented:
 /// - [`name`](Property::name) indicates which property name should matched for.
 /// - [`parse`](Property::parse) parses the [`PropertyValues`] into the [`Cache`](Property::Cache) value to be reused across multiple entities.
 /// - [`apply`](Property::apply) applies on the given [`Components`](Property::Components) the [`Cache`](Property::Cache) value.
-/// Additionally, an [`AssetServer`] and [`Commands`] parameters are provided for more complex use cases.
+///   Additionally, an [`AssetServer`] and [`Commands`] parameters are provided for more complex use cases.
 ///
 /// Also, there one function which have default implementations:
 /// - [`apply_system`](Property::apply_system) is a [`system`](https://docs.rs/bevy_ecs/0.8.1/bevy_ecs/system/index.html) which interacts with
-/// [ecs world](`bevy::prelude::World`) and call the [`apply`](Property::apply) function on every matched entity.
+///   [ecs world](`bevy::prelude::World`) and call the [`apply`](Property::apply) function on every matched entity.
 pub trait Property:
     Default + Sized + Send + Sync + 'static
 {

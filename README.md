@@ -127,7 +127,7 @@ This crate marks the first public release from both Tome of Many Things.
         <li>Documentation<ul>
             <li>Fixed some errors in latest readme</li>
         </ul></li>
-    </ul>
+    </ul></td>
 </tr>
 <tr>
     <td>0.7.0</td>

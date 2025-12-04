@@ -14,7 +14,7 @@ use bevy::prelude::{
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// # use bevy::prelude::*;
 /// use tomt_bevycss::prelude::*;
 ///

@@ -30,7 +30,7 @@ pub struct StyleSheetAsset
 
 impl StyleSheetAsset
 {
-    /// Parses a string with a valid CSS into a list of [`crate::stylesheet::StyleRule`]s.
+    /// Parses a string with a valid CSS into a list of [`StyleRule`]s.
     ///
     /// This used by internal asset loader to keep track of where each asset came from.
     /// If you are creating this struct by hand, you can safely supply an  empty string as path.
@@ -51,7 +51,7 @@ impl StyleSheetAsset
         }
     }
 
-    /// Returns the list of properties defined by the given [`crate::selector::Selector`].
+    /// Returns the list of properties defined by the given [`Selector`].
     pub fn get_property_names(
         &self,
         selector: &Selector
@@ -64,7 +64,7 @@ impl StyleSheetAsset
             )
     }
 
-    /// Returns the [`PropertyValues`] on the given [`crate::selector::Selector`] with the given name.
+    /// Returns the [`PropertyValues`] on the given [`Selector`] with the given name.
     pub fn get_property_value(
         &self,
         selector: &Selector,

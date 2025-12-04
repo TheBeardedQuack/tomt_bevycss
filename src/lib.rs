@@ -36,7 +36,7 @@ pub mod prelude {
 }
 
 /// Utility trait which adds the [`register_component_selector`](RegisterComponentSelector::register_component_selector)
-/// function on [`App`](bevy::prelude::App) to add a new component selector.
+/// function on [`App`] to add a new component selector.
 ///
 /// You can register any component you want and name it as you like.
 /// It's advised to use `lower-case` and `kebab-case` to match CSS coding style.
@@ -61,7 +61,6 @@ pub mod prelude {
 ///      // }
 /// # }
 /// ```
-
 pub trait RegisterComponentSelector
 {
     fn register_component_selector<T>(
@@ -97,7 +96,7 @@ for bevy::prelude::App
 }
 
 /// Utility trait which adds the [`register_property`](RegisterProperty::register_property) function
-/// on [`App`](bevy::prelude::App) to add a [`Property`] parser.
+/// on [`App`] to add a [`Property`] parser.
 ///
 /// You need to register only custom properties which implements [`Property`] trait.
 pub trait RegisterProperty

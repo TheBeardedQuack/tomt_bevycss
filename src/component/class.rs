@@ -13,7 +13,7 @@ use std::borrow::Cow;
 ///
 /// # Examples
 ///
-/// ```
+/// ```rust
 /// # use bevy::prelude::*;
 /// # use tomt_bevycss::prelude::*;
 /// fn system(mut commands: Commands) {

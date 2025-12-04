@@ -140,7 +140,7 @@ pub(crate) fn prepare_state(
         }
     }
 
-    if state.len() > 0
+    if !state.is_empty()
     {
         trace!("PreProcess result: {state:?}");
     }
@@ -425,9 +425,8 @@ pub(crate) fn hot_reload_style_sheets(
 pub(crate) fn clear_state(
     mut sheet_rule: ResMut<StyleSheetState>
 ) {
-    if sheet_rule.len() > 0
+    if !sheet_rule.is_empty()
     {
-        debug!("Finished applying style sheet.");
         sheet_rule.clear();
     }
 }

@@ -36,6 +36,9 @@ fn some_main() {
 A simple way to keep the styling code separated from core gameplay code, would be to place the initialization within its own plugin.
 
 ```rust
+use bevy::prelude::*;
+use tomt_bevycss::prelude::*;
+
 struct StylePlugin;
 
 impl Plugin for StylePlugin
