@@ -26,7 +26,7 @@ fn setup(
     asset_server: Res<AssetServer>
 ) {
     // Camera
-    commands.spawn(Camera2dBundle::default());
+    let camera = commands.spawn(Camera2dBundle::default()).id();
 
     // root node
     commands.spawn(NodeBundle
@@ -42,6 +42,7 @@ fn setup(
             ..default()
         })
         .insert((
+            TargetCamera(camera),
             Name::new("ui-root"),
             StyleSheet::new(asset_server.load("sheets/hot_reload.css")),
         ))
