@@ -42,12 +42,20 @@ bevy = { version = "0.13.2", features = [
 ] }
 
 [[example]]
-name = "simple_ui"
-path = "examples/simple_ui.rs"
+name = "alpha"
+path = "examples/alpha.rs"
 
 [[example]]
 name = "hot_reload"
 path = "examples/hot_reload.rs"
+
+[[example]]
+name = "menu"
+path = "examples/menu.rs"
+
+[[example]]
+name = "simple_ui"
+path = "examples/simple_ui.rs"
 
 [[example]]
 name = "stress_test"
@@ -56,7 +64,3 @@ path = "examples/stress_test.rs"
 [[example]]
 name = "theme"
 path = "examples/theme.rs"
-
-[[example]]
-name = "alpha"
-path = "examples/alpha.rs"

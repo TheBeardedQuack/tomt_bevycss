@@ -120,6 +120,8 @@ This crate marks the first public release from both Tome of Many Things.
             <li>bevy_editor_pls - Restored and updated to 0.7</li>
         </ul></li>
     </ul></td>
+</tr>
+<tr>
     <td>0.6.1</td>
     <td><ul>
         <li>Documentation<ul>
@@ -136,13 +138,17 @@ This crate marks the first public release from both Tome of Many Things.
             <li>smallvec - Updated to 1.13.2</li>
             <li>cssparser - Updated to 0.34.0</li>
         </ul></li>
+        <li>Documentation<ul>
+            <li>Added missing `menu` example to Cargo.toml</li>
+            <li>Added contributors to thank you note</li>
+        </ul></li>
     </ul></td>
 </tr>
 </table>
 
 ### Future Goals
 - Update crate dependencies
-- Backport fixes into BevyECSS
+- ~~Backport fixes into BevyECSS~~ They've caught up in there own style
 - Higher level language support (LESS / SCSS / SASS)
 - Add CSS color functions
 
@@ -241,12 +247,16 @@ TOMT_BevyCSS is dual-licensed under either:
 This means you can select the license you prefer!
 This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are [very good reasons][55] to include both.
 
+While these are the licenses we've inherited from [original crate][41], it is a concious decision for the ToMT_BevyCSS project to maintain this dual-license approach, on the existing licenses.
+
 # Special Thanks
 
 I'd like to say a quick thank you to those who've contributed with development of this crate.
 
-- [Leinnan](https://github.com/Leinnan) - Bevy 0.12 Support
-- [cntheat](https://github.com/cndheat) - Beta testing and feedback for each version, with an actual game
+- [afonsolage](https://github.com/afonsolage) - Original author of BevyECSS, from which this project is forked
+- [Leinnan](https://github.com/Leinnan) - Bevy 0.12 support
+- [AmonDeShir](https://github.com/AmonDeShir) - Bevy 0.13, 0.14 support
+- [cndheat](https://github.com/cndheat) - Beta testing and feedback, with usage in a game
 
 <!-- Icons -->
 [1]: https://img.shields.io/badge/license-MIT%2FApache-blue.svg
