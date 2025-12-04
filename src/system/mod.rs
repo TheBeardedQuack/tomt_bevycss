@@ -93,7 +93,7 @@ pub(crate) fn prepare_state(
     // Find only changed components
     for updated_entity in &params.ui_changes
     {
-        debug!("Updated detected for entity {}", updated_entity.index());
+        debug!("Update detected for entity {}", updated_entity.index());
 
         // Find list of stylesheets that apply to this component (and cache in style_tree for next iterations)
         for (root_entity, sheet_handle) in style_tree
@@ -122,7 +122,7 @@ pub(crate) fn prepare_state(
                 );
 
                 trace!(
-                    "Applying rule '{}' on {} entities {entities:?}",
+                    "Applying rule '{}' on {} entities",
                     rule.selector.to_string(),
                     entities.len()
                 );
