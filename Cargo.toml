@@ -1,7 +1,7 @@
 [package]
 name = "tomt_bevycss"
-version = "0.7.2"
-edition = "2021"
+version = "0.7.3"
+edition = "2024"
 authors = ["TheBeardedQuack", "Tome of Many Things"]
 categories = ["game-development", "gui", "web-programming"]
 description = "Expansion and fixes based on bevy_ecss. Allows for using a slightly wider subset of CSS to interact with Bevy ECS. Now on Bevy 0.13!"
