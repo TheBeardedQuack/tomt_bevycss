@@ -3,6 +3,7 @@ use super::{
     PropertyParser,
 };
 use crate::{
+    DynArray,
     prelude::BevyCssError,
     selector::{Selector, SelectorElement},
     stylesheet::StyleRule,
@@ -16,7 +17,6 @@ use cssparser::{
     RuleBodyParser,
     ToCss,
 };
-use smallvec::{smallvec, SmallVec};
 
 /// Parses a `css` string using [`StyleSheetParser`].
 pub(crate) struct StyleSheetParser;
@@ -25,7 +25,7 @@ impl StyleSheetParser
 {
     pub(crate) fn parse(
         content: &str
-    ) -> SmallVec<[StyleRule; 8]> {
+    ) -> DynArray<StyleRule> {
         let mut input = ParserInput::new(content);
         let mut parser = Parser::new(&mut input);
 
@@ -57,7 +57,7 @@ for StyleSheetParser
         &mut self,
         input: &mut Parser<'i, 't>,
     ) -> Result<Self::Prelude, ParseError<'i, Self::Error>> {
-        let mut elements = smallvec![];
+        let mut elements = DynArray::new();
 
         #[derive(Debug, Default, Clone)]
         enum DelimType

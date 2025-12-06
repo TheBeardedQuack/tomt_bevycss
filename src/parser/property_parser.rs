@@ -1,13 +1,20 @@
 use super::{
     parse_values,
-    smallvec,
 };
 use crate::{
+    DynArray,
     prelude::BevyCssError,
     property::PropertyValues,
 };
 
-use cssparser::{AtRuleParser, DeclarationParser, Parser, ParseError, RuleBodyItemParser, QualifiedRuleParser};
+use cssparser::{
+    AtRuleParser,
+    DeclarationParser,
+    Parser,
+    ParseError,
+    RuleBodyItemParser,
+    QualifiedRuleParser,
+};
 
 pub struct PropertyParser;
 
@@ -22,7 +29,7 @@ for PropertyParser
         name: cssparser::CowRcStr<'i>,
         parser: &mut Parser<'i, 't>,
     ) -> Result<Self::Declaration, ParseError<'i, BevyCssError>> {
-        let mut tokens = smallvec![];
+        let mut tokens = DynArray::new();
         for token in parse_values(parser)?
         {
             match token.try_into()

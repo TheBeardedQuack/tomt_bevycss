@@ -16,13 +16,10 @@ mod style_tree;
 use style_tree::StyleTree;
 
 use crate::{
-    component::{
+    DynArray, component::{
         MatchSelectorElement,
         StyleSheet,
-    },
-    property::{StyleSheetState, StyleSheetStateBuilder},
-    selector::{Selector, SelectorElement},
-    stylesheet::StyleSheetAsset,
+    }, property::{StyleSheetState, StyleSheetStateBuilder}, selector::{Selector, SelectorElement}, stylesheet::StyleSheetAsset
 };
 
 use bevy::{
@@ -40,7 +37,6 @@ use bevy::{
         World,
     },
 };
-use smallvec::{smallvec, SmallVec};
 
 #[derive(Deref, DerefMut, Resource)]
 pub(crate) struct PrepareParams(
@@ -151,19 +147,19 @@ fn build_entity_filter(
     root: Entity,
     updated_node: Entity,
     css_query: &CssQueryParam
-) -> Option<SmallVec<[Entity; 8]>> {
+) -> Option<DynArray<Entity>> {
     css_query.ui_nodes.get(updated_node)
         .map(|(_entity, parent, children, _stylesheet)|
         {
             // Add parents recursively
-            parent.map_or_else(SmallVec::default, |parent| 
+            parent.map_or_else(DynArray::default, |parent| 
                     get_parents_recursively(root, parent, &css_query.parent)
                 )
                 .into_iter()
                 // Add the entity that triggered the change
                 .chain(std::iter::once(updated_node))
                 // Add children recursively
-                .chain(children.map_or_else(SmallVec::default, |children|
+                .chain(children.map_or_else(DynArray::default, |children|
                     get_children_recursively(children, &css_query.children)
                 ))
                 .collect()
@@ -181,12 +177,12 @@ fn select_entities(
     world: &World,
     css_query: &CssQueryParam,
     registry: &mut ComponentFilterRegistry
-) -> SmallVec<[Entity; 8]> {
+) -> DynArray<Entity> {
     let mut parent_tree = selector.get_parent_tree();
 
     if parent_tree.is_empty()
     {
-        return SmallVec::new();
+        return DynArray::new();
     }
 
     let mut filter = build_entity_filter(root_node, updated_node, css_query);
@@ -218,16 +214,16 @@ fn select_entities(
 /// Filter entities matching the given selectors.
 /// This function is called once per node on tree returned by [`get_parent_tree`](Selector::get_parent_tree)
 fn select_entities_node(
-    node: SmallVec<[&SelectorElement; 8]>,
+    node: DynArray<&SelectorElement>,
     world: &World,
     css_query: &CssQueryParam,
     registry: &mut ComponentFilterRegistry,
-    filter: Option<SmallVec<[Entity; 8]>>
-) -> SmallVec<[Entity; 8]> {
+    filter: Option<DynArray<Entity>>
+) -> DynArray<Entity> {
     let fold_fn = |
-        filter: Option<SmallVec<[Entity; 8]>>,
+        filter: Option<DynArray<Entity>>,
         element: &SelectorElement
-    | -> Option<SmallVec<[Entity; 8]>> {
+    | -> Option<DynArray<Entity>> {
         let result = match element
         {
             SelectorElement::Name(name) => get_entities_with(
@@ -277,11 +273,11 @@ fn select_entities_node(
 fn get_entities_with_pseudo_class(
     name: &str,
     query: &PseudoClassParam,
-    filter: Option<SmallVec<[Entity; 8]>>
-) -> SmallVec<[Entity; 8]> {
+    filter: Option<DynArray<Entity>>
+) -> DynArray<Entity> {
     use bevy::prelude::Interaction;
 
-    let mut buffer: SmallVec<[Entity; 8]> = Default::default();
+    let mut buffer: DynArray<Entity> = Default::default();
     for (entity, action) in query.interaction.iter()
     {
         match (name, *action)
@@ -308,8 +304,8 @@ fn get_entities_with_pseudo_class(
 fn get_entities_with<T>(
     name: &str,
     query: &Query<(Entity, &'static T)>,
-    filter: Option<SmallVec<[Entity; 8]>>
-) -> SmallVec<[Entity; 8]>
+    filter: Option<DynArray<Entity>>
+) -> DynArray<Entity>
 where
     T: Component + MatchSelectorElement,
 {
@@ -334,8 +330,8 @@ fn get_entities_with_component(
     name: &str,
     world: &World,
     components: &mut ComponentFilterRegistry,
-    filter: Option<SmallVec<[Entity; 8]>>
-) -> SmallVec<[Entity; 8]> {
+    filter: Option<DynArray<Entity>>
+) -> DynArray<Entity> {
     match components.0.get_mut(name)
     {
         Some(query) => {
@@ -351,7 +347,7 @@ fn get_entities_with_component(
         }
         None => {
             error!("Unregistered component selector {}", name);
-            SmallVec::new()
+            DynArray::new()
         }
     }
 }
@@ -365,12 +361,12 @@ fn get_parents_recursively(
     root: Entity,
     parent: &Parent,
     query_parent: &query::QueryEntityParent
-) -> SmallVec<[Entity; 8]> {
+) -> DynArray<Entity> {
     let mut result = match query_parent.get(parent.get())
     {
         Ok((entity, parent)) => match entity == root
         {
-            true => smallvec![entity],
+            true => DynArray::from_elem(entity, 1),
             false => get_parents_recursively(root, parent, query_parent),
         },
         Err(_err) => Default::default(),
@@ -387,13 +383,13 @@ fn get_parents_recursively(
 fn get_children_recursively(
     children: &Children,
     query_childs: &query::QueryEntityChildren,
-) -> SmallVec<[Entity; 8]> {
+) -> DynArray<Entity> {
     children
         .iter()
         .flat_map(|&e|
             std::iter::once(e).chain(
                 query_childs.get(e)
-                    .map_or(SmallVec::new(), |(_c, gc)|
+                    .map_or(DynArray::new(), |(_c, gc)|
                         get_children_recursively(gc, query_childs)
                     )
             )

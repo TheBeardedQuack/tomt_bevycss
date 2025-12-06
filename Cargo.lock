@@ -3942,7 +3942,7 @@ dependencies = [
 
 [[package]]
 name = "tomt_bevycss"
-version = "0.7.1"
+version = "0.7.2"
 dependencies = [
  "bevy",
  "bevy_editor_pls",

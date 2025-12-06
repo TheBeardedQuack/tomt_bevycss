@@ -1,11 +1,12 @@
 use bevy::utils::AHasher;
 use cssparser::CowRcStr;
-use smallvec::{smallvec, SmallVec};
 use std::{
     cmp::Ordering,
     hash::{Hash, Hasher},
     sync::Mutex,
 };
+
+use crate::DynArray;
 
 static RULE_COUNTER: Mutex<usize> = Mutex::new(0);
 
@@ -44,7 +45,7 @@ pub enum SelectorElement
 pub struct Selector
 {
     hash: u64,
-    elements: SmallVec<[SelectorElement; 8]>,
+    elements: DynArray<SelectorElement>,
     /// Rule loading order from parser
     load_order: usize,
 }
@@ -53,7 +54,7 @@ impl Selector
 {
     /// Creates a new selector for the given elements.
     pub fn new(
-        elements: SmallVec<[SelectorElement; 8]>
+        elements: DynArray<SelectorElement>
     ) -> Self {
         let hasher = AHasher::default();
 
@@ -82,9 +83,9 @@ impl Selector
     /// Each node in the tree is composed of many elements, also each node is parent of the next one.
     pub fn get_parent_tree(
         &self
-    ) -> SmallVec<[SmallVec<[&SelectorElement; 8]>; 8]> {
-        let mut tree = SmallVec::new();
-        let mut current_level = SmallVec::new();
+    ) -> DynArray<DynArray<&SelectorElement>> {
+        let mut tree = DynArray::new();
+        let mut current_level = DynArray::new();
 
         for element in &self.elements
         {
@@ -92,7 +93,7 @@ impl Selector
             {
                 SelectorElement::Child => {
                     tree.push(current_level);
-                    current_level = SmallVec::new();
+                    current_level = DynArray::new();
                 }
                 _ => current_level.push(element),
             }
@@ -206,13 +207,13 @@ for Selector
     }
 }
 
-impl<'i> From<Vec<CowRcStr<'i>>>
+impl<'i, IterT: IntoIterator<Item = CowRcStr<'i>>> From<IterT>
 for Selector
 {
     fn from(
-        input: Vec<CowRcStr<'i>>
+        input: IterT
     ) -> Self {
-        let mut elements = smallvec![];
+        let mut elements = DynArray::new();
         let mut next_is_class = false;
 
         for value in input.into_iter()
@@ -224,16 +225,13 @@ for Selector
                 continue;
             }
 
-            if let Some(value) = value.strip_prefix('#')
-            {
+            if let Some(value) = value.strip_prefix('#') {
                 elements.push(SelectorElement::Name(value.to_string()));
             }
-            else if next_is_class
-            {
+            else if next_is_class {
                 elements.push(SelectorElement::Class(value.to_string()))
             }
-            else
-            {
+            else {
                 elements.push(SelectorElement::Component(value.to_string()))
             }
 

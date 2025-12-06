@@ -1,4 +1,4 @@
-use crate::selector::Selector;
+use crate::{DynArray, selector::Selector};
 
 use bevy::{
     prelude::{
@@ -7,13 +7,12 @@ use bevy::{
     },
     utils::HashMap,
 };
-use smallvec::SmallVec;
 
 /// Maps which entities was selected by a [`Selector`]
 #[derive(Debug, Clone, Default, Deref, DerefMut)]
 pub struct SelectedEntities(
     HashMap<
         Selector,
-        SmallVec<[Entity; 8]>
+        DynArray<Entity>
     >
 );

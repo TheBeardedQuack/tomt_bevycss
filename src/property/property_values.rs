@@ -1,3 +1,5 @@
+use crate::DynArray;
+
 use super::{
     colors,
     PropertyToken,
@@ -14,13 +16,12 @@ use bevy::{
         Val,
     },
 };
-use smallvec::SmallVec;
 
 /// A list of [`PropertyToken`] which was parsed from a single property.
 #[derive(Clone, Debug, Default)]
 #[derive(Deref)]
 pub struct PropertyValues(
-    pub(crate) SmallVec<[PropertyToken; 8]>
+    pub(crate) DynArray<PropertyToken>
 );
 
 impl PropertyValues

@@ -1,16 +1,15 @@
-mod style_sheet_parser;
 pub(crate) use style_sheet_parser::*;
-
-mod property_parser;
-use property_parser::PropertyParser;
-
-use crate::prelude::BevyCssError;
+use crate::{DynArray, prelude::BevyCssError};
 
 use cssparser::{
     Parser, ParseError,
     ToCss, Token,
 };
-use smallvec::{smallvec, SmallVec};
+
+mod property_parser;
+use property_parser::PropertyParser;
+
+mod style_sheet_parser;
 
 
 fn format_error(
@@ -39,8 +38,8 @@ fn format_error(
 
 fn parse_values<'i>(
     parser: &mut Parser<'i, '_>,
-) -> Result<SmallVec<[Token<'i>; 8]>, ParseError<'i, BevyCssError>> {
-    let mut values = SmallVec::new();
+) -> Result<DynArray<Token<'i>>, ParseError<'i, BevyCssError>> {
+    let mut values = DynArray::new();
     while let Ok(token) = parser.next_including_whitespace()
     {
         values.push(token.clone())

@@ -118,7 +118,7 @@ fn parse_single_complex_class_selector_no_property(
     assert_eq!(node.len(), 7, "Should have a 7 selector class");
 
     use SelectorElement::*;
-    let expected: SmallVec<[SelectorElement; 8]> = smallvec![
+    let expected: DynArray<SelectorElement> = smallvec![
         Class("a".to_string()),
         Class("b".to_string()),
         Class("c".to_string()),
@@ -153,7 +153,7 @@ fn parse_single_composed_selector_no_property(
     assert_eq!(node.len(), 4, "Should have a 4 selectors");
 
     use SelectorElement::*;
-    let expected: SmallVec<[SelectorElement; 8]> = smallvec![
+    let expected: DynArray<SelectorElement> = smallvec![
         Component("a".to_string()),
         Class("b".to_string()),
         Name("c".to_string()),
@@ -182,7 +182,7 @@ fn parse_multiple_composed_selector_no_property(
     assert_eq!(tree.len(), 7, "Should have a single selector node");
 
     use SelectorElement::*;
-    let expected: SmallVec<[SmallVec<[SelectorElement; 8]>; 8]> = smallvec![
+    let expected: DynArray<DynArray<SelectorElement>> = smallvec![
         smallvec![Component("a".to_string()), Class("b".to_string())],
         smallvec![Name("c".to_string())],
         smallvec![Class("d".to_string())],

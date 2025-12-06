@@ -1,5 +1,6 @@
 use super::StyleRule;
 use crate::{
+    DynArray,
     parser::StyleSheetParser,
     property::PropertyValues,
     selector::Selector,
@@ -11,7 +12,6 @@ use bevy::{
     reflect::{TypePath},
     utils::AHasher,
 };
-use smallvec::SmallVec;
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
@@ -25,7 +25,7 @@ pub struct StyleSheetAsset
 {
     path: String,
     hash: u64,
-    rules: SmallVec<[StyleRule; 8]>,
+    rules: DynArray<StyleRule>,
 }
 
 impl StyleSheetAsset

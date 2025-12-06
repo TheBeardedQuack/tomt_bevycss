@@ -22,6 +22,8 @@ use bevy::{
     prelude::*,
 };
 
+pub type DynArray<T> = smallvec::SmallVec<[T; 8]>;
+
 /// use `tomt_bevycss::prelude::*;` to import common components, and plugins and utility functions.
 pub mod prelude {
     pub use super::{
