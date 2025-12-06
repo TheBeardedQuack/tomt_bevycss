@@ -83,7 +83,7 @@ Note that these are properties which are provived by TOMT_BevyCSS but you can al
 ### [`Style`][5] Properties
 
 |     Property      |                                            Values                                             | Description                                                                                                                  |
-| :---------------: | :-------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------|
+|:-----------------:| :-------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------|
 |     `display`     |                                       `flex` \| `none`                                        | Applies the  `display`         property on [`display`][20]         field of all sections on matched [`Style`][5] components. |
 |  `position-type`  |                                   `absolute` \| `relative`                                    | Applies the  `position-type`   property on [`position_type`][21]   field of all sections on matched [`Style`][5] components. |
 |    `direction`    |                        `inherit` \| `left-to-right` \| `right-to-left`                        | Applies the  `direction`       property on [`direction`][22]       field of all sections on matched [`Style`][5] components. |
@@ -124,10 +124,11 @@ Note that these are properties which are provived by TOMT_BevyCSS but you can al
 
 ### Component Properties
 
-|      Property      |           Values                             |             Description                                                   |
-| :----------------: | :------------------------------------------: | :------------------------------------------------------------------------ |
-| `background-color` | [`named-colors`][103] \| [`hex_colors`][104] | Applies the property on [`BackgroundColor`][1] of all matched components. |
-
+|      Property      |                                Values                                | Description                                                               |
+|:------------------:|:--------------------------------------------------------------------:|:--------------------------------------------------------------------------|
+| `background-color` |             [`named-colors`][103] \| [`hex_colors`][104]             | Applies the property on [`BackgroundColor`][1] of all matched components. |
+|  `border-radius`   |                         <`area-short-hand`>                          | Applies the property on [`BorderRadius`][9] of all matched components.    |
+|   `border-color`   |             [`named-colors`][103] \| [`hex_colors`][104]             | Applies the property on [`BorderColor`][10] of all matched components.    |
 
 [1]: https://docs.rs/bevy/latest/bevy/prelude/struct.BackgroundColor.html
 [2]: https://docs.rs/bevy/latest/bevy/text/struct.Text.html
@@ -137,6 +138,8 @@ Note that these are properties which are provived by TOMT_BevyCSS but you can al
 [6]: https://docs.rs/bevy/latest/bevy/prelude/struct.UiImage.html
 [7]: https://docs.rs/bevy/latest/bevy/prelude/enum.Interaction.html
 [8]: https://docs.rs/bevy/latest/bevy/core/struct.Name.html
+[9]: https://docs.rs/bevy/latest/bevy/prelude/struct.BorderRadius.html
+[10]: https://docs.rs/bevy/latest/bevy/prelude/struct.BorderColor.html
 
 [20]: https://docs.rs/bevy/latest/bevy/prelude/struct.Style.html#structfield.display
 [21]: https://docs.rs/bevy/latest/bevy/prelude/struct.Style.html#structfield.position_type

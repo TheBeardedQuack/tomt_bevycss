@@ -4,7 +4,7 @@
 
 #left-border {
     margin: 0px 0px 0px 50px;
-    border: 0px;
+    border-width: 0px;
     padding: 5px;
     background-color: gray;
 }
@@ -25,4 +25,4 @@
 
 .container .blue-bg {
     background-color: #ff00FF10;
-} 
+}

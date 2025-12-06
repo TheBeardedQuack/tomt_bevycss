@@ -51,13 +51,14 @@ pub struct SpawnedBy<T>(PhantomData<T>);
 
 const CLASS_MAIN_MENU: &str = "main-menu";
 
+// Whenever an StyleSheet is loaded, it'll be applied automatically
 fn main(
     // no args
 ) {
     let mut app = App::new();
 
     app.add_plugins(DefaultPlugins)
-        .add_plugins(BevyCssPlugin::default())
+        .add_plugins(BevyCssPlugin)
         .register_type::<Class>()
         .register_type::<StyleSheet>();
 

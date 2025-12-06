@@ -18,7 +18,7 @@ struct FancyColor;
 fn some_main() {
     let mut app = App::new();
 
-    app.add_plugins(DefaultPlugins).add_plugin(BevyCssPlugin::default());
+    app.add_plugins(DefaultPlugins).add_plugin(BevyCssPlugin);
 
     // Register your own custom selector:
     // fancy-pants {
