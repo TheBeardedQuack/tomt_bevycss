@@ -229,20 +229,20 @@ fn select_entities_node(
             SelectorElement::Name(name) => get_entities_with(
                 name.as_str(),
                 &css_query.names,
-                filter
+                filter.as_ref()
             ),
 
             SelectorElement::Class(class) => get_entities_with(
                 class.as_str(),
                 &css_query.classes,
-                filter
+                filter.as_ref()
             ),
 
             #[cfg(feature = "pseudo_class")]
             SelectorElement::PseudoClass(class) => get_entities_with_pseudo_class(
                 class.as_str(),
                 &css_query.pseudo_classes,
-                filter
+                filter.as_ref()
             ),
 
             #[cfg(feature = "pseudo_prop")]
@@ -254,7 +254,7 @@ fn select_entities_node(
                 component.as_str(),
                 world,
                 registry,
-                filter
+                filter.as_ref()
             ),
 
             // All child elements are filtered by [`get_parent_tree`](Selector::get_parent_tree)
@@ -273,7 +273,7 @@ fn select_entities_node(
 fn get_entities_with_pseudo_class(
     name: &str,
     query: &PseudoClassParam,
-    filter: Option<DynArray<Entity>>
+    filter: Option<&DynArray<Entity>>
 ) -> DynArray<Entity> {
     use bevy::prelude::Interaction;
 
@@ -304,7 +304,7 @@ fn get_entities_with_pseudo_class(
 fn get_entities_with<T>(
     name: &str,
     query: &Query<(Entity, &'static T)>,
-    filter: Option<DynArray<Entity>>
+    filter: Option<&DynArray<Entity>>
 ) -> DynArray<Entity>
 where
     T: Component + MatchSelectorElement,
@@ -330,13 +330,13 @@ fn get_entities_with_component(
     name: &str,
     world: &World,
     components: &mut ComponentFilterRegistry,
-    filter: Option<DynArray<Entity>>
+    filter: Option<&DynArray<Entity>>
 ) -> DynArray<Entity> {
     match components.0.get_mut(name)
     {
         Some(query) => {
             let mut buffer = query.filter(world);
-            if let Some(filter) = &filter
+            if let Some(filter) = filter
             {
                 buffer = buffer.into_iter()
                     .filter(|e| filter.contains(e))
